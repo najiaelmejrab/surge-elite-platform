@@ -1,10 +1,10 @@
-admin-game-entry.html
-coach-roster.html
+frontend/admin-game-entry.html
+frontend/coach-roster.html
 
-js/admin-game-entry.js
-js/coach-roster.js
+frontend/js/admin-game-entry.js
+frontend/js/coach-roster.js
 
 node_modules/
 .env
-Thumbs.db
 .DS_Store
+Thumbs.db
