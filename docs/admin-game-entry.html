@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<!-- Antigravity edit test -->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Game Entry &amp; Box Score | Surge Elite Basketball Platform</title>
+  <meta name="description"
+    content="Official game management, live quarter scoring, and player box score entry for Surge Elite administrators and scorekeepers.">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Oswald -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Custom Dark Theme Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/design-refinements.css">
+
+  <style>
+    /* Page-specific overrides only — base styles live in design-refinements.css */
+    .stat-input-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 950px;
+    }
+
+    .stat-input-table th {
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      padding: 0.65rem 0.4rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-align: center;
+      border-bottom: 1px solid var(--border-light);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .stat-input-table th:first-child {
+      text-align: left;
+      padding-left: 0.75rem;
+    }
+
+    .stat-input-table td {
+      padding: 0.55rem 0.3rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .stat-input-table tr:hover td {
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+
+
+    .form-select option {
+      background: var(--bg-surface);
+      color: var(--text-main);
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-container">
+
+    <!-- Toast Message Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ==========================================
+       NAVIGATION BAR
+       ========================================== -->
+    <header class="navbar" id="navbar">
+      <div class="container nav-container">
+        <a href="index.html" class="logo">
+          <div class="logo-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M5.5 5.5A10 10 0 0 1 18.5 18.5"></path>
+              <path d="M18.5 5.5A10 10 0 0 0 5.5 18.5"></path>
+              <line x1="12" y1="2" x2="12" y2="22"></line>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+            </svg>
+          </div>
+          SURGE <span>ELITE</span>
+        </a>
+
+        <nav>
+          <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="leagues.html" class="nav-link">Leagues</a></li>
+            <li><a href="teams.html" class="nav-link">Teams</a></li>
+            <li><a href="players.html" class="nav-link">Players</a></li>
+            <li><a href="games.html" class="nav-link">Games</a></li>
+            <li><a href="admin-game-entry.html" class="nav-link active"
+                style="color: var(--primary); font-weight: 700;">Admin Entry</a></li>
+            <li><a href="coach-roster.html" class="nav-link">Coach Roster</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-actions">
+          <span class="badge badge-orange"
+            style="font-size: 0.75rem; letter-spacing: 0.05em; padding: 0.25rem 0.6rem;">ADMIN ROLE</span>
+          <a href="login.html" class="btn btn-outline btn-sm">Switch User</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==========================================
+       PAGE HEADER
+       ========================================== -->
+    <section class="page-banner">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="index.html">Home</a>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current">Admin Entry</span>
+        </div>
+        <h1 class="banner-title">GAME ENTRY &amp; BOX SCORE MANAGER</h1>
+        <p class="banner-desc">Manage fixtures, record live period scores, and submit verified player box score
+          analytics.</p>
+      </div>
+    </section>
+
+    <!-- Quick Game Selector Filter Bar -->
+
+
+    <!-- Filter Bar for Edit Saved Game -->
+    <main class="container" style="padding-top: 2.5rem; padding-bottom: 6rem;">
+      <div class="league-filter-bar"
+        style="padding: 1rem; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+        <div class="search-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            style="color: var(--text-muted); flex-shrink: 0;">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="editGameSearch" placeholder="Search saved games...">
+        </div>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+          <select id="savedGameSelect" class="filter-select">
+            <option value="">Select Game...</option>
+            <!-- Options populated dynamically -->
+          </select>
+          <button type="button" class="btn btn-primary btn-sm" id="newGameBtn">+ New Game</button>
+        </div>
+      </div>
+      <form id="gameEntryForm">
+        <input type="hidden" id="gameId" value="">
+
+        <!-- MODAL: NEW GAME -->
+        <div class="modal-overlay" id="newGameModal" style="display: none;">
+          <div class="modal-content-box" style="max-width: 800px;">
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 1rem;">
+              <h3 style="font-family: var(--font-display); font-size: 1.25rem; text-transform: uppercase;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"
+                  style="vertical-align: bottom; margin-right: 0.5rem;">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                1. Game Information &amp; Schedule
+              </h3>
+              <button type="button" id="closeNewGameModal"
+                style="font-size: 1.5rem; color: var(--text-muted); line-height: 1; border: none; background: transparent; cursor: pointer;">&times;</button>
+            </div>
+
+            <div class="admin-grid-3">
+              <div class="form-group">
+                <label for="leagueSelect" class="form-label">League *</label>
+                <select id="leagueSelect" class="form-select" required>
+                  <option value="">Select League...</option>
+                  <option value="1" selected>Pro-Am Elite Championship</option>
+                  <option value="2">Metropolitan Premier Division</option>
+                  <option value="3">Next-Gen Youth Showcase</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="seasonSelect" class="form-label">Season *</label>
+                <select id="seasonSelect" class="form-select" required>
+                  <option value="">Select Season...</option>
+                  <option value="1" selected>Summer 2026 Season</option>
+                  <option value="2">Spring 2026 Regular Season</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="venueSelect" class="form-label">
+                  Venue / Court *
+                  <a href="#" id="openVenueModal"
+                    style="float: right; color: var(--primary); text-transform: none; font-weight: normal; font-size: 0.75rem;">+
+                    Add Venue</a>
+                </label>
+                <select id="venueSelect" class="form-select">
+                  <option value="">Select Venue...</option>
+                  <option value="1" selected>Surge Performance Center - Main Arena (Los Angeles)</option>
+                  <option value="2">Elite Sports Pavilion - Court 1 (Brooklyn)</option>
+                  <option value="3">Apex Center (Chicago)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="admin-grid-3">
+              <div class="form-group">
+                <label for="gameDate" class="form-label">Game Date *</label>
+                <input type="date" id="gameDate" class="form-control" value="2026-08-17" required>
+              </div>
+
+              <div class="form-group">
+                <label for="gameTime" class="form-label">Tip-Off Time *</label>
+                <input type="time" id="gameTime" class="form-control" value="19:30" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Game Status *</label>
+                <div style="display: flex; gap: 0.5rem;">
+                  <label class="status-badge-radio" data-status="scheduled">
+                    <input type="radio" name="gameStatus" value="scheduled">
+                    <span>Scheduled</span>
+                  </label>
+                  <label class="status-badge-radio" data-status="live">
+                    <input type="radio" name="gameStatus" value="live">
+                    <span style="color: #ef4444;">&bull; Live</span>
+                  </label>
+                  <label class="status-badge-radio active" data-status="completed">
+                    <input type="radio" name="gameStatus" value="completed" checked>
+                    <span style="color: #10b981;">Completed</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div
+              style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 2rem; border-top: 1px solid var(--border-light); padding-top: 1.5rem;">
+              <button type="button" class="btn btn-outline" id="cancelNewGameModal">Cancel</button>
+              <button type="button" class="btn btn-primary" id="btnCreateNewGame">Create/Save Game</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: MATCHUP & TEAMS -->
+        <section class="admin-card">
+          <div class="admin-card-header">
+            <h2 class="admin-card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              2. Matchup &amp; Competing Teams
+            </h2>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Step 2 of 5</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.5rem; align-items: center;">
+            <!-- Home Team Card -->
+            <div
+              style="background: var(--bg-surface); border: 1px solid rgba(0, 229, 255, 0.3); border-radius: var(--radius-md); padding: 1.25rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                <span class="badge" style="background: rgba(0, 229, 255, 0.15); color: #00e5ff;">HOME TEAM</span>
+                <span id="homeDivisionBadge" style="font-size: 0.75rem; color: var(--text-muted);">Division 1</span>
+              </div>
+              <div class="form-group">
+                <label for="homeTeamSelect" class="form-label">Select Home Team *</label>
+                <select id="homeTeamSelect" class="form-select" required>
+                  <option value="">Select Home Team...</option>
+                  <option value="1" selected>Venice Wave (VNC)</option>
+                  <option value="2">Gotham Knights (GTM)</option>
+                  <option value="3">South Beach Surge (MIA)</option>
+                  <option value="4">Windy City Ballers (CHI)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- VS Indicator -->
+            <div style="text-align: center;">
+              <div class="admin-vs-circle">VS</div>
+            </div>
+
+            <!-- Away Team Card -->
+            <div
+              style="background: var(--bg-surface); border: 1px solid rgba(255, 0, 85, 0.3); border-radius: var(--radius-md); padding: 1.25rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                <span class="badge" style="background: rgba(255, 0, 85, 0.15); color: #ff0055;">AWAY TEAM</span>
+                <span id="awayDivisionBadge" style="font-size: 0.75rem; color: var(--text-muted);">Division 1</span>
+              </div>
+              <div class="form-group">
+                <label for="awayTeamSelect" class="form-label">Select Away Team *</label>
+                <select id="awayTeamSelect" class="form-select" required>
+                  <option value="">Select Away Team...</option>
+                  <option value="1">Venice Wave (VNC)</option>
+                  <option value="2" selected>Gotham Knights (GTM)</option>
+                  <option value="3">South Beach Surge (MIA)</option>
+                  <option value="4">Windy City Ballers (CHI)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3 & 4: QUARTER SCORING MATRIX & FINAL SCORE -->
+        <section class="admin-card">
+          <div class="admin-card-header">
+            <h2 class="admin-card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              3. Quarter-by-Quarter Scoring Matrix &amp; Totals
+            </h2>
+            <div style="display: flex; gap: 0.5rem;">
+              <button type="button" class="btn btn-outline btn-sm" id="btnAddOT"
+                style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">+ Add Overtime (OT)</button>
+            </div>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="matrix-table" id="quartersMatrixTable">
+              <thead>
+                <tr id="matrixHeaderRow">
+                  <th>Team</th>
+                  <th>Q1</th>
+                  <th>Q2</th>
+                  <th>Q3</th>
+                  <th>Q4</th>
+                  <th>Sum Total</th>
+                  <th>Official Final</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <span id="labelHomeTeamName" style="color: #00e5ff; font-weight: 700;">Venice Wave (Home)</span>
+                  </td>
+                  <td><input type="number" min="0" max="99" class="matrix-input q-input" data-team="home"
+                      data-quarter="1" value="28"></td>
+                  <td><input type="number" min="0" max="99" class="matrix-input q-input" data-team="home"
+                      data-quarter="2" value="26"></td>
+                  <td><input type="number" min="0" max="99" class="matrix-input q-input" data-team="home"
+                      data-quarter="3" value="29"></td>
+                  <td><input type="number" min="0" max="99" class="matrix-input q-input" data-team="home"
+                      data-quarter="4" value="29"></td>
+                  <td><span class="matrix-total" id="calcHomeTotal">112</span></td>
+                  <td>
+                    <input type="number" min="0" id="homeFinalScore" class="matrix-input"
+                      style="width: 80px; border-color: #00e5ff; font-size: 1.3rem;" value="112" required>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span id="labelAwayTeamName" style="color: #ff0055; font-weight: 700;">Gotham Knights
+                      (Away)</span>
+                  </td>
+                  <td><input type="number" min="0" max="99" class="matrix-input q-input" data-team="away"
+                      data-quarter="1" value="24"></td>
+                  <td><input type="number" min="0" max="99" class="matrix-input q-input" data-team="away"
+                      data-quarter="2" value="27"></td>
+                  <td><input type="number" min="0" max="99" class="matrix-input q-input" data-team="away"
+                      data-quarter="3" value="24"></td>
+                  <td><input type="number" min="0" max="99" class="matrix-input q-input" data-team="away"
+                      data-quarter="4" value="26"></td>
+                  <td><span class="matrix-total" id="calcAwayTotal">101</span></td>
+                  <td>
+                    <input type="number" min="0" id="awayFinalScore" class="matrix-input"
+                      style="width: 80px; border-color: #ff0055; font-size: 1.3rem;" value="101" required>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div
+            style="margin-top: 1rem; display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.25); padding: 0.75rem 1rem; border-radius: var(--radius-sm);">
+            <div style="font-size: 0.82rem; color: var(--text-muted);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                style="vertical-align: middle; margin-right: 4px;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              Quarter sums automatically update the live total score. You can manually adjust the official final score
+              if necessary.
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" id="btnSyncScores" style="font-size: 0.75rem;">
+              Auto-Sync Final Scores
+            </button>
+          </div>
+        </section>
+
+        <!-- SECTION 5: PLAYER BOX SCORE ENTRY -->
+        <section class="admin-card">
+          <div class="admin-card-header">
+            <h2 class="admin-card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <polyline points="16 11 18 13 22 9"></polyline>
+              </svg>
+              4. Player Box Score Statistics
+            </h2>
+            <div style="display: flex; gap: 0.5rem;">
+              <button type="button" class="btn btn-outline btn-sm" id="btnAddPlayerHome">+ Add Home Player</button>
+              <button type="button" class="btn btn-outline btn-sm" id="btnAddPlayerAway">+ Add Away Player</button>
+            </div>
+          </div>
+
+          <!-- Team Box Score Tabs -->
+          <div
+            style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">
+            <button type="button" class="tab-btn active" id="tabBtnHome"
+              style="padding: 0.6rem 1.2rem; font-weight: 700; border-radius: var(--radius-sm); color: #00e5ff; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0,229,255,0.3);">
+              Venice Wave (Home Roster)
+            </button>
+            <button type="button" class="tab-btn" id="tabBtnAway"
+              style="padding: 0.6rem 1.2rem; font-weight: 700; border-radius: var(--radius-sm); color: var(--text-muted); background: transparent; border: 1px solid var(--border-light);">
+              Gotham Knights (Away Roster)
+            </button>
+          </div>
+
+          <!-- HOME TEAM BOX SCORE PANE -->
+          <div id="paneHomeBoxScore" style="display: block;">
+            <div style="overflow-x: auto; max-height: 480px;">
+              <table class="stat-input-table" id="homeStatsTable">
+                <thead>
+                  <tr>
+                    <th>Player Athlete</th>
+                    <th>POS</th>
+                    <th>MIN</th>
+                    <th>PTS</th>
+                    <th>REB</th>
+                    <th>AST</th>
+                    <th>STL</th>
+                    <th>BLK</th>
+                    <th>TO</th>
+                    <th>PF</th>
+                    <th>FGM</th>
+                    <th>FGA</th>
+                    <th>3PM</th>
+                    <th>3PA</th>
+                    <th>FTM</th>
+                    <th>FTA</th>
+                    <th>+/-</th>
+                    <th>Del</th>
+                  </tr>
+                </thead>
+                <tbody id="homeStatsBody">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+                <tfoot>
+                  <tr class="stat-row-total" id="homeStatsFooter">
+                    <td style="text-align: left; padding-left: 0.75rem;">TEAM TOTALS</td>
+                    <td>-</td>
+                    <td id="totHomeMin">200</td>
+                    <td id="totHomePts" style="color: #ffb800; font-size: 1rem;">112</td>
+                    <td id="totHomeReb">42</td>
+                    <td id="totHomeAst">28</td>
+                    <td id="totHomeStl">8</td>
+                    <td id="totHomeBlk">5</td>
+                    <td id="totHomeTo">11</td>
+                    <td id="totHomePf">16</td>
+                    <td id="totHomeFgm">42</td>
+                    <td id="totHomeFga">86</td>
+                    <td id="totHome3pm">14</td>
+                    <td id="totHome3pa">32</td>
+                    <td id="totHomeFtm">14</td>
+                    <td id="totHomeFta">18</td>
+                    <td>-</td>
+                    <td>-</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <div
+              style="margin-top: 0.75rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
+              <div>
+                Points Validation: <span id="homePtsValidation" style="font-weight: 700; color: #10b981;">&#10004;
+                  Matches Home Total (112 pts)</span>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm" id="btnQuickHomeRoster">+ Load Full Registered
+                Roster</button>
+            </div>
+          </div>
+
+          <!-- AWAY TEAM BOX SCORE PANE -->
+          <div id="paneAwayBoxScore" style="display: none;">
+            <div style="overflow-x: auto; max-height: 480px;">
+              <table class="stat-input-table" id="awayStatsTable">
+                <thead>
+                  <tr>
+                    <th>Player Athlete</th>
+                    <th>POS</th>
+                    <th>MIN</th>
+                    <th>PTS</th>
+                    <th>REB</th>
+                    <th>AST</th>
+                    <th>STL</th>
+                    <th>BLK</th>
+                    <th>TO</th>
+                    <th>PF</th>
+                    <th>FGM</th>
+                    <th>FGA</th>
+                    <th>3PM</th>
+                    <th>3PA</th>
+                    <th>FTM</th>
+                    <th>FTA</th>
+                    <th>+/-</th>
+                    <th>Del</th>
+                  </tr>
+                </thead>
+                <tbody id="awayStatsBody">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+                <tfoot>
+                  <tr class="stat-row-total" id="awayStatsFooter">
+                    <td style="text-align: left; padding-left: 0.75rem;">TEAM TOTALS</td>
+                    <td>-</td>
+                    <td id="totAwayMin">200</td>
+                    <td id="totAwayPts" style="color: #ffb800; font-size: 1rem;">101</td>
+                    <td id="totAwayReb">38</td>
+                    <td id="totAwayAst">22</td>
+                    <td id="totAwayStl">6</td>
+                    <td id="totAwayBlk">4</td>
+                    <td id="totAwayTo">14</td>
+                    <td id="totAwayPf">19</td>
+                    <td id="totAwayFgm">38</td>
+                    <td id="totAwayFga">84</td>
+                    <td id="totAway3pm">11</td>
+                    <td id="totAway3pa">29</td>
+                    <td id="totAwayFtm">14</td>
+                    <td id="totAwayFta">20</td>
+                    <td>-</td>
+                    <td>-</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <div
+              style="margin-top: 0.75rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
+              <div>
+                Points Validation: <span id="awayPtsValidation" style="font-weight: 700; color: #10b981;">&#10004;
+                  Matches Away Total (101 pts)</span>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm" id="btnQuickAwayRoster">+ Load Full Registered
+                Roster</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- STICKY ACTION CONTROLS FOOTER -->
+        <div class="admin-sticky-footer">
+          <div class="container"
+            style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <button type="button" class="btn btn-outline" id="btnResetForm" style="color: var(--text-muted);">
+                Reset
+              </button>
+              <button type="button" class="btn btn-outline" id="btnDeleteGame"
+                style="color: #ef4444; border-color: rgba(239, 68, 68, 0.4); display: none;">
+                Delete Fixture
+              </button>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <a href="#" id="linkViewPublicGame" target="_blank" class="btn btn-outline btn-sm" style="display: none;">
+                Preview Game Details &rarr;
+              </a>
+              <button type="button" class="btn btn-outline" id="btnSaveDraft">
+                Save as Scheduled / Draft
+              </button>
+              <button type="submit" class="btn btn-primary" id="btnSaveGame"
+                style="padding: 0.75rem 2rem; font-weight: 800;">
+                Publish Official Game &amp; Stats &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ==========================================
+       MODAL: QUICK ADD VENUE
+       ========================================== -->
+    <div class="modal" id="venueModal"
+      style="display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); align-items: center; justify-content: center;">
+      <div
+        style="background: var(--bg-card); border: 1px solid var(--border-orange); border-radius: var(--radius-lg); width: 100%; max-width: 480px; padding: 2rem; box-shadow: var(--shadow-orange);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h3 style="font-family: var(--font-display); font-size: 1.25rem; text-transform: uppercase;">Add New Venue
+          </h3>
+          <button type="button" id="closeVenueModal"
+            style="font-size: 1.5rem; color: var(--text-muted);">&times;</button>
+        </div>
+        <form id="quickVenueForm">
+          <div class="form-group">
+            <label class="form-label">Venue Name *</label>
+            <input type="text" id="newVenueName" class="form-control" placeholder="e.g. Surge Sports Complex" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Address</label>
+            <input type="text" id="newVenueAddress" class="form-control" placeholder="e.g. 1044 Basketball Blvd">
+          </div>
+          <div class="admin-grid-2">
+            <div class="form-group">
+              <label class="form-label">City *</label>
+              <input type="text" id="newVenueCity" class="form-control" placeholder="e.g. Los Angeles" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Capacity</label>
+              <input type="number" id="newVenueCapacity" class="form-control" placeholder="e.g. 2500">
+            </div>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+            <button type="button" class="btn btn-outline" id="cancelVenueModal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Venue</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- PLAYER MODAL: Add Home Player -->
+    <div class="modal-overlay" id="playerModalHome" style="display: none;">
+      <div class="modal-content-box">
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 1rem;">
+          <h3 style="font-family: var(--font-display); font-size: 1.25rem; text-transform: uppercase;">Add Home Player
+          </h3>
+          <button type="button" id="closePlayerModalHome"
+            style="font-size: 1.5rem; color: var(--text-muted); line-height: 1;">&times;</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="playerSearchHome">Search Players</label>
+          <input type="text" id="playerSearchHome" class="form-control" placeholder="Enter player name...">
+        </div>
+        <div id="playerListHome" style="margin-top: 1rem; max-height: 300px; overflow-y: auto;">
+          <!-- Player rows inserted via JS -->
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-outline" id="btnCancelHome">Cancel</button>
+          <!-- Individual Add buttons on each row, no bulk add -->
+        </div>
+      </div>
+    </div>
+    <!-- PLAYER MODAL: Add Away Player -->
+    <div class="modal-overlay" id="playerModalAway" style="display: none;">
+      <div class="modal-content-box">
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 1rem;">
+          <h3 style="font-family: var(--font-display); font-size: 1.25rem; text-transform: uppercase;">Add Away Player
+          </h3>
+          <button type="button" id="closePlayerModalAway"
+            style="font-size: 1.5rem; color: var(--text-muted); line-height: 1;">&times;</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="playerSearchAway">Search Players</label>
+          <input type="text" id="playerSearchAway" class="form-control" placeholder="Enter player name...">
+        </div>
+        <div id="playerListAway" style="margin-top: 1rem; max-height: 300px; overflow-y: auto;">
+          <!-- Player rows inserted via JS -->
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-outline" id="btnCancelAway">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom JavaScript File -->
+    <script src="js/admin-game-entry.js"></script>
+  </div>
+</body>
+
+</html>

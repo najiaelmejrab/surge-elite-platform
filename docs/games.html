@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Games Schedule & Results | Surge Elite Basketball Platform</title>
+  <meta name="description" content="Browse upcoming games and recent results across all Surge Elite leagues. Filter by league, team, or search by opponent.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/design-refinements.css">
+</head>
+
+<body>
+
+  <!-- ==========================================
+       NAVIGATION BAR
+       ========================================== -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M5.5 5.5A10 10 0 0 1 18.5 18.5"></path>
+            <path d="M18.5 5.5A10 10 0 0 0 5.5 18.5"></path>
+            <line x1="12" y1="2" x2="12" y2="22"></line>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+          </svg>
+        </div>
+        SURGE <span>ELITE</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="leagues.html" class="nav-link">Leagues</a></li>
+          <li><a href="teams.html" class="nav-link">Teams</a></li>
+          <li><a href="players.html" class="nav-link">Players</a></li>
+          <li><a href="games.html" class="nav-link active">Games</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-outline btn-sm btn-login btn-trigger-login">Login</a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <aside class="mobile-menu" id="mobileMenu">
+    <div>
+      <div class="mobile-menu-header">
+        <a href="index.html" class="logo">SURGE <span>ELITE</span></a>
+        <button class="mobile-close" id="mobileClose">&times;</button>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+        <li><a href="leagues.html" class="mobile-nav-link">Leagues</a></li>
+        <li><a href="teams.html" class="mobile-nav-link">Teams</a></li>
+        <li><a href="players.html" class="mobile-nav-link">Players</a></li>
+        <li><a href="games.html" class="mobile-nav-link active">Games</a></li>
+      </ul>
+    </div>
+    <div>
+      <a href="login.html" class="btn btn-primary btn-trigger-login" style="width: 100%; text-align: center; display: block;">Player Login</a>
+    </div>
+  </aside>
+
+
+  <!-- ==========================================
+       PAGE BANNER
+       ========================================== -->
+  <section class="page-banner">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Games</span>
+      </div>
+      <h1 class="banner-title">Schedule &amp; <span>Results</span></h1>
+      <p class="banner-desc">All upcoming fixtures and completed game results across every active Surge Elite division.</p>
+
+      <!-- Pill Tab Toggle -->
+      <div style="margin-top: 1.75rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+        <div class="pill-tabs" role="tablist">
+          <button class="pill-tab active" data-section="sectionUpcoming" role="tab">🗓 Upcoming</button>
+          <button class="pill-tab" data-section="sectionResults" role="tab">🏆 Results</button>
+        </div>
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Season 2026</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==========================================
+       FILTER BAR
+       ========================================== -->
+  <div class="container" style="padding-top: 2rem;">
+    <div class="league-filter-bar">
+      <div class="search-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--text-muted); flex-shrink: 0;">
+          <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="gameSearch" placeholder="Search teams or venue...">
+      </div>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <select id="gameLeagueFilter" class="filter-select">
+          <option value="all">All Leagues</option>
+          <option value="u15">U15 Youth League</option>
+          <option value="u17">U17 Junior League</option>
+          <option value="u19">U19 Elite Division</option>
+        </select>
+        <select id="gameTeamFilter" class="filter-select">
+          <option value="all">All Teams</option>
+          <option value="surge-wolves">Surge Wolves</option>
+          <option value="apex-titans">Apex Titans</option>
+          <option value="metro-vipers">Metro Vipers</option>
+          <option value="coastal-ballers">Coastal Ballers</option>
+          <option value="skyline-knights">Skyline Knights</option>
+          <option value="thunder-hawks">Thunder Hawks</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       UPCOMING GAMES SECTION
+       ========================================== -->
+  <main class="container" style="padding-top: 1.5rem; padding-bottom: 6rem;">
+
+    <!-- UPCOMING -->
+    <div class="games-list-section active" id="sectionUpcoming">
+      <div style="margin-bottom: 1.75rem;">
+        <h2 style="font-family: var(--font-display); font-size: 1.4rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.06em;">
+          This Week — Oct 22–27, 2026
+        </h2>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+
+        <!-- Game 1 -->
+        <a href="game-details.html?id=g001" style="text-decoration: none; color: inherit; display: block;">
+          <article class="game-card-full" data-league="u15" data-teams="surge-wolves apex-titans">
+            <div class="game-card-top">
+              <span class="game-league-tag">U15 Youth League &bull; Game #15</span>
+              <span class="game-status-badge status-upcoming">Upcoming</span>
+            </div>
+            <div class="game-card-body">
+              <div class="game-matchup-full">
+                <div class="team-side home">
+                  <div class="team-logo-pill">SW</div>
+                  <div class="team-full-name">Surge Wolves</div>
+                  <div class="team-record-small">12–2 (Home)</div>
+                </div>
+                <div class="score-center">
+                  <div class="score-vs">VS</div>
+                </div>
+                <div class="team-side away">
+                  <div class="team-logo-pill">AT</div>
+                  <div class="team-full-name">Apex Titans</div>
+                  <div class="team-record-small">(Away) 11–3</div>
+                </div>
+              </div>
+              <div class="game-card-footer">
+                <div class="game-info-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  <span>Oct 22, 2026 — 7:00 PM</span>
+                </div>
+                <div class="game-info-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  <span>Surge Arena, Downtown</span>
+                </div>
+                <span class="btn btn-outline btn-sm" style="pointer-events: none;">View Details →</span>
+              </div>
+            </div>
+          </article>
+        </a>
+
+        <!-- Game 2 -->
+        <a href="game-details.html?id=g002" style="text-decoration: none; color: inherit; display: block;">
+          <article class="game-card-full" data-league="u17" data-teams="metro-vipers thunder-hawks">
+            <div class="game-card-top">
+              <span class="game-league-tag">U17 Junior League &bull; Game #13</span>
+              <span class="game-status-badge status-upcoming">Upcoming</span>
+            </div>
+            <div class="game-card-body">
+              <div class="game-matchup-full">
+                <div class="team-side home">
+                  <div class="team-logo-pill">MV</div>
+                  <div class="team-full-name">Metro Vipers</div>
+                  <div class="team-record-small">9–5 (Home)</div>
+                </div>
+                <div class="score-center">
+                  <div class="score-vs">VS</div>
+                </div>
+                <div class="team-side away">
+                  <div class="team-logo-pill">TH</div>
+                  <div class="team-full-name">Thunder Hawks</div>
+                  <div class="team-record-small">(Away) 7–7</div>
+                </div>
+              </div>
+              <div class="game-card-footer">
+                <div class="game-info-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  <span>Oct 23, 2026 — 6:30 PM</span>
+                </div>
+                <div class="game-info-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  <span>Metro Pavilion, Eastside</span>
+                </div>
+                <span class="btn btn-outline btn-sm" style="pointer-events: none;">View Details →</span>
+              </div>
+            </div>
+          </article>
+        </a>
+
+        <!-- Game 3 -->
+        <a href="game-details.html?id=g003" style="text-decoration: none; color: inherit; display: block;">
+          <article class="game-card-full" data-league="u19" data-teams="skyline-knights coastal-ballers">
+            <div class="game-card-top">
+              <span class="game-league-tag">U19 Elite Division &bull; Game #11</span>
+              <span class="game-status-badge status-upcoming">Upcoming</span>
+            </div>
+            <div class="game-card-body">
+              <div class="game-matchup-full">
+                <div class="team-side home">
+                  <div class="team-logo-pill">SK</div>
+                  <div class="team-full-name">Skyline Knights</div>
+                  <div class="team-record-small">6–8 (Home)</div>
+                </div>
+                <div class="score-center">
+                  <div class="score-vs">VS</div>
+                </div>
+                <div class="team-side away">
+                  <div class="team-logo-pill">CB</div>
+                  <div class="team-full-name">Coastal Ballers</div>
+                  <div class="team-record-small">(Away) 8–6</div>
+                </div>
+              </div>
+              <div class="game-card-footer">
+                <div class="game-info-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  <span>Oct 25, 2026 — 5:00 PM</span>
+                </div>
+                <div class="game-info-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  <span>Skyline Fieldhouse, Northgate</span>
+                </div>
+                <span class="btn btn-outline btn-sm" style="pointer-events: none;">View Details →</span>
+              </div>
+            </div>
+          </article>
+        </a>
+
+        <!-- Game 4 -->
+        <a href="game-details.html?id=g004" style="text-decoration: none; color: inherit; display: block;">
+          <article class="game-card-full" data-league="u17" data-teams="apex-titans surge-wolves">
+            <div class="game-card-top">
+              <span class="game-league-tag">U17 Junior League &bull; Game #14</span>
+              <span class="game-status-badge status-upcoming">Upcoming</span>
+            </div>
+            <div class="game-card-body">
+              <div class="game-matchup-full">
+                <div class="team-side home">
+                  <div class="team-logo-pill">AT</div>
+                  <div class="team-full-name">Apex Titans</div>
+                  <div class="team-record-small">11–3 (Home)</div>
+                </div>
+                <div class="score-center">
+                  <div class="score-vs">VS</div>
+                </div>
+                <div class="team-side away">
+                  <div class="team-logo-pill">SW</div>
+                  <div class="team-full-name">Surge Wolves</div>
+                  <div class="team-record-small">(Away) 12–2</div>
+                </div>
+              </div>
+              <div class="game-card-footer">
+                <div class="game-info-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  <span>Oct 27, 2026 — 7:30 PM</span>
+                </div>
+                <div class="game-info-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  <span>Apex Sports Center, Westfield</span>
+                </div>
+                <span class="btn btn-outline btn-sm" style="pointer-events: none;">View Details →</span>
+              </div>
+            </div>
+          </article>
+        </a>
+
+      </div><!-- /.upcoming list -->
+    </div><!-- /#sectionUpcoming -->
+
+
+    <!-- RESULTS -->
+    <div class="games-list-section" id="sectionResults">
+      <div style="margin-bottom: 1.75rem;">
+        <h2 style="font-family: var(--font-display); font-size: 1.4rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.06em;">
+          Recent Results — Oct 14–21, 2026
+        </h2>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+
+        <!-- Result 1 — FEATURED (click to details) -->
+        <a href="game-details.html?id=r001" style="text-decoration: none; color: inherit; display: block;">
+          <article class="game-card-full" data-league="u15" data-teams="surge-wolves metro-vipers" style="border-color: var(--border-orange);">
+            <div class="game-card-top">
+              <span class="game-league-tag">U15 Youth League &bull; Game #14</span>
+              <span class="game-status-badge status-final">Final</span>
+            </div>
+            <div class="game-card-body">
+              <div class="game-matchup-full">
+                <div class="team-side home">
+                  <div class="team-logo-pill" style="border-color: var(--primary);">SW</div>
+                  <div class="team-full-name" style="color: var(--primary);">Surge Wolves ✓</div>
+                  <div class="team-record-small">Win — Home</div>
+                </div>
+                <div class="score-center">
+                  <div class="score-display">88 – 82</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">Final</div>
+                </div>
+                <div class="team-side away">
+                  <div class="team-logo-pill">MV</div>
+                  <div class="team-full-name">Metro Vipers</div>
+                  <div class="team-record-small">Loss — Away</div>
+                </div>
+              </div>
+              <div class="game-card-footer">
+                <div class="game-info-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  <span>Oct 18, 2026</span>
+                </div>
+                <div class="game-info-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  <span>Surge Arena, Downtown</span>
+                </div>
+                <div class="game-info-chip" style="color: var(--primary);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                  <span>MVP: M. Vance — 32 PTS</span>
+                </div>
+                <span class="btn btn-outline btn-sm" style="pointer-events: none;">Full Box Score →</span>
+              </div>
+            </div>
+          </article>
+        </a>
+
+        <!-- Result 2 -->
+        <a href="game-details.html?id=r002" style="text-decoration: none; color: inherit; display: block;">
+          <article class="game-card-full" data-league="u17" data-teams="apex-titans thunder-hawks">
+            <div class="game-card-top">
+              <span class="game-league-tag">U17 Junior League &bull; Game #12</span>
+              <span class="game-status-badge status-final">Final</span>
+            </div>
+            <div class="game-card-body">
+              <div class="game-matchup-full">
+                <div class="team-side home">
+                  <div class="team-logo-pill" style="border-color: var(--primary);">AT</div>
+                  <div class="team-full-name" style="color: var(--primary);">Apex Titans ✓</div>
+                  <div class="team-record-small">Win — Home</div>
+                </div>
+                <div class="score-center">
+                  <div class="score-display">74 – 68</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">Final</div>
+                </div>
+                <div class="team-side away">
+                  <div class="team-logo-pill">TH</div>
+                  <div class="team-full-name">Thunder Hawks</div>
+                  <div class="team-record-small">Loss — Away</div>
+                </div>
+              </div>
+              <div class="game-card-footer">
+                <div class="game-info-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  <span>Oct 16, 2026</span>
+                </div>
+                <div class="game-info-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  <span>Apex Sports Center, Westfield</span>
+                </div>
+                <div class="game-info-chip" style="color: var(--primary);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                  <span>MVP: E. Rostova — 26 PTS</span>
+                </div>
+                <span class="btn btn-outline btn-sm" style="pointer-events: none;">Full Box Score →</span>
+              </div>
+            </div>
+          </article>
+        </a>
+
+        <!-- Result 3 -->
+        <a href="game-details.html?id=r003" style="text-decoration: none; color: inherit; display: block;">
+          <article class="game-card-full" data-league="u19" data-teams="coastal-ballers skyline-knights">
+            <div class="game-card-top">
+              <span class="game-league-tag">U19 Elite Division &bull; Game #10</span>
+              <span class="game-status-badge status-final">Final</span>
+            </div>
+            <div class="game-card-body">
+              <div class="game-matchup-full">
+                <div class="team-side home">
+                  <div class="team-logo-pill">SK</div>
+                  <div class="team-full-name">Skyline Knights</div>
+                  <div class="team-record-small">Loss — Home</div>
+                </div>
+                <div class="score-center">
+                  <div class="score-display">70 – 79</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">Final</div>
+                </div>
+                <div class="team-side away">
+                  <div class="team-logo-pill" style="border-color: var(--primary);">CB</div>
+                  <div class="team-full-name" style="color: var(--primary);">Coastal Ballers ✓</div>
+                  <div class="team-record-small">Win — Away</div>
+                </div>
+              </div>
+              <div class="game-card-footer">
+                <div class="game-info-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  <span>Oct 14, 2026</span>
+                </div>
+                <div class="game-info-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  <span>Skyline Fieldhouse, Northgate</span>
+                </div>
+                <div class="game-info-chip" style="color: var(--primary);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                  <span>MVP: D. Miller — 22 PTS / 14 REB</span>
+                </div>
+                <span class="btn btn-outline btn-sm" style="pointer-events: none;">Full Box Score →</span>
+              </div>
+            </div>
+          </article>
+        </a>
+
+      </div><!-- /.results list -->
+    </div><!-- /#sectionResults -->
+
+  </main><!-- /.container -->
+
+
+  <!-- ==========================================
+       FOOTER
+       ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">SURGE <span>ELITE</span></a>
+          <p>The next-generation basketball league management and player development platform.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="leagues.html">Leagues</a>
+            <a href="teams.html">Teams</a>
+            <a href="players.html">Players</a>
+            <a href="games.html">Games</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Leagues</h4>
+          <div class="footer-links">
+            <a href="league-details.html?id=u15">U15 Youth League</a>
+            <a href="league-details.html?id=u17">U17 Junior League</a>
+            <a href="league-details.html?id=u19">U19 Elite Division</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <div class="footer-links">
+            <a href="mailto:support@surgelite.com">support@surgelite.com</a>
+            <a href="tel:+18005557874">+1 (800) 555-SURGE</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>&copy; 2026 Surge Elite Basketball Platform. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Login Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <button class="modal-close">&times;</button>
+      <h3 class="modal-title">Player &amp; Staff Login</h3>
+      <p class="modal-desc">Access your Surge Elite dashboard.</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" class="form-input" placeholder="player@surgelite.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
