@@ -1,7 +1,10 @@
+admin-game-entry.html
+coach-roster.html
+
+js/admin-game-entry.js
+js/coach-roster.js
+
 node_modules/
-dist/
-build/
 .env
-*.log
 Thumbs.db
 .DS_Store

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Surge Elite Basketball Platform</title>
+  <meta name="description" content="Sign in to your Surge Elite account to access development analytics, athlete testing data, training logs, and team management.">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Oswald -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Custom Dark Theme Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/design-refinements.css">
+</head>
+
+<body>
+
+  <!-- ==========================================
+       NAVIGATION BAR
+       ========================================== -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M5.5 5.5A10 10 0 0 1 18.5 18.5"></path>
+            <path d="M18.5 5.5A10 10 0 0 0 5.5 18.5"></path>
+            <line x1="12" y1="2" x2="12" y2="22"></line>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+          </svg>
+        </div>
+        SURGE <span>ELITE</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="leagues.html" class="nav-link">Leagues</a></li>
+          <li><a href="teams.html" class="nav-link">Teams</a></li>
+          <li><a href="players.html" class="nav-link">Players</a></li>
+          <li><a href="games.html" class="nav-link">Games</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-primary btn-sm">Login</a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <aside class="mobile-menu" id="mobileMenu">
+    <div>
+      <div class="mobile-menu-header">
+        <a href="index.html" class="logo">SURGE <span>ELITE</span></a>
+        <button class="mobile-close" id="mobileClose" aria-label="Close Navigation Menu">&times;</button>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+        <li><a href="leagues.html" class="mobile-nav-link">Leagues</a></li>
+        <li><a href="teams.html" class="mobile-nav-link">Teams</a></li>
+        <li><a href="players.html" class="mobile-nav-link">Players</a></li>
+        <li><a href="games.html" class="mobile-nav-link">Games</a></li>
+      </ul>
+    </div>
+    <div>
+      <a href="login.html" class="btn btn-primary" style="width: 100%; text-align: center;">Player Login</a>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+       LOGIN SECTION
+       ========================================== -->
+  <main class="container" style="min-height: calc(100vh - 380px); display: flex; align-items: center; justify-content: center; padding: 4rem 1rem;">
+    <div style="width: 100%; max-width: 440px; background: var(--bg-card); border: 1px solid var(--border-orange); border-radius: var(--radius-lg); padding: 2.5rem 2rem; box-shadow: var(--shadow-orange-glow);">
+      
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div class="logo-icon" style="margin: 0 auto 1rem; width: 48px; height: 48px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M5.5 5.5A10 10 0 0 1 18.5 18.5"></path>
+            <path d="M18.5 5.5A10 10 0 0 0 5.5 18.5"></path>
+            <line x1="12" y1="2" x2="12" y2="22"></line>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+          </svg>
+        </div>
+        <h1 style="font-family: var(--font-display); font-size: 1.75rem; text-transform: uppercase; letter-spacing: 0.04em;">
+          Athlete &amp; Staff <span style="color: var(--primary);">Login</span>
+        </h1>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.35rem;">
+          Sign in to access your Surge Elite dashboard, development analytics, and game tape.
+        </p>
+      </div>
+
+      <form id="standaloneLoginForm" onsubmit="event.preventDefault(); alert('Surge Elite Platform: Login authentication backend will be implemented in future backend milestone!');">
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label class="form-label" for="userEmail" style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Email Address</label>
+          <input type="email" id="userEmail" class="form-input" placeholder="player@surgelite.com" required style="width: 100%; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border-light); border-radius: var(--radius-md); color: #fff;">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <label class="form-label" for="userPassword" style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0;">Password</label>
+            <a href="#" style="font-size: 0.75rem; color: var(--primary); text-decoration: none;">Forgot password?</a>
+          </div>
+          <input type="password" id="userPassword" class="form-input" placeholder="••••••••" required style="width: 100%; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border-light); border-radius: var(--radius-md); color: #fff;">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1rem; margin-bottom: 1.25rem;">Sign In to Dashboard</button>
+
+        <div style="text-align: center; font-size: 0.825rem; color: var(--text-muted);">
+          Don't have an account yet? <a href="index.html#premium" style="color: var(--primary); font-weight: 600;">Request Athlete Access</a>
+        </div>
+      </form>
+
+    </div>
+  </main>
+
+  <!-- ==========================================
+       FOOTER
+       ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">SURGE <span>ELITE</span></a>
+          <p>The next-generation basketball league management and player development platform built for competitive athletes and organizers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="leagues.html">Leagues</a>
+            <a href="teams.html">Teams</a>
+            <a href="players.html">Players</a>
+            <a href="games.html">Games</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Leagues</h4>
+          <div class="footer-links">
+            <a href="league-details.html?id=u15">U15 Youth League</a>
+            <a href="league-details.html?id=u17">U17 Junior League</a>
+            <a href="league-details.html?id=u19">U19 Elite Division</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Contact &amp; Support</h4>
+          <div class="footer-links">
+            <a href="mailto:support@surgelite.com">support@surgelite.com</a>
+            <a href="tel:+18005557874">+1 (800) 555-SURGE</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>&copy; 2026 Surge Elite Basketball Platform. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Players Directory &amp; Leaderboards | Surge Elite Basketball Platform</title>
+  <meta name="description" content="Browse top league statistical leaders in Points, Rebounds, Assists, Steals, and Blocks, and explore the complete Surge Elite player directory.">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Oswald -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Custom Dark Theme Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/design-refinements.css">
+</head>
+
+<body>
+
+  <!-- ==========================================
+       NAVIGATION BAR
+       ========================================== -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M5.5 5.5A10 10 0 0 1 18.5 18.5"></path>
+            <path d="M18.5 5.5A10 10 0 0 0 5.5 18.5"></path>
+            <line x1="12" y1="2" x2="12" y2="22"></line>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+          </svg>
+        </div>
+        SURGE <span>ELITE</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="leagues.html" class="nav-link">Leagues</a></li>
+          <li><a href="teams.html" class="nav-link">Teams</a></li>
+          <li><a href="players.html" class="nav-link active">Players</a></li>
+          <li><a href="games.html" class="nav-link">Games</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-outline btn-sm btn-login btn-trigger-login">Login</a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <aside class="mobile-menu" id="mobileMenu">
+    <div>
+      <div class="mobile-menu-header">
+        <a href="index.html" class="logo">SURGE <span>ELITE</span></a>
+        <button class="mobile-close" id="mobileClose" aria-label="Close Navigation Menu">&times;</button>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+        <li><a href="leagues.html" class="mobile-nav-link">Leagues</a></li>
+        <li><a href="teams.html" class="mobile-nav-link">Teams</a></li>
+        <li><a href="players.html" class="mobile-nav-link active">Players</a></li>
+        <li><a href="games.html" class="mobile-nav-link">Games</a></li>
+      </ul>
+    </div>
+    <div>
+      <a href="login.html" class="btn btn-primary btn-trigger-login" style="width: 100%; text-align: center; display: block;">Player Login</a>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+       PAGE BANNER
+       ========================================== -->
+  <section class="page-banner">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Players</span>
+      </div>
+      <h1 class="banner-title">Surge Elite <span>Athletes &amp; Leaders</span></h1>
+      <p class="banner-desc">Explore top statistical performers across all competitive divisions and browse our verified athlete directory.</p>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       TOP PLAYERS LEADERBOARDS SECTION
+       ========================================== -->
+  <section class="container" style="padding-top: 2.5rem; padding-bottom: 2rem;">
+    <div style="margin-bottom: 1.75rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+          <span class="badge badge-orange">League Leaders</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Season 2026</span>
+        </div>
+        <h2 style="font-family: var(--font-display); font-size: 1.75rem; text-transform: uppercase; letter-spacing: 0.04em;">
+          Top Players <span style="color: var(--primary);">Leaderboard</span>
+        </h2>
+      </div>
+      <p style="font-size: 0.875rem; color: var(--text-muted); max-width: 450px;">
+        Statistical leaders across Points, Rebounds, Assists, Steals, and Blocks. Click any athlete name to view their complete profile.
+      </p>
+    </div>
+
+    <!-- 5-Card Responsive Leaderboards Grid -->
+    <div class="leaderboards-grid-5">
+
+      <!-- Leaderboard 1: Points Per Game (PPG) -->
+      <div class="leader-column">
+        <div class="leader-col-header">
+          <span>Points (PPG)</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="4"></circle>
+          </svg>
+        </div>
+        
+        <!-- Rank 1 -->
+        <div class="leader-row">
+          <div class="leader-player-info">
+            <span class="leader-rank-num" style="color: var(--primary);">#1</span>
+            <div>
+              <div class="leader-name">
+                <a href="player-profile.html?id=marcus">Marcus Vance</a>
+              </div>
+              <div class="leader-team-lbl">Surge Wolves • U15</div>
+            </div>
+          </div>
+          <div class="leader-stat-val">24.8</div>
+        </div>
+
+        <!-- Rank 2 -->
+        <div class="leader-row">
+          <div class="leader-player-info">
+            <span class="leader-rank-num">#2</span>
+            <div>
+              <div class="leader-name">
+                <a href="player-profile.html?id=elena">Elena Rostova</a>
+              </div>
+              <div class="leader-team-lbl">Apex Titans • U17</div>
+            </div>
+          </div>
+          <div class="leader-stat-val">22.1</div>
+        </div>
+
+        <!-- Rank 3 -->
+        <div class="leader-row">
+          <div class="leader-player-info">
+            <span class="leader-rank-num">#3</span>
+            <div>
+              <div class="leader-name">
+                <a href="player-profile.html?id=darius">Darius Miller</a>
+              </div>
+              <div class="leader-team-lbl">Skyline Knights • U19</div>
+            </div>
+          </div>
+          <div class="leader-stat-val">19.5</div>
+        </div>
+      </div>
+
+      <!-- Leaderboard 2: Rebounds Per Game (RPG) -->
+      <div class="leader-column">
+        <div class="leader-col-header">
+          <span>Rebounds (RPG)</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        </div>
+
+        <!-- Rank 1 -->
+        <div class="leader-row">
+          <div class="leader-player-info">
+            <span class="leader-rank-num" style="color: var(--primary);">#1</span>
+            <div>
+              <div class="leader-name">
+                <a href="player-profile.html?id=darius">Darius Miller</a>
+              </div>
+              <div class="leader-team-lbl">Skyline Knights • U19</div>
+            </div>
+          </div>
+          <div class="leader-stat-val">10.4</div>
+        </div>
+
+        <!-- Rank 2 -->
+        <div class="leader-row">
+          <div class="leader-player-info">
+            <span class="leader-rank-num">#2</span>
+            <div>
+              <div class="leader-name">
+                <a href="player-profile.html?id=jamal">Jamal Brooks</a>
+              </div>
+              <div class="leader-team-lbl">Surge Wolves • U15</div>
+            </div>
+          </div>
+          <div class="leader-stat-val">9.2</div>
+        </div>
+
+        <!-- Rank 3 -->
+        <div class="leader-row">
+          <div class="leader-player-info">
+            <span class="leader-rank-num">#3</span>
+            <div>
+              <div class="leader-name">
+                <a href="player-profile.html?id=tyson">Tyson Reed</a>
+              </div>
+              <div class="leader-team-lbl">Metro Vipers • U17</div>
+            </div>
+          </div>
+          <div class="leader-stat-val">8.9</div>
+        </div>
+      </div>
+
+      <!-- Leaderboard 3: Assists Per Game (APG) -->
+      <div class="leader-column">
+        <div class="leader-col-header">
+          <span>Assists (APG)</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+        </div>
+
+        <!-- Rank 1 -->
+        <div class="leader-row">
+          <div class="leader-player-info">
+            <span class="leader-rank-num" style="color: var(--primary);">#1</span>
+            <div>
+              <div class="leader-name">
+                <a href="player-profile.html?id=marcus">Marcus Vance</a>
+              </div>
+              <div class="leader-team-lbl">Surge Wolves • U15</div>
+            </div>
+          </div>
+          <div class="leader-stat-val">9.4</div>
+        </div>
+
+        <!-- Rank 2 -->
+        <div class="leader-row">
+          <div class="leader-player-info">
+            <span class="leader-rank-num">#2</span>
+            <div>
+              <div class="leader-name">
+                <a href="player-profile.html?id=elena">Elena Rostova</a>
+              </div>
+              <div class="leader-team-lbl">Apex Titans • U17</div>
+            </div>
+          </div>
+          <div class="leader-stat-val">7.1</div>
+        </div>
+
+        <!-- Rank 3 -->
+        <div class="leader-row">
+          <div class="leader-player-info">
+            <span class="leader-rank-num">#3</span>
+            <div>
+              <div class="leader-name">
+                <a href="player-profile.html?id=kai">Kai Takahashi</a>
+              </div>
+              <div class="leader-team-lbl">Thunder Hawks • U17</div>
+            </div>
+          </div>
+          <div class="leader-stat-val">6.8</div>
+        </div>
+      </div>
+
+      <!-- Leaderboard 4: Steals Per Game (SPG) -->
+      <div class="leader-column">
+        <div class="leader-col-header">
+          <span>Steals (SPG)</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+
+        <!-- Rank 1 -->
+        <div class="leader-row">
+          <div class="leader-player-info">
+            <span class="leader-rank-num" style="color: var(--primary);">#1</span>
+            <div>
+              <div class="leader-name">
+                <a href="player-profile.html?id=marcus">Marcus Vance</a>
+              </div>
+              <div class="leader-team-lbl">Surge Wolves • U15</div>
+            </div>
+          </div>
+          <div class="leader-stat-val">2.3</div>
+        </div>
+
+        <!-- Rank 2 -->
+        <div class="leader-row">
+          <div class="leader-player-info">
+            <span class="leader-rank-num">#2</span>
+            <div>
+              <div class="leader-name">
+                <a href="player-profile.html?id=elena">Elena Rostova</a>
+              </div>
+              <div class="leader-team-lbl">Apex Titans • U17</div>
+            </div>
+          </div>
+          <div class="leader-stat-val">2.1</div>
+        </div>
+
+        <!-- Rank 3 -->
+        <div class="leader-row">
+          <div class="leader-player-info">
+            <span class="leader-rank-num">#3</span>
+            <div>
+              <div class="leader-name">
+                <a href="player-profile.html?id=cameron">Cameron Cole</a>
+              </div>
+              <div class="leader-team-lbl">Surge Wolves • U15</div>
+            </div>
+          </div>
+          <div class="leader-stat-val">2.0</div>
+        </div>
+      </div>
+
+      <!-- Leaderboard 5: Blocks Per Game (BPG) -->
+      <div class="leader-column">
+        <div class="leader-col-header">
+          <span>Blocks (BPG)</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+
+        <!-- Rank 1 -->
+        <div class="leader-row">
+          <div class="leader-player-info">
+            <span class="leader-rank-num" style="color: var(--primary);">#1</span>
+            <div>
+              <div class="leader-name">
+                <a href="player-profile.html?id=jamal">Jamal Brooks</a>
+              </div>
+              <div class="leader-team-lbl">Surge Wolves • U15</div>
+            </div>
+          </div>
+          <div class="leader-stat-val">2.7</div>
+        </div>
+
+        <!-- Rank 2 -->
+        <div class="leader-row">
+          <div class="leader-player-info">
+            <span class="leader-rank-num">#2</span>
+            <div>
+              <div class="leader-name">
+                <a href="player-profile.html?id=tyson">Tyson Reed</a>
+              </div>
+              <div class="leader-team-lbl">Metro Vipers • U17</div>
+            </div>
+          </div>
+          <div class="leader-stat-val">2.2</div>
+        </div>
+
+        <!-- Rank 3 -->
+        <div class="leader-row">
+          <div class="leader-player-info">
+            <span class="leader-rank-num">#3</span>
+            <div>
+              <div class="leader-name">
+                <a href="player-profile.html?id=darius">Darius Miller</a>
+              </div>
+              <div class="leader-team-lbl">Skyline Knights • U19</div>
+            </div>
+          </div>
+          <div class="leader-stat-val">1.8</div>
+        </div>
+      </div>
+
+    </div><!-- /.leaderboards-grid-5 -->
+  </section>
+
+  <!-- ==========================================
+       PLAYER DIRECTORY SECTION WITH 4 FILTERS
+       ========================================== -->
+  <main class="container" style="padding-bottom: 6rem;">
+    
+    <div style="margin-bottom: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+      <div>
+        <h2 style="font-family: var(--font-display); font-size: 1.6rem; text-transform: uppercase; letter-spacing: 0.04em;">
+          Athlete Directory
+        </h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Filter by division, team, position, or search by name.</p>
+      </div>
+    </div>
+
+    <!-- 4-Filter Control Bar -->
+    <div class="league-filter-bar" style="margin-bottom: 2rem;">
+      
+      <!-- Search Input -->
+      <div class="search-box" style="flex: 1.5; min-width: 240px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--text-muted); flex-shrink:0;">
+          <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="playerSearch" placeholder="Search by player name or team...">
+      </div>
+
+      <!-- Filter Dropdowns -->
+      <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; flex: 2;">
+        
+        <!-- League Filter -->
+        <select id="playerLeagueFilter" class="filter-select" style="min-width: 140px;">
+          <option value="all">All Leagues</option>
+          <option value="u15">U15 Youth League</option>
+          <option value="u17">U17 Junior League</option>
+          <option value="u19">U19 Elite Division</option>
+        </select>
+
+        <!-- Team Filter -->
+        <select id="playerTeamFilter" class="filter-select" style="min-width: 140px;">
+          <option value="all">All Teams</option>
+          <option value="surge-wolves">Surge Wolves</option>
+          <option value="apex-titans">Apex Titans</option>
+          <option value="metro-vipers">Metro Vipers</option>
+          <option value="coastal-ballers">Coastal Ballers</option>
+          <option value="skyline-knights">Skyline Knights</option>
+          <option value="thunder-hawks">Thunder Hawks</option>
+        </select>
+
+        <!-- Position Filter -->
+        <select id="positionFilter" class="filter-select" style="min-width: 130px;">
+          <option value="all">All Positions</option>
+          <option value="PG">Point Guard (PG)</option>
+          <option value="SG">Shooting Guard (SG)</option>
+          <option value="SF">Small Forward (SF)</option>
+          <option value="PF">Power Forward (PF)</option>
+          <option value="C">Center (C)</option>
+        </select>
+
+      </div>
+    </div>
+
+    <!-- Player Cards Grid -->
+    <div class="players-directory-grid" id="playersGrid">
+
+      <!-- Player 1: Marcus Vance -->
+      <article class="player-dir-card" data-pos="PG" data-div="u15" data-league="u15" data-team="surge-wolves">
+        <div class="player-dir-header">
+          <div class="player-dir-number">#23</div>
+          <div class="player-dir-avatar">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+        </div>
+        <div class="player-dir-body">
+          <div class="player-dir-name">Marcus Vance</div>
+          <div class="player-dir-meta">Surge Wolves &bull; U15 Division</div>
+          <div class="player-dir-chips">
+            <span class="player-dir-chip pos">PG</span>
+            <span class="player-dir-chip">U15</span>
+            <span class="player-dir-chip" style="color: var(--primary); border-color: var(--border-orange);">MVP Candidate</span>
+          </div>
+          <div class="player-dir-stats-mini">
+            <div><div class="mini-stat-val">24.8</div><div class="mini-stat-lbl">PPG</div></div>
+            <div><div class="mini-stat-val">6.2</div><div class="mini-stat-lbl">RPG</div></div>
+            <div><div class="mini-stat-val">9.4</div><div class="mini-stat-lbl">APG</div></div>
+          </div>
+          <a href="player-profile.html?id=marcus" class="btn btn-primary btn-sm" style="width: 100%;">View Profile</a>
+        </div>
+      </article>
+
+      <!-- Player 2: Elena Rostova -->
+      <article class="player-dir-card" data-pos="SG" data-div="u17" data-league="u17" data-team="apex-titans">
+        <div class="player-dir-header">
+          <div class="player-dir-number">#03</div>
+          <div class="player-dir-avatar" style="color: #ff8800; border-color: var(--bg-card);">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+        </div>
+        <div class="player-dir-body">
+          <div class="player-dir-name">Elena Rostova</div>
+          <div class="player-dir-meta">Apex Titans &bull; U17 Division</div>
+          <div class="player-dir-chips">
+            <span class="player-dir-chip pos">SG</span>
+            <span class="player-dir-chip">U17</span>
+            <span class="player-dir-chip" style="color: #ff8800; border-color: rgba(255,136,0,0.4);">Scoring Leader</span>
+          </div>
+          <div class="player-dir-stats-mini">
+            <div><div class="mini-stat-val">22.1</div><div class="mini-stat-lbl">PPG</div></div>
+            <div><div class="mini-stat-val">4.8</div><div class="mini-stat-lbl">RPG</div></div>
+            <div><div class="mini-stat-val">7.1</div><div class="mini-stat-lbl">APG</div></div>
+          </div>
+          <a href="player-profile.html?id=elena" class="btn btn-primary btn-sm" style="width: 100%;">View Profile</a>
+        </div>
+      </article>
+
+      <!-- Player 3: Darius Miller -->
+      <article class="player-dir-card" data-pos="SF" data-div="u19" data-league="u19" data-team="skyline-knights">
+        <div class="player-dir-header">
+          <div class="player-dir-number">#11</div>
+          <div class="player-dir-avatar" style="color: #4ade80; border-color: var(--bg-card);">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+        </div>
+        <div class="player-dir-body">
+          <div class="player-dir-name">Darius Miller</div>
+          <div class="player-dir-meta">Skyline Knights &bull; U19 Division</div>
+          <div class="player-dir-chips">
+            <span class="player-dir-chip pos">SF</span>
+            <span class="player-dir-chip">U19</span>
+            <span class="player-dir-chip" style="color: #4ade80; border-color: rgba(74,222,128,0.4);">Double-Double</span>
+          </div>
+          <div class="player-dir-stats-mini">
+            <div><div class="mini-stat-val">19.5</div><div class="mini-stat-lbl">PPG</div></div>
+            <div><div class="mini-stat-val">10.4</div><div class="mini-stat-lbl">RPG</div></div>
+            <div><div class="mini-stat-val">4.3</div><div class="mini-stat-lbl">APG</div></div>
+          </div>
+          <a href="player-profile.html?id=darius" class="btn btn-primary btn-sm" style="width: 100%;">View Profile</a>
+        </div>
+      </article>
+
+      <!-- Player 4: Tyson Reed -->
+      <article class="player-dir-card" data-pos="PF" data-div="u17" data-league="u17" data-team="metro-vipers">
+        <div class="player-dir-header">
+          <div class="player-dir-number">#34</div>
+          <div class="player-dir-avatar">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+        </div>
+        <div class="player-dir-body">
+          <div class="player-dir-name">Tyson Reed</div>
+          <div class="player-dir-meta">Metro Vipers &bull; U17 Division</div>
+          <div class="player-dir-chips">
+            <span class="player-dir-chip pos">PF</span>
+            <span class="player-dir-chip">U17</span>
+            <span class="player-dir-chip">Rebound Leader</span>
+          </div>
+          <div class="player-dir-stats-mini">
+            <div><div class="mini-stat-val">12.4</div><div class="mini-stat-lbl">PPG</div></div>
+            <div><div class="mini-stat-val">8.9</div><div class="mini-stat-lbl">RPG</div></div>
+            <div><div class="mini-stat-val">1.8</div><div class="mini-stat-lbl">APG</div></div>
+          </div>
+          <a href="player-profile.html?id=tyson" class="btn btn-primary btn-sm" style="width: 100%;">View Profile</a>
+        </div>
+      </article>
+
+      <!-- Player 5: Jamal Brooks -->
+      <article class="player-dir-card" data-pos="C" data-div="u15" data-league="u15" data-team="surge-wolves">
+        <div class="player-dir-header">
+          <div class="player-dir-number">#55</div>
+          <div class="player-dir-avatar">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+        </div>
+        <div class="player-dir-body">
+          <div class="player-dir-name">Jamal Brooks</div>
+          <div class="player-dir-meta">Surge Wolves &bull; U15 Division</div>
+          <div class="player-dir-chips">
+            <span class="player-dir-chip pos">C</span>
+            <span class="player-dir-chip">U15</span>
+            <span class="player-dir-chip" style="color: #38bdf8; border-color: rgba(56,189,248,0.4);">Blocks Leader</span>
+          </div>
+          <div class="player-dir-stats-mini">
+            <div><div class="mini-stat-val">10.8</div><div class="mini-stat-lbl">PPG</div></div>
+            <div><div class="mini-stat-val">9.2</div><div class="mini-stat-lbl">RPG</div></div>
+            <div><div class="mini-stat-val">1.2</div><div class="mini-stat-lbl">APG</div></div>
+          </div>
+          <a href="player-profile.html?id=jamal" class="btn btn-primary btn-sm" style="width: 100%;">View Profile</a>
+        </div>
+      </article>
+
+      <!-- Player 6: Kai Takahashi -->
+      <article class="player-dir-card" data-pos="SG" data-div="u17" data-league="u17" data-team="thunder-hawks">
+        <div class="player-dir-header">
+          <div class="player-dir-number">#08</div>
+          <div class="player-dir-avatar" style="color: #38bdf8; border-color: var(--bg-card);">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+        </div>
+        <div class="player-dir-body">
+          <div class="player-dir-name">Kai Takahashi</div>
+          <div class="player-dir-meta">Thunder Hawks &bull; U17 Division</div>
+          <div class="player-dir-chips">
+            <span class="player-dir-chip pos">SG</span>
+            <span class="player-dir-chip">U17</span>
+            <span class="player-dir-chip" style="color: #38bdf8; border-color: rgba(56,189,248,0.4);">Playmaker</span>
+          </div>
+          <div class="player-dir-stats-mini">
+            <div><div class="mini-stat-val">14.3</div><div class="mini-stat-lbl">PPG</div></div>
+            <div><div class="mini-stat-val">3.2</div><div class="mini-stat-lbl">RPG</div></div>
+            <div><div class="mini-stat-val">6.8</div><div class="mini-stat-lbl">APG</div></div>
+          </div>
+          <a href="player-profile.html?id=kai" class="btn btn-primary btn-sm" style="width: 100%;">View Profile</a>
+        </div>
+      </article>
+
+      <!-- Player 7: Cameron Cole -->
+      <article class="player-dir-card" data-pos="PG" data-div="u15" data-league="u15" data-team="surge-wolves">
+        <div class="player-dir-header">
+          <div class="player-dir-number">#04</div>
+          <div class="player-dir-avatar">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+        </div>
+        <div class="player-dir-body">
+          <div class="player-dir-name">Cameron Cole</div>
+          <div class="player-dir-meta">Surge Wolves &bull; U15 Division</div>
+          <div class="player-dir-chips">
+            <span class="player-dir-chip pos">PG</span>
+            <span class="player-dir-chip">U15</span>
+            <span class="player-dir-chip">Lockdown DEF</span>
+          </div>
+          <div class="player-dir-stats-mini">
+            <div><div class="mini-stat-val">8.5</div><div class="mini-stat-lbl">PPG</div></div>
+            <div><div class="mini-stat-val">2.1</div><div class="mini-stat-lbl">RPG</div></div>
+            <div><div class="mini-stat-val">4.8</div><div class="mini-stat-lbl">APG</div></div>
+          </div>
+          <a href="player-profile.html?id=cameron" class="btn btn-primary btn-sm" style="width: 100%;">View Profile</a>
+        </div>
+      </article>
+
+      <!-- Player 8: Tyler Washington -->
+      <article class="player-dir-card" data-pos="SG" data-div="u19" data-league="u19" data-team="coastal-ballers">
+        <div class="player-dir-header">
+          <div class="player-dir-number">#07</div>
+          <div class="player-dir-avatar">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+        </div>
+        <div class="player-dir-body">
+          <div class="player-dir-name">Tyler Washington</div>
+          <div class="player-dir-meta">Coastal Ballers &bull; U19 Division</div>
+          <div class="player-dir-chips">
+            <span class="player-dir-chip pos">SG</span>
+            <span class="player-dir-chip">U19</span>
+            <span class="player-dir-chip">Sharpshooter</span>
+          </div>
+          <div class="player-dir-stats-mini">
+            <div><div class="mini-stat-val">16.2</div><div class="mini-stat-lbl">PPG</div></div>
+            <div><div class="mini-stat-val">4.1</div><div class="mini-stat-lbl">RPG</div></div>
+            <div><div class="mini-stat-val">3.5</div><div class="mini-stat-lbl">APG</div></div>
+          </div>
+          <a href="player-profile.html?id=tyler" class="btn btn-primary btn-sm" style="width: 100%;">View Profile</a>
+        </div>
+      </article>
+
+    </div><!-- /.players-directory-grid -->
+  </main>
+
+  <!-- ==========================================
+       FOOTER
+       ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">SURGE <span>ELITE</span></a>
+          <p>The next-generation basketball league management and player development platform built for competitive athletes and organizers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="leagues.html">Leagues</a>
+            <a href="teams.html">Teams</a>
+            <a href="players.html">Players</a>
+            <a href="games.html">Games</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Leagues</h4>
+          <div class="footer-links">
+            <a href="league-details.html?id=u15">U15 Youth League</a>
+            <a href="league-details.html?id=u17">U17 Junior League</a>
+            <a href="league-details.html?id=u19">U19 Elite Division</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Contact &amp; Support</h4>
+          <div class="footer-links">
+            <a href="mailto:support@surgelite.com">support@surgelite.com</a>
+            <a href="tel:+18005557874">+1 (800) 555-SURGE</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>&copy; 2026 Surge Elite Basketball Platform. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Login Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <button class="modal-close">&times;</button>
+      <h3 class="modal-title">Player &amp; Staff Login</h3>
+      <p class="modal-desc">Access your Surge Elite dashboard, development score, and training logs.</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" class="form-input" placeholder="player@surgelite.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

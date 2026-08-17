@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Details | Surge Elite Basketball Platform</title>
+  <meta name="description" content="View complete team roster, player statistics, coaching staff, game schedule, and recent results on Surge Elite.">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Oswald -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Custom Dark Theme Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/design-refinements.css">
+</head>
+
+<body>
+
+  <!-- ==========================================
+       NAVIGATION BAR
+       ========================================== -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M5.5 5.5A10 10 0 0 1 18.5 18.5"></path>
+            <path d="M18.5 5.5A10 10 0 0 0 5.5 18.5"></path>
+            <line x1="12" y1="2" x2="12" y2="22"></line>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+          </svg>
+        </div>
+        SURGE <span>ELITE</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="leagues.html" class="nav-link">Leagues</a></li>
+          <li><a href="teams.html" class="nav-link active">Teams</a></li>
+          <li><a href="players.html" class="nav-link">Players</a></li>
+          <li><a href="games.html" class="nav-link">Games</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-outline btn-sm btn-login btn-trigger-login">Login</a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <aside class="mobile-menu" id="mobileMenu">
+    <div>
+      <div class="mobile-menu-header">
+        <a href="index.html" class="logo">SURGE <span>ELITE</span></a>
+        <button class="mobile-close" id="mobileClose" aria-label="Close Navigation Menu">&times;</button>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+        <li><a href="leagues.html" class="mobile-nav-link">Leagues</a></li>
+        <li><a href="teams.html" class="mobile-nav-link active">Teams</a></li>
+        <li><a href="players.html" class="mobile-nav-link">Players</a></li>
+        <li><a href="games.html" class="mobile-nav-link">Games</a></li>
+      </ul>
+    </div>
+    <div>
+      <a href="login.html" class="btn btn-primary btn-trigger-login" style="width: 100%; text-align: center; display: block;">Player Login</a>
+    </div>
+  </aside>
+
+
+  <!-- ==========================================
+       PAGE BANNER & TEAM HEADER
+       ========================================== -->
+  <section class="page-banner">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="teams.html">Teams</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Team Profile</span>
+      </div>
+
+      <!-- Team Details Header Card -->
+      <div class="league-header-card" style="margin-top: 1.5rem; margin-bottom: 0;">
+        <div class="league-header-info">
+          <div class="team-logo-lg" id="teamHeaderIcon" style="width: 80px; height: 80px; font-size: 2.2rem;">SW</div>
+          <div>
+            <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 0.5rem;">
+              <span class="league-badge" id="teamDivisionBadge">U15 Division</span>
+              <span class="league-badge" style="background: rgba(34, 197, 94, 0.15); color: #4ade80;">Season 2026</span>
+            </div>
+            <h1 class="banner-title" id="teamNameDisplay" style="margin-bottom: 0.25rem;">Surge Elite U15</h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Head Coach: <strong id="teamCoachDisplay" style="color: var(--text-main);">Coach David Miller</strong></p>
+          </div>
+        </div>
+
+        <div class="league-header-stats">
+          <div class="detail-stat">
+            <span class="detail-stat-val" id="teamRecordDisplay">12 - 2</span>
+            <span class="detail-stat-lbl">Win - Loss Record</span>
+          </div>
+          <div class="detail-stat">
+            <span class="detail-stat-val" style="color: #4ade80;" id="teamPctDisplay">.857</span>
+            <span class="detail-stat-lbl">Win PCT</span>
+          </div>
+          <div class="detail-stat">
+            <span class="detail-stat-val" id="teamSeedDisplay">#1 Seed</span>
+            <span class="detail-stat-lbl">League Rank</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==========================================
+       MAIN CONTENT: TABBED NAVIGATION
+       ========================================== -->
+  <main class="container" style="padding-top: 2.5rem; padding-bottom: 6rem;">
+    <div class="tabs-container">
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="rosterTab">🏃 Team Roster</button>
+        <button class="tab-btn" data-tab="statsTab">📊 Team Statistics</button>
+        <button class="tab-btn" data-tab="scheduleTab">📅 Upcoming Schedule</button>
+        <button class="tab-btn" data-tab="resultsTab">🏀 Game Results</button>
+      </div>
+
+      <!-- TAB 1: TEAM ROSTER TABLE -->
+      <div class="tab-content active" id="rosterTab">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+          <h2 style="font-family: var(--font-display); font-size: 1.5rem; text-transform: uppercase;">Official Active Roster</h2>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Season 2026 Roster • 10 Active Athletes</span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="roster-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Player Name</th>
+                <th>POS</th>
+                <th>Height</th>
+                <th>Weight</th>
+                <th>Class</th>
+                <th>PPG</th>
+                <th>RPG</th>
+                <th>APG</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="rank-cell top-rank">#23</td>
+                <td><a href="player-profile.html?id=marcus" style="color: inherit; text-decoration: none;"><strong style="color: var(--primary);">Marcus Vance</strong> ⭐</a></td>
+                <td><span class="pos-badge">PG</span></td>
+                <td>6' 2"</td>
+                <td>185 lbs</td>
+                <td>Freshman</td>
+                <td><strong style="color: var(--primary);">24.8</strong></td>
+                <td>6.2</td>
+                <td>9.4</td>
+              </tr>
+              <tr>
+                <td class="rank-cell">#07</td>
+                <td><a href="player-profile.html?id=tyler" style="color: inherit; text-decoration: none;"><strong style="color: var(--text-main);">Tyler Washington</strong></a></td>
+                <td><span class="pos-badge">SG</span></td>
+                <td>6' 4"</td>
+                <td>190 lbs</td>
+                <td>Sophomore</td>
+                <td>16.2</td>
+                <td>4.1</td>
+                <td>3.5</td>
+              </tr>
+              <tr>
+                <td class="rank-cell">#11</td>
+                <td><a href="player-profile.html?id=darius" style="color: inherit; text-decoration: none;"><strong style="color: var(--text-main);">Darius Miller</strong></a></td>
+                <td><span class="pos-badge">SF</span></td>
+                <td>6' 7"</td>
+                <td>210 lbs</td>
+                <td>Sophomore</td>
+                <td>19.5</td>
+                <td><strong style="color: var(--primary);">10.4</strong></td>
+                <td>4.3</td>
+              </tr>
+              <tr>
+                <td class="rank-cell">#34</td>
+                <td><a href="player-profile.html?id=tyson" style="color: inherit; text-decoration: none;"><strong style="color: var(--text-main);">Tyson Reed</strong></a></td>
+                <td><span class="pos-badge">PF</span></td>
+                <td>6' 8"</td>
+                <td>225 lbs</td>
+                <td>Freshman</td>
+                <td>12.4</td>
+                <td>8.9</td>
+                <td>1.8</td>
+              </tr>
+              <tr>
+                <td class="rank-cell">#55</td>
+                <td><a href="player-profile.html?id=jamal" style="color: inherit; text-decoration: none;"><strong style="color: var(--text-main);">Jamal Brooks</strong></a></td>
+                <td><span class="pos-badge">C</span></td>
+                <td>6' 10"</td>
+                <td>240 lbs</td>
+                <td>Sophomore</td>
+                <td>10.8</td>
+                <td>9.2</td>
+                <td>1.2</td>
+              </tr>
+              <tr>
+                <td class="rank-cell">#04</td>
+                <td><a href="player-profile.html?id=cameron" style="color: inherit; text-decoration: none;"><strong style="color: var(--text-main);">Cameron Cole</strong></a></td>
+                <td><span class="pos-badge">PG</span></td>
+                <td>5' 11"</td>
+                <td>170 lbs</td>
+                <td>Freshman</td>
+                <td>8.5</td>
+                <td>2.1</td>
+                <td>4.8</td>
+              </tr>
+              <tr>
+                <td class="rank-cell">#15</td>
+                <td><strong style="color: var(--text-main);">Jaylen Wright</strong></td>
+                <td><span class="pos-badge">SG</span></td>
+                <td>6' 3"</td>
+                <td>180 lbs</td>
+                <td>Freshman</td>
+                <td>7.2</td>
+                <td>2.8</td>
+                <td>1.5</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 2: TEAM STATISTICS -->
+      <div class="tab-content" id="statsTab">
+        <h2 style="font-family: var(--font-display); font-size: 1.5rem; text-transform: uppercase; margin-bottom: 1.5rem;">Season Performance Metrics</h2>
+
+        <div class="team-stats-summary">
+          <div class="team-stat-box">
+            <div class="team-stat-value">85.4</div>
+            <div class="team-stat-title">Points Per Game</div>
+          </div>
+          <div class="team-stat-box">
+            <div class="team-stat-value">42.5</div>
+            <div class="team-stat-title">Rebounds Per Game</div>
+          </div>
+          <div class="team-stat-box">
+            <div class="team-stat-value">21.4</div>
+            <div class="team-stat-title">Assists Per Game</div>
+          </div>
+          <div class="team-stat-box">
+            <div class="team-stat-value">48.2%</div>
+            <div class="team-stat-title">Field Goal %</div>
+          </div>
+          <div class="team-stat-box">
+            <div class="team-stat-value">37.8%</div>
+            <div class="team-stat-title">3-Point FG %</div>
+          </div>
+          <div class="team-stat-box">
+            <div class="team-stat-value" style="color: #4ade80;">94.2</div>
+            <div class="team-stat-title">Defensive Rating</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: UPCOMING SCHEDULE -->
+      <div class="tab-content" id="scheduleTab">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+          <h2 style="font-family: var(--font-display); font-size: 1.5rem; text-transform: uppercase;">Upcoming Match Schedule</h2>
+          <a href="games.html" class="btn btn-outline btn-sm">Full Schedule →</a>
+        </div>
+
+        <div class="games-grid">
+          <a href="game-details.html?id=g001" style="text-decoration: none; color: inherit; display: block;">
+            <div class="game-card">
+              <div class="game-header">
+                <span class="game-tag">🔥 NEXT MATCH</span>
+                <span class="game-date-badge">Oct 24, 2026 • 6:00 PM</span>
+              </div>
+              <div class="game-matchup">
+                <div class="team">
+                  <div class="team-badge-icon">SW</div>
+                  <div class="team-name">Surge Wolves</div>
+                </div>
+                <div class="match-vs">VS</div>
+                <div class="team">
+                  <div class="team-badge-icon">AT</div>
+                  <div class="team-name">Apex Titans</div>
+                </div>
+              </div>
+              <div class="game-venue">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                Elite Sports Arena — Court A
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- TAB 4: GAME RESULTS -->
+      <div class="tab-content" id="resultsTab">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+          <h2 style="font-family: var(--font-display); font-size: 1.5rem; text-transform: uppercase;">Recent Match Results</h2>
+          <a href="games.html" class="btn btn-outline btn-sm">All Game Results →</a>
+        </div>
+
+        <div class="results-grid">
+          <a href="game-details.html?id=r001" style="text-decoration: none; color: inherit; display: block;">
+            <div class="result-card">
+              <div class="result-date">FINAL • Oct 18, 2026</div>
+              <div class="result-match">
+                <div class="result-team-row winner">
+                  <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <div class="team-mini-icon">SW</div>
+                    Surge Wolves 🏆
+                  </div>
+                  <span class="result-score">88</span>
+                </div>
+                <div class="result-team-row">
+                  <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <div class="team-mini-icon">AT</div>
+                    Apex Titans
+                  </div>
+                  <span class="result-score" style="color: var(--text-muted);">82</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">SURGE <span>ELITE</span></a>
+          <p>The next-generation basketball league management and player development platform built for competitive athletes and organizers.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="leagues.html">Leagues</a>
+            <a href="teams.html">Teams</a>
+            <a href="players.html">Players</a>
+            <a href="games.html">Games</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Leagues</h4>
+          <div class="footer-links">
+            <a href="league-details.html?id=u15">U15 Youth League</a>
+            <a href="league-details.html?id=u17">U17 Junior League</a>
+            <a href="league-details.html?id=u19">U19 Elite Division</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contact &amp; Support</h4>
+          <div class="footer-links">
+            <a href="mailto:support@surgelite.com">support@surgelite.com</a>
+            <a href="tel:+18005557874">+1 (800) 555-SURGE</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 Surge Elite Basketball Platform. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- Login Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <button class="modal-close" aria-label="Close modal">&times;</button>
+      <h3 class="modal-title">Player &amp; Staff Login</h3>
+      <p class="modal-desc">Access your Surge Elite dashboard to view game stats and team rosters.</p>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" class="form-input" placeholder="player@surgelite.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+
+  <script>
+    // URL Parameter Handler for Team Selection
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const teamId = urlParams.get('team');
+
+      const icon = document.getElementById('teamHeaderIcon');
+      const badge = document.getElementById('teamDivisionBadge');
+      const name = document.getElementById('teamNameDisplay');
+      const coach = document.getElementById('teamCoachDisplay');
+      const record = document.getElementById('teamRecordDisplay');
+      const pct = document.getElementById('teamPctDisplay');
+      const seed = document.getElementById('teamSeedDisplay');
+
+      if (teamId === 'apex') {
+        if (icon) { icon.textContent = 'AT'; icon.style.borderColor = '#ff8800'; icon.style.color = '#ff8800'; }
+        if (badge) badge.textContent = 'U17 Division';
+        if (name) name.textContent = 'Apex Titans';
+        if (coach) coach.textContent = 'Coach Sarah Jenkins';
+        if (record) record.textContent = '11 - 3';
+        if (pct) pct.textContent = '.786';
+        if (seed) seed.textContent = '#2 Seed';
+      } else if (teamId === 'vipers') {
+        if (icon) { icon.textContent = 'MV'; icon.style.borderColor = '#4ade80'; icon.style.color = '#4ade80'; }
+        if (badge) badge.textContent = 'U17 Division';
+        if (name) name.textContent = 'Metro Vipers';
+        if (coach) coach.textContent = 'Coach Ray Allen';
+        if (record) record.textContent = '9 - 5';
+        if (pct) pct.textContent = '.643';
+        if (seed) seed.textContent = '#3 Seed';
+      } else if (teamId === 'ballers') {
+        if (icon) { icon.textContent = 'CB'; icon.style.borderColor = '#38bdf8'; icon.style.color = '#38bdf8'; }
+        if (badge) badge.textContent = 'U19 Division';
+        if (name) name.textContent = 'Coastal Ballers';
+        if (coach) coach.textContent = 'Coach Marcus Thorne';
+        if (record) record.textContent = '8 - 6';
+        if (pct) pct.textContent = '.571';
+        if (seed) seed.textContent = '#4 Seed';
+      }
+    });
+  </script>
+</body>
+
+</html>

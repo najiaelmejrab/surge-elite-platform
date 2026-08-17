@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Game Details | Surge Elite Basketball Platform</title>
+  <meta name="description" content="View live game score, quarter-by-quarter scoreboard, detailed team leaders, comprehensive box score, and game highlights on Surge Elite.">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Oswald -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Custom Dark Theme Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/design-refinements.css">
+</head>
+
+<body>
+
+  <!-- ==========================================
+       NAVIGATION BAR
+       ========================================== -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M5.5 5.5A10 10 0 0 1 18.5 18.5"></path>
+            <path d="M18.5 5.5A10 10 0 0 0 5.5 18.5"></path>
+            <line x1="12" y1="2" x2="12" y2="22"></line>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+          </svg>
+        </div>
+        SURGE <span>ELITE</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="leagues.html" class="nav-link">Leagues</a></li>
+          <li><a href="teams.html" class="nav-link">Teams</a></li>
+          <li><a href="players.html" class="nav-link">Players</a></li>
+          <li><a href="games.html" class="nav-link active">Games</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-outline btn-sm btn-login btn-trigger-login">Login</a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <aside class="mobile-menu" id="mobileMenu">
+    <div>
+      <div class="mobile-menu-header">
+        <a href="index.html" class="logo">SURGE <span>ELITE</span></a>
+        <button class="mobile-close" id="mobileClose" aria-label="Close Navigation Menu">&times;</button>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+        <li><a href="leagues.html" class="mobile-nav-link">Leagues</a></li>
+        <li><a href="teams.html" class="mobile-nav-link">Teams</a></li>
+        <li><a href="players.html" class="mobile-nav-link">Players</a></li>
+        <li><a href="games.html" class="mobile-nav-link active">Games</a></li>
+      </ul>
+    </div>
+    <div>
+      <a href="login.html" class="btn btn-primary btn-trigger-login" style="width: 100%; text-align: center; display: block;">Player Login</a>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+       BREADCRUMBS & TOP CONTEXT
+       ========================================== -->
+  <div class="container" style="padding-top: 2rem;">
+    <div class="breadcrumb" style="margin-bottom: 1rem;">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-separator">/</span>
+      <a href="games.html">Games</a>
+      <span class="breadcrumb-separator">/</span>
+      <span class="breadcrumb-current" id="crumbGameTitle">Surge Wolves vs Metro Vipers</span>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       FINAL SCORE HERO SECTION
+       ========================================== -->
+  <section class="container" style="margin-bottom: 2.5rem;">
+    <div class="game-score-hero">
+      
+      <!-- Top Badges & Meta -->
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border-light);">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span class="badge badge-orange" id="heroLeagueTag">U15 Youth League</span>
+          <span style="color: var(--text-muted); font-size: 0.85rem;" id="heroGameNumber">Regular Season • Game #14</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span class="game-status-badge status-final" id="heroStatusBadge">Final Score</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted);" id="heroDate">October 18, 2026</span>
+        </div>
+      </div>
+
+      <!-- Matchup Score Grid -->
+      <div class="game-score-hero-matchup">
+        
+        <!-- Home Team -->
+        <div class="hero-team-block">
+          <div class="hero-team-icon" id="homeLogoPill" style="border-color: var(--primary); background: rgba(255, 94, 0, 0.1);">SW</div>
+          <div class="hero-team-name" id="homeTeamName" style="color: var(--primary);">Surge Wolves</div>
+          <div class="hero-team-record" id="homeTeamRecord">12–2 (Home)</div>
+          <span class="winner-tag" id="homeWinnerTag">✓ WINNER</span>
+        </div>
+
+        <!-- Center Score Display -->
+        <div class="hero-score-block">
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <span class="hero-score" id="homeScore">88</span>
+            <span class="hero-score-sep">–</span>
+            <span class="hero-score" id="awayScore">82</span>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.08em; margin-top: 0.25rem;" id="heroGameDuration">
+            Full Time
+          </div>
+        </div>
+
+        <!-- Away Team -->
+        <div class="hero-team-block">
+          <div class="hero-team-icon" id="awayLogoPill">MV</div>
+          <div class="hero-team-name" id="awayTeamName">Metro Vipers</div>
+          <div class="hero-team-record" id="awayTeamRecord">9–5 (Away)</div>
+          <span class="winner-tag" id="awayWinnerTag" style="opacity: 0; pointer-events: none;">–</span>
+        </div>
+
+      </div><!-- /.game-score-hero-matchup -->
+
+      <!-- Game Quick Information Footer -->
+      <div style="margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; gap: 2rem; flex-wrap: wrap; font-size: 0.85rem; color: var(--text-muted);">
+        <div style="display: flex; align-items: center; gap: 0.4rem;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <span id="infoVenue">Surge Arena, Court 1 (Downtown)</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.4rem;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span id="infoTime">Tip-off: 7:00 PM EST</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.4rem;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span id="infoAttendance">Attendance: 1,420</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.4rem;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span id="infoReferees">Head Referee: D. Morrison</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================
+       MAIN CONTENT GRID
+       ========================================== -->
+  <main class="container" style="padding-bottom: 6rem;">
+    
+    <div style="display: grid; grid-template-columns: 1fr; gap: 2.5rem;">
+
+      <!-- SECTION 1: QUARTER-BY-QUARTER SCOREBOARD -->
+      <section class="card" style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
+          <h2 style="font-family: var(--font-display); font-size: 1.4rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.6rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            Quarter-by-Quarter Scoreboard
+          </h2>
+          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700;">4 Quarters • 10 Min</span>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="quarter-scoreboard">
+            <thead>
+              <tr>
+                <th style="width: 32%;">Team</th>
+                <th>Q1</th>
+                <th>Q2</th>
+                <th>Q3</th>
+                <th>Q4</th>
+                <th style="color: var(--primary);">Total</th>
+              </tr>
+            </thead>
+            <tbody id="quarterTableBody">
+              <!-- Home Row -->
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span class="team-logo-pill" style="width: 32px; height: 32px; font-size: 0.75rem; border-color: var(--primary);">SW</span>
+                    <span style="color: var(--primary); font-weight: 700;" id="qHomeName">Surge Wolves</span>
+                  </div>
+                </td>
+                <td id="qHome1">24</td>
+                <td id="qHome2">21</td>
+                <td id="qHome3">23</td>
+                <td id="qHome4">20</td>
+                <td class="total-cell" id="qHomeTotal">88</td>
+              </tr>
+              <!-- Away Row -->
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span class="team-logo-pill" style="width: 32px; height: 32px; font-size: 0.75rem;">MV</span>
+                    <span id="qAwayName">Metro Vipers</span>
+                  </div>
+                </td>
+                <td id="qAway1">19</td>
+                <td id="qAway2">22</td>
+                <td id="qAway3">18</td>
+                <td id="qAway4">23</td>
+                <td class="total-cell" style="color: var(--text-main);" id="qAwayTotal">82</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 2: TEAM LEADERS COMPARISON -->
+      <section class="card" style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.75rem; flex-wrap: wrap; gap: 0.75rem;">
+          <h2 style="font-family: var(--font-display); font-size: 1.4rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.6rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+            Game Statistical Leaders
+          </h2>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Head-to-Head Leaders</span>
+        </div>
+
+        <div class="team-leaders-grid">
+          
+          <!-- Home Leaders -->
+          <div class="team-leader-col">
+            <h3 id="leaderHomeTitle">Surge Wolves Leaders</h3>
+            
+            <div class="leader-stat-row">
+              <div class="leader-player-col">
+                <div class="team-logo-pill" style="width: 38px; height: 38px; font-size: 0.8rem; border-color: var(--primary);">#23</div>
+                <div>
+                  <div style="font-weight: 700; color: var(--text-main);" id="leadHomePtsName">Marcus Vance</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Point Guard • #23</div>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div class="leader-stat-category">Points</div>
+                <div style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--primary);" id="leadHomePtsVal">32 PTS</div>
+              </div>
+            </div>
+
+            <div class="leader-stat-row">
+              <div class="leader-player-col">
+                <div class="team-logo-pill" style="width: 38px; height: 38px; font-size: 0.8rem;">#55</div>
+                <div>
+                  <div style="font-weight: 700; color: var(--text-main);" id="leadHomeRebName">Jamal Brooks</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Center • #55</div>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div class="leader-stat-category">Rebounds</div>
+                <div style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--text-main);" id="leadHomeRebVal">12 REB</div>
+              </div>
+            </div>
+
+            <div class="leader-stat-row">
+              <div class="leader-player-col">
+                <div class="team-logo-pill" style="width: 38px; height: 38px; font-size: 0.8rem;">#23</div>
+                <div>
+                  <div style="font-weight: 700; color: var(--text-main);" id="leadHomeAstName">Marcus Vance</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Point Guard • #23</div>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div class="leader-stat-category">Assists</div>
+                <div style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--text-main);" id="leadHomeAstVal">9 AST</div>
+              </div>
+            </div>
+
+            <div class="leader-stat-row">
+              <div class="leader-player-col">
+                <div class="team-logo-pill" style="width: 38px; height: 38px; font-size: 0.8rem;">#04</div>
+                <div>
+                  <div style="font-weight: 700; color: var(--text-main);" id="leadHomeStlName">Cameron Cole</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Guard • #04</div>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div class="leader-stat-category">Steals</div>
+                <div style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--text-main);" id="leadHomeStlVal">3 STL</div>
+              </div>
+            </div>
+
+          </div><!-- /.team-leader-col Home -->
+
+          <!-- Away Leaders -->
+          <div class="team-leader-col">
+            <h3 id="leaderAwayTitle">Metro Vipers Leaders</h3>
+            
+            <div class="leader-stat-row">
+              <div class="leader-player-col">
+                <div class="team-logo-pill" style="width: 38px; height: 38px; font-size: 0.8rem;">#34</div>
+                <div>
+                  <div style="font-weight: 700; color: var(--text-main);" id="leadAwayPtsName">Tyson Reed</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Power Forward • #34</div>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div class="leader-stat-category">Points</div>
+                <div style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--primary);" id="leadAwayPtsVal">24 PTS</div>
+              </div>
+            </div>
+
+            <div class="leader-stat-row">
+              <div class="leader-player-col">
+                <div class="team-logo-pill" style="width: 38px; height: 38px; font-size: 0.8rem;">#34</div>
+                <div>
+                  <div style="font-weight: 700; color: var(--text-main);" id="leadAwayRebName">Tyson Reed</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Power Forward • #34</div>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div class="leader-stat-category">Rebounds</div>
+                <div style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--text-main);" id="leadAwayRebVal">11 REB</div>
+              </div>
+            </div>
+
+            <div class="leader-stat-row">
+              <div class="leader-player-col">
+                <div class="team-logo-pill" style="width: 38px; height: 38px; font-size: 0.8rem;">#12</div>
+                <div>
+                  <div style="font-weight: 700; color: var(--text-main);" id="leadAwayAstName">J. Jenkins</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Guard • #12</div>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div class="leader-stat-category">Assists</div>
+                <div style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--text-main);" id="leadAwayAstVal">6 AST</div>
+              </div>
+            </div>
+
+            <div class="leader-stat-row">
+              <div class="leader-player-col">
+                <div class="team-logo-pill" style="width: 38px; height: 38px; font-size: 0.8rem;">#34</div>
+                <div>
+                  <div style="font-weight: 700; color: var(--text-main);" id="leadAwayStlName">Tyson Reed</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Power Forward • #34</div>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div class="leader-stat-category">Blocks</div>
+                <div style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--text-main);" id="leadAwayStlVal">2 BLK</div>
+              </div>
+            </div>
+
+          </div><!-- /.team-leader-col Away -->
+
+        </div>
+      </section>
+
+      <!-- SECTION 3: FULL BOX SCORE TABLE -->
+      <section class="card" style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 style="font-family: var(--font-display); font-size: 1.4rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.6rem;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              Box Score
+            </h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">Complete individual player performance and efficiency metrics.</p>
+          </div>
+
+          <!-- Box Score Team Switcher -->
+          <div class="pill-tabs" role="tablist">
+            <button class="pill-tab active" id="btnBoxHome" onclick="switchBoxScore('home')">Surge Wolves</button>
+            <button class="pill-tab" id="btnBoxAway" onclick="switchBoxScore('away')">Metro Vipers</button>
+          </div>
+        </div>
+
+        <!-- Home Box Score Table -->
+        <div id="boxScoreHomeWrapper" style="overflow-x: auto;">
+          <table class="box-score-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>POS</th>
+                <th>MIN</th>
+                <th>PTS</th>
+                <th>REB</th>
+                <th>AST</th>
+                <th>STL</th>
+                <th>BLK</th>
+                <th>FG</th>
+                <th>3PT</th>
+                <th>FT</th>
+                <th>+/-</th>
+              </tr>
+            </thead>
+            <tbody id="boxScoreHomeBody">
+              <tr>
+                <td>
+                  <a href="player-profile.html?id=marcus" style="color: inherit; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <span>Marcus Vance #23</span>
+                    <span class="badge badge-orange" style="font-size: 0.65rem; padding: 0.15rem 0.4rem;">MVP</span>
+                  </a>
+                </td>
+                <td>PG</td>
+                <td>36</td>
+                <td class="stat-hi">32</td>
+                <td>6</td>
+                <td class="stat-hi">9</td>
+                <td class="stat-hi">3</td>
+                <td>0</td>
+                <td>11-19</td>
+                <td>4-7</td>
+                <td>6-7</td>
+                <td style="color: #10b981; font-weight: 700;">+11</td>
+              </tr>
+              <tr>
+                <td><a href="player-profile.html?id=jamal" style="color: inherit; text-decoration: none; font-weight: 700;">Jamal Brooks #55</a></td>
+                <td>C</td>
+                <td>32</td>
+                <td>16</td>
+                <td class="stat-hi">12</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="stat-hi">4</td>
+                <td>7-10</td>
+                <td>0-0</td>
+                <td>2-4</td>
+                <td style="color: #10b981; font-weight: 700;">+8</td>
+              </tr>
+              <tr>
+                <td><a href="player-profile.html?id=cameron" style="color: inherit; text-decoration: none; font-weight: 700;">Cameron Cole #04</a></td>
+                <td>SG</td>
+                <td>28</td>
+                <td>14</td>
+                <td>3</td>
+                <td>4</td>
+                <td>2</td>
+                <td>0</td>
+                <td>5-11</td>
+                <td>3-6</td>
+                <td>1-2</td>
+                <td style="color: #10b981; font-weight: 700;">+4</td>
+              </tr>
+              <tr>
+                <td>Devon Hayes #15</td>
+                <td>SF</td>
+                <td>26</td>
+                <td>12</td>
+                <td>5</td>
+                <td>3</td>
+                <td>1</td>
+                <td>1</td>
+                <td>5-9</td>
+                <td>1-3</td>
+                <td>1-1</td>
+                <td style="color: #10b981; font-weight: 700;">+3</td>
+              </tr>
+              <tr>
+                <td>Andre Lucas #21</td>
+                <td>PF</td>
+                <td>24</td>
+                <td>10</td>
+                <td>7</td>
+                <td>1</td>
+                <td>0</td>
+                <td>1</td>
+                <td>4-8</td>
+                <td>0-1</td>
+                <td>2-2</td>
+                <td style="color: #10b981; font-weight: 700;">+5</td>
+              </tr>
+              <tr>
+                <td>Zion Peters #09</td>
+                <td>G</td>
+                <td>14</td>
+                <td>4</td>
+                <td>2</td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+                <td>2-4</td>
+                <td>0-1</td>
+                <td>0-0</td>
+                <td style="color: var(--text-muted);">-1</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr style="border-top: 2px solid var(--border-orange); font-weight: 800; color: var(--text-main); background: rgba(255, 94, 0, 0.05);">
+                <td style="text-align: left; padding-left: 1.25rem;">TOTALS</td>
+                <td>—</td>
+                <td>200</td>
+                <td class="stat-hi" style="font-size: 1rem;" id="homeTotalPts">88</td>
+                <td id="homeTotalReb">35</td>
+                <td id="homeTotalAst">20</td>
+                <td id="homeTotalStl">7</td>
+                <td id="homeTotalBlk">6</td>
+                <td>34-61 (55.7%)</td>
+                <td>8-18 (44.4%)</td>
+                <td>12-16 (75.0%)</td>
+                <td>—</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- Away Box Score Table (Initially hidden) -->
+        <div id="boxScoreAwayWrapper" style="display: none; overflow-x: auto;">
+          <table class="box-score-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>POS</th>
+                <th>MIN</th>
+                <th>PTS</th>
+                <th>REB</th>
+                <th>AST</th>
+                <th>STL</th>
+                <th>BLK</th>
+                <th>FG</th>
+                <th>3PT</th>
+                <th>FT</th>
+                <th>+/-</th>
+              </tr>
+            </thead>
+            <tbody id="boxScoreAwayBody">
+              <tr>
+                <td><a href="player-profile.html?id=tyson" style="color: inherit; text-decoration: none; font-weight: 700;">Tyson Reed #34</a></td>
+                <td>PF</td>
+                <td>35</td>
+                <td class="stat-hi">24</td>
+                <td class="stat-hi">11</td>
+                <td>3</td>
+                <td>1</td>
+                <td class="stat-hi">2</td>
+                <td>9-16</td>
+                <td>1-3</td>
+                <td>5-7</td>
+                <td style="color: #ef4444; font-weight: 700;">-4</td>
+              </tr>
+              <tr>
+                <td>Jalen Jenkins #12</td>
+                <td>PG</td>
+                <td>34</td>
+                <td>20</td>
+                <td>4</td>
+                <td class="stat-hi">6</td>
+                <td>2</td>
+                <td>0</td>
+                <td>8-17</td>
+                <td>2-6</td>
+                <td>2-2</td>
+                <td style="color: #ef4444; font-weight: 700;">-6</td>
+              </tr>
+              <tr>
+                <td>Malik O'Neal #05</td>
+                <td>SG</td>
+                <td>31</td>
+                <td>15</td>
+                <td>3</td>
+                <td>4</td>
+                <td>1</td>
+                <td>0</td>
+                <td>6-13</td>
+                <td>3-8</td>
+                <td>0-0</td>
+                <td style="color: #ef4444; font-weight: 700;">-8</td>
+              </tr>
+              <tr>
+                <td>Kobe Vance #22</td>
+                <td>SF</td>
+                <td>27</td>
+                <td>11</td>
+                <td>6</td>
+                <td>2</td>
+                <td>1</td>
+                <td>1</td>
+                <td>4-10</td>
+                <td>1-4</td>
+                <td>2-3</td>
+                <td style="color: #ef4444; font-weight: 700;">-5</td>
+              </tr>
+              <tr>
+                <td>Terrence Watts #40</td>
+                <td>C</td>
+                <td>23</td>
+                <td>8</td>
+                <td>7</td>
+                <td>0</td>
+                <td>0</td>
+                <td>1</td>
+                <td>4-7</td>
+                <td>0-0</td>
+                <td>0-0</td>
+                <td style="color: #ef4444; font-weight: 700;">-7</td>
+              </tr>
+              <tr>
+                <td>Liam Scott #02</td>
+                <td>G</td>
+                <td>15</td>
+                <td>4</td>
+                <td>1</td>
+                <td>2</td>
+                <td>0</td>
+                <td>0</td>
+                <td>1-4</td>
+                <td>1-3</td>
+                <td>1-2</td>
+                <td style="color: #10b981; font-weight: 700;">+0</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr style="border-top: 2px solid var(--border-orange); font-weight: 800; color: var(--text-main); background: rgba(255, 94, 0, 0.05);">
+                <td style="text-align: left; padding-left: 1.25rem;">TOTALS</td>
+                <td>—</td>
+                <td>200</td>
+                <td class="stat-hi" style="font-size: 1rem;" id="awayTotalPts">82</td>
+                <td id="awayTotalReb">32</td>
+                <td id="awayTotalAst">17</td>
+                <td id="awayTotalStl">5</td>
+                <td id="awayTotalBlk">4</td>
+                <td>32-67 (47.8%)</td>
+                <td>8-24 (33.3%)</td>
+                <td>10-14 (71.4%)</td>
+                <td>—</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 4: HIGHLIGHTS & GAME MEDIA -->
+      <section class="card" style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h2 style="font-family: var(--font-display); font-size: 1.4rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.6rem;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Game Highlights &amp; Video Replay
+            </h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">Official HD game recaps, top 5 plays, and full match archive.</p>
+          </div>
+          <span class="badge badge-orange">HD 1080p</span>
+        </div>
+
+        <div class="highlights-placeholder">
+          <div class="highlights-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3"></polygon>
+            </svg>
+          </div>
+          <div style="text-align: center; max-width: 440px; padding: 0 1rem;">
+            <h3 style="font-family: var(--font-display); font-size: 1.3rem; color: var(--text-main); margin-bottom: 0.5rem; text-transform: uppercase;">
+              Video Recap Processing
+            </h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+              Automated high-framerate broadcast highlights and AI shot tracking analysis are being generated for this fixture.
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; margin-top: 0.5rem;">
+            <button class="btn btn-outline btn-sm btn-trigger-login">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              Player Login for Full Tape
+            </button>
+            <a href="games.html" class="btn btn-primary btn-sm">← Back to All Games</a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ==========================================
+       FOOTER
+       ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">SURGE <span>ELITE</span></a>
+          <p>The next-generation basketball league management and player development platform.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="leagues.html">Leagues</a>
+            <a href="teams.html">Teams</a>
+            <a href="players.html">Players</a>
+            <a href="games.html">Games</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Leagues</h4>
+          <div class="footer-links">
+            <a href="league-details.html?id=u15">U15 Youth League</a>
+            <a href="league-details.html?id=u17">U17 Junior League</a>
+            <a href="league-details.html?id=u19">U19 Elite Division</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Contact &amp; Support</h4>
+          <div class="footer-links">
+            <a href="mailto:support@surgelite.com">support@surgelite.com</a>
+            <a href="tel:+18005557874">+1 (800) 555-SURGE</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>&copy; 2026 Surge Elite Basketball Platform. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Login Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <button class="modal-close">&times;</button>
+      <h3 class="modal-title">Player &amp; Staff Login</h3>
+      <p class="modal-desc">Access your Surge Elite dashboard, full game tape, and analytics.</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" class="form-input" placeholder="player@surgelite.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Shared Javascript -->
+  <script src="js/app.js"></script>
+
+  <!-- Dynamic Game Details Script -->
+  <script>
+    /**
+     * Switch between Home and Away team box score tables
+     */
+    function switchBoxScore(team) {
+      const homeWrap = document.getElementById('boxScoreHomeWrapper');
+      const awayWrap = document.getElementById('boxScoreAwayWrapper');
+      const btnHome = document.getElementById('btnBoxHome');
+      const btnAway = document.getElementById('btnBoxAway');
+
+      if (team === 'home') {
+        homeWrap.style.display = 'block';
+        awayWrap.style.display = 'none';
+        btnHome.classList.add('active');
+        btnAway.classList.remove('active');
+      } else {
+        homeWrap.style.display = 'none';
+        awayWrap.style.display = 'block';
+        btnAway.classList.add('active');
+        btnHome.classList.remove('active');
+      }
+    }
+
+    /**
+     * Dynamic Data Loader for Game Details
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const gameId = params.get('id') || 'r001';
+
+      const gamesDatabase = {
+        'r001': {
+          title: 'Surge Wolves vs Metro Vipers',
+          league: 'U15 Youth League',
+          gameNo: 'Regular Season • Game #14',
+          status: 'Final Score',
+          date: 'October 18, 2026',
+          venue: 'Surge Arena, Court 1 (Downtown)',
+          time: 'Tip-off: 7:00 PM EST',
+          attendance: 'Attendance: 1,420',
+          referee: 'Head Referee: D. Morrison',
+          home: {
+            name: 'Surge Wolves', logo: 'SW', record: '12–2 (Home)', score: 88, isWinner: true,
+            quarters: [24, 21, 23, 20],
+            leaders: {
+              pts: { name: 'Marcus Vance', sub: 'Point Guard • #23', val: '32 PTS', pill: '#23' },
+              reb: { name: 'Jamal Brooks', sub: 'Center • #55', val: '12 REB', pill: '#55' },
+              ast: { name: 'Marcus Vance', sub: 'Point Guard • #23', val: '9 AST', pill: '#23' },
+              stl: { name: 'Cameron Cole', sub: 'Guard • #04', val: '3 STL', pill: '#04' }
+            }
+          },
+          away: {
+            name: 'Metro Vipers', logo: 'MV', record: '9–5 (Away)', score: 82, isWinner: false,
+            quarters: [19, 22, 18, 23],
+            leaders: {
+              pts: { name: 'Tyson Reed', sub: 'Power Forward • #34', val: '24 PTS', pill: '#34' },
+              reb: { name: 'Tyson Reed', sub: 'Power Forward • #34', val: '11 REB', pill: '#34' },
+              ast: { name: 'J. Jenkins', sub: 'Guard • #12', val: '6 AST', pill: '#12' },
+              stl: { name: 'Tyson Reed', sub: 'Power Forward • #34', val: '2 BLK', pill: '#34' }
+            }
+          }
+        },
+        'r002': {
+          title: 'Apex Titans vs Thunder Hawks',
+          league: 'U17 Junior League',
+          gameNo: 'Regular Season • Game #12',
+          status: 'Final Score',
+          date: 'October 16, 2026',
+          venue: 'Apex Sports Center, Westfield',
+          time: 'Tip-off: 6:30 PM EST',
+          attendance: 'Attendance: 1,180',
+          referee: 'Head Referee: R. Sterling',
+          home: {
+            name: 'Apex Titans', logo: 'AT', record: '11–3 (Home)', score: 74, isWinner: true,
+            quarters: [18, 22, 17, 17],
+            leaders: {
+              pts: { name: 'Elena Rostova', sub: 'Shooting Guard • #03', val: '26 PTS', pill: '#03' },
+              reb: { name: 'David Okafor', sub: 'Center • #44', val: '10 REB', pill: '#44' },
+              ast: { name: 'Elena Rostova', sub: 'Shooting Guard • #03', val: '7 AST', pill: '#03' },
+              stl: { name: 'Mateo Silva', sub: 'Guard • #10', val: '4 STL', pill: '#10' }
+            }
+          },
+          away: {
+            name: 'Thunder Hawks', logo: 'TH', record: '7–7 (Away)', score: 68, isWinner: false,
+            quarters: [14, 19, 16, 19],
+            leaders: {
+              pts: { name: 'Kai Takahashi', sub: 'Shooting Guard • #08', val: '21 PTS', pill: '#08' },
+              reb: { name: 'Brandon Cole', sub: 'Forward • #33', val: '8 REB', pill: '#33' },
+              ast: { name: 'Kai Takahashi', sub: 'Shooting Guard • #08', val: '8 AST', pill: '#08' },
+              stl: { name: 'Sam Vance', sub: 'Forward • #15', val: '2 BLK', pill: '#15' }
+            }
+          }
+        },
+        'r003': {
+          title: 'Skyline Knights vs Coastal Ballers',
+          league: 'U19 Elite Division',
+          gameNo: 'Regular Season • Game #10',
+          status: 'Final Score',
+          date: 'October 14, 2026',
+          venue: 'Skyline Fieldhouse, Northgate',
+          time: 'Tip-off: 8:00 PM EST',
+          attendance: 'Attendance: 1,650',
+          referee: 'Head Referee: T. Henderson',
+          home: {
+            name: 'Skyline Knights', logo: 'SK', record: '6–8 (Home)', score: 70, isWinner: false,
+            quarters: [16, 18, 17, 19],
+            leaders: {
+              pts: { name: 'Darius Miller', sub: 'Small Forward • #11', val: '22 PTS', pill: '#11' },
+              reb: { name: 'Darius Miller', sub: 'Small Forward • #11', val: '14 REB', pill: '#11' },
+              ast: { name: 'Leo Martinez', sub: 'Point Guard • #05', val: '5 AST', pill: '#05' },
+              stl: { name: 'Chris Vance', sub: 'Guard • #02', val: '2 STL', pill: '#02' }
+            }
+          },
+          away: {
+            name: 'Coastal Ballers', logo: 'CB', record: '8–6 (Away)', score: 79, isWinner: true,
+            quarters: [20, 21, 18, 20],
+            leaders: {
+              pts: { name: 'Tyler Washington', sub: 'Shooting Guard • #07', val: '25 PTS', pill: '#07' },
+              reb: { name: 'Marcus Bell', sub: 'Center • #50', val: '11 REB', pill: '#50' },
+              ast: { name: 'Zack Morris', sub: 'Point Guard • #01', val: '8 AST', pill: '#01' },
+              stl: { name: 'Tyler Washington', sub: 'Shooting Guard • #07', val: '3 STL', pill: '#07' }
+            }
+          }
+        },
+        'g001': {
+          title: 'Surge Wolves vs Apex Titans (Upcoming)',
+          league: 'U15 Youth League',
+          gameNo: 'Regular Season • Game #15',
+          status: 'Upcoming',
+          date: 'October 22, 2026',
+          venue: 'Surge Arena, Court 1 (Downtown)',
+          time: 'Tip-off: 7:00 PM EST',
+          attendance: 'Expected: Sellout (1,500+)',
+          referee: 'Head Referee: M. Gonzalez',
+          home: {
+            name: 'Surge Wolves', logo: 'SW', record: '12–2 (Home)', score: '-', isWinner: false,
+            quarters: ['-', '-', '-', '-'],
+            leaders: {
+              pts: { name: 'Marcus Vance', sub: 'Season PPG Leader', val: '24.8 PPG', pill: '#23' },
+              reb: { name: 'Jamal Brooks', sub: 'Season RPG Leader', val: '9.2 RPG', pill: '#55' },
+              ast: { name: 'Marcus Vance', sub: 'Season APG Leader', val: '6.4 APG', pill: '#23' },
+              stl: { name: 'Cameron Cole', sub: 'Season SPG Leader', val: '2.1 SPG', pill: '#04' }
+            }
+          },
+          away: {
+            name: 'Apex Titans', logo: 'AT', record: '11–3 (Away)', score: '-', isWinner: false,
+            quarters: ['-', '-', '-', '-'],
+            leaders: {
+              pts: { name: 'Elena Rostova', sub: 'Season PPG Leader', val: '22.1 PPG', pill: '#03' },
+              reb: { name: 'David Okafor', sub: 'Season RPG Leader', val: '8.4 RPG', pill: '#44' },
+              ast: { name: 'Elena Rostova', sub: 'Season APG Leader', val: '7.1 APG', pill: '#03' },
+              stl: { name: 'Mateo Silva', sub: 'Season SPG Leader', val: '1.9 SPG', pill: '#10' }
+            }
+          }
+        }
+      };
+
+      const g = gamesDatabase[gameId];
+      if (!g) return;
+
+      // Update Top Crumb and Titles
+      document.title = `${g.title} | Surge Elite Basketball Platform`;
+      const crumbEl = document.getElementById('crumbGameTitle');
+      if (crumbEl) crumbEl.textContent = g.title;
+
+      // Update Header Badges
+      const leagueEl = document.getElementById('heroLeagueTag');
+      if (leagueEl) leagueEl.textContent = g.league;
+      const gameNoEl = document.getElementById('heroGameNumber');
+      if (gameNoEl) gameNoEl.textContent = g.gameNo;
+      const statusEl = document.getElementById('heroStatusBadge');
+      if (statusEl) {
+        statusEl.textContent = g.status;
+        if (g.status === 'Upcoming') {
+          statusEl.className = 'game-status-badge status-upcoming';
+        } else {
+          statusEl.className = 'game-status-badge status-final';
+        }
+      }
+      const dateEl = document.getElementById('heroDate');
+      if (dateEl) dateEl.textContent = g.date;
+
+      // Update Score Hero
+      const homeNameEl = document.getElementById('homeTeamName');
+      if (homeNameEl) homeNameEl.textContent = g.home.name;
+      const homeLogoEl = document.getElementById('homeLogoPill');
+      if (homeLogoEl) homeLogoEl.textContent = g.home.logo;
+      const homeRecEl = document.getElementById('homeTeamRecord');
+      if (homeRecEl) homeRecEl.textContent = g.home.record;
+      const homeScoreEl = document.getElementById('homeScore');
+      if (homeScoreEl) homeScoreEl.textContent = g.home.score;
+
+      const awayNameEl = document.getElementById('awayTeamName');
+      if (awayNameEl) awayNameEl.textContent = g.away.name;
+      const awayLogoEl = document.getElementById('awayLogoPill');
+      if (awayLogoEl) awayLogoEl.textContent = g.away.logo;
+      const awayRecEl = document.getElementById('awayTeamRecord');
+      if (awayRecEl) awayRecEl.textContent = g.away.record;
+      const awayScoreEl = document.getElementById('awayScore');
+      if (awayScoreEl) awayScoreEl.textContent = g.away.score;
+
+      // Winner tags
+      const homeWinTag = document.getElementById('homeWinnerTag');
+      const awayWinTag = document.getElementById('awayWinnerTag');
+      if (homeWinTag && awayWinTag) {
+        if (g.home.isWinner) {
+          homeWinTag.style.opacity = '1';
+          awayWinTag.style.opacity = '0';
+          homeNameEl.style.color = 'var(--primary)';
+          awayNameEl.style.color = 'var(--text-main)';
+        } else if (g.away.isWinner) {
+          homeWinTag.style.opacity = '0';
+          awayWinTag.style.opacity = '1';
+          awayNameEl.style.color = 'var(--primary)';
+          homeNameEl.style.color = 'var(--text-main)';
+        } else {
+          homeWinTag.style.opacity = '0';
+          awayWinTag.style.opacity = '0';
+          homeNameEl.style.color = 'var(--text-main)';
+          awayNameEl.style.color = 'var(--text-main)';
+        }
+      }
+
+      // Meta info
+      const vEl = document.getElementById('infoVenue');
+      if (vEl) vEl.textContent = g.venue;
+      const tEl = document.getElementById('infoTime');
+      if (tEl) tEl.textContent = g.time;
+      const aEl = document.getElementById('infoAttendance');
+      if (aEl) aEl.textContent = g.attendance;
+      const rEl = document.getElementById('infoReferees');
+      if (rEl) rEl.textContent = g.referee;
+
+      // Quarter-by-quarter table
+      const qHomeName = document.getElementById('qHomeName');
+      if (qHomeName) qHomeName.textContent = g.home.name;
+      const qHome1 = document.getElementById('qHome1'); if (qHome1) qHome1.textContent = g.home.quarters[0];
+      const qHome2 = document.getElementById('qHome2'); if (qHome2) qHome2.textContent = g.home.quarters[1];
+      const qHome3 = document.getElementById('qHome3'); if (qHome3) qHome3.textContent = g.home.quarters[2];
+      const qHome4 = document.getElementById('qHome4'); if (qHome4) qHome4.textContent = g.home.quarters[3];
+      const qHomeTotal = document.getElementById('qHomeTotal'); if (qHomeTotal) qHomeTotal.textContent = g.home.score;
+
+      const qAwayName = document.getElementById('qAwayName');
+      if (qAwayName) qAwayName.textContent = g.away.name;
+      const qAway1 = document.getElementById('qAway1'); if (qAway1) qAway1.textContent = g.away.quarters[0];
+      const qAway2 = document.getElementById('qAway2'); if (qAway2) qAway2.textContent = g.away.quarters[1];
+      const qAway3 = document.getElementById('qAway3'); if (qAway3) qAway3.textContent = g.away.quarters[2];
+      const qAway4 = document.getElementById('qAway4'); if (qAway4) qAway4.textContent = g.away.quarters[3];
+      const qAwayTotal = document.getElementById('qAwayTotal'); if (qAwayTotal) qAwayTotal.textContent = g.away.score;
+
+      // Tab switcher labels
+      const btnBoxHome = document.getElementById('btnBoxHome');
+      if (btnBoxHome) btnBoxHome.textContent = g.home.name;
+      const btnBoxAway = document.getElementById('btnBoxAway');
+      if (btnBoxAway) btnBoxAway.textContent = g.away.name;
+
+      // Leaders update
+      const leadHomeTitle = document.getElementById('leaderHomeTitle');
+      if (leadHomeTitle) leadHomeTitle.textContent = `${g.home.name} Leaders`;
+      const leadAwayTitle = document.getElementById('leaderAwayTitle');
+      if (leadAwayTitle) leadAwayTitle.textContent = `${g.away.name} Leaders`;
+
+      // Home Leaders
+      if (g.home.leaders) {
+        const hPts = document.getElementById('leadHomePtsName'); if (hPts) hPts.textContent = g.home.leaders.pts.name;
+        const hPtsV = document.getElementById('leadHomePtsVal'); if (hPtsV) hPtsV.textContent = g.home.leaders.pts.val;
+        const hReb = document.getElementById('leadHomeRebName'); if (hReb) hReb.textContent = g.home.leaders.reb.name;
+        const hRebV = document.getElementById('leadHomeRebVal'); if (hRebV) hRebV.textContent = g.home.leaders.reb.val;
+        const hAst = document.getElementById('leadHomeAstName'); if (hAst) hAst.textContent = g.home.leaders.ast.name;
+        const hAstV = document.getElementById('leadHomeAstVal'); if (hAstV) hAstV.textContent = g.home.leaders.ast.val;
+        const hStl = document.getElementById('leadHomeStlName'); if (hStl) hStl.textContent = g.home.leaders.stl.name;
+        const hStlV = document.getElementById('leadHomeStlVal'); if (hStlV) hStlV.textContent = g.home.leaders.stl.val;
+      }
+
+      // Away Leaders
+      if (g.away.leaders) {
+        const aPts = document.getElementById('leadAwayPtsName'); if (aPts) aPts.textContent = g.away.leaders.pts.name;
+        const aPtsV = document.getElementById('leadAwayPtsVal'); if (aPtsV) aPtsV.textContent = g.away.leaders.pts.val;
+        const aReb = document.getElementById('leadAwayRebName'); if (aReb) aReb.textContent = g.away.leaders.reb.name;
+        const aRebV = document.getElementById('leadAwayRebVal'); if (aRebV) aRebV.textContent = g.away.leaders.reb.val;
+        const aAst = document.getElementById('leadAwayAstName'); if (aAst) aAst.textContent = g.away.leaders.ast.name;
+        const aAstV = document.getElementById('leadAwayAstVal'); if (aAstV) aAstV.textContent = g.away.leaders.ast.val;
+        const aStl = document.getElementById('leadAwayStlName'); if (aStl) aStl.textContent = g.away.leaders.stl.name;
+        const aStlV = document.getElementById('leadAwayStlVal'); if (aStlV) aStlV.textContent = g.away.leaders.stl.val;
+      }
+    });
+  </script>
+</body>
+</html>

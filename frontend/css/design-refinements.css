@@ -1,0 +1,1031 @@
+/* ==========================================================================
+   SURGE ELITE — DESIGN REFINEMENTS v2
+   Premium Polish Layer: Typography, Spacing, Cards, Admin, Roster
+   Loaded after style.css — safe to override without breaking functionality
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   OVERRIDE: Updated colour palette already set in style.css tokens.
+   Patch any leftover old-orange references in component bodies here.
+   -------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------
+   HERO SECTION — taller, better hierarchy
+   -------------------------------------------------------------------------- */
+.hero {
+  padding-top: 96px; /* matches new 72px navbar */
+  padding-bottom: 80px;
+}
+
+.hero-title {
+  font-size: clamp(3rem, 6vw, 4.75rem);
+  letter-spacing: 0.025em;
+  line-height: 1.08;
+  margin-bottom: 1.5rem;
+}
+
+.hero-subtitle {
+  font-size: clamp(1.05rem, 2vw, 1.2rem);
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 2.75rem;
+}
+
+.hero-stat-num {
+  font-size: 2.25rem;
+  letter-spacing: -0.01em;
+}
+
+.hero-stat-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.hero-stats-strip {
+  gap: 3rem;
+  padding-top: 2.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   PAGE-LEVEL HERO SPACING  (leagues, teams, games, player pages)
+   -------------------------------------------------------------------------- */
+/* Make sure content clears the 72px navbar on non-homepage pages */
+body > header + * {
+  /* hero sections on interior pages */
+}
+/* Fallback inline-padding-top used on most pages — increase via class */
+.page-hero-pad {
+  padding-top: 72px;
+}
+
+/* --------------------------------------------------------------------------
+   BADGE — cleaner, thinner
+   -------------------------------------------------------------------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-full);
+  line-height: 1;
+}
+
+.badge-orange {
+  background: rgba(249, 115, 22, 0.15);
+  color: var(--primary);
+  border: 1px solid rgba(249, 115, 22, 0.35);
+}
+
+.badge-green {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+}
+
+.badge-red {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}
+
+.badge-blue {
+  background: rgba(6, 182, 212, 0.12);
+  color: var(--cyan-highlight);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   LEAGUE CARDS
+   -------------------------------------------------------------------------- */
+.league-card {
+  border-radius: var(--radius-xl);
+  padding: 2rem 2rem 1.75rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.league-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-orange);
+}
+
+.league-title {
+  font-size: 1.65rem;
+  line-height: 1.25;
+}
+
+/* --------------------------------------------------------------------------
+   GAME CARDS
+   -------------------------------------------------------------------------- */
+.game-card {
+  border-radius: var(--radius-xl);
+  padding: 1.75rem 2rem;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.team-badge-icon {
+  width: 60px;
+  height: 60px;
+  font-size: 1.15rem;
+}
+
+/* --------------------------------------------------------------------------
+   PLAYER CARDS
+   -------------------------------------------------------------------------- */
+.player-card {
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.player-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+}
+
+.player-name {
+  font-size: 1.6rem;
+}
+
+.player-stats-grid {
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  gap: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   STAT CARDS (landing page)
+   -------------------------------------------------------------------------- */
+.stat-card {
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+/* --------------------------------------------------------------------------
+   TEAM CARDS
+   -------------------------------------------------------------------------- */
+.team-card {
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.team-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+/* --------------------------------------------------------------------------
+   SECTION SPACING — consistent 96px between landmark sections
+   -------------------------------------------------------------------------- */
+.leagues-section,
+.games-section,
+.players-section,
+.stats-section,
+.cta-section,
+.testimonials-section {
+  padding: 96px 0;
+}
+
+/* --------------------------------------------------------------------------
+   SECTION HEADERS — more breathing room
+   -------------------------------------------------------------------------- */
+.section-header {
+  margin-bottom: 56px;
+}
+
+.section-title {
+  font-size: clamp(2.25rem, 4.5vw, 3rem);
+}
+
+/* --------------------------------------------------------------------------
+   FORMS: Global polish
+   -------------------------------------------------------------------------- */
+.form-control,
+.form-select {
+  background: rgba(17, 22, 34, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  padding: 0.75rem 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  appearance: none;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+  background: rgba(22, 28, 43, 1);
+}
+
+.form-label {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE BREAKPOINTS
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .nav-links {
+    display: none;
+  }
+  .mobile-toggle {
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: clamp(2.25rem, 8vw, 3rem);
+  }
+}
+
+/* ==========================================================================
+   ADMIN GAME ENTRY — Premium Step Card UI
+   ========================================================================== */
+
+/* Hero bar */
+.admin-hero {
+  padding: 48px 0 32px;
+  background: radial-gradient(ellipse at 50% -30%, rgba(249, 115, 22, 0.12) 0%, transparent 65%);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 0;
+}
+
+.admin-hero h1 {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+}
+
+/* Step cards */
+.admin-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 2rem 2.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s ease;
+}
+
+.admin-card:focus-within {
+  border-color: rgba(249, 115, 22, 0.4);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.06);
+}
+
+.admin-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.admin-card-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* Step indicator pill */
+.admin-card-header > span:last-child {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-light);
+}
+
+/* Equal-width grid for Schedule inputs */
+.admin-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.admin-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.admin-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 960px) {
+  .admin-grid-3 { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 640px) {
+  .admin-grid-2,
+  .admin-grid-3,
+  .admin-grid-4 { grid-template-columns: 1fr; }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 1.25rem;
+}
+
+/* Status radio toggle chips */
+.status-badge-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.82rem;
+  transition: all 0.15s ease;
+  background: rgba(255, 255, 255, 0.02);
+  user-select: none;
+}
+
+.status-badge-radio:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.status-badge-radio.active {
+  border-color: var(--primary);
+  background: rgba(249, 115, 22, 0.12);
+  color: #fff;
+}
+
+/* VS circle — bigger */
+.admin-vs-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.2);
+  flex-shrink: 0;
+}
+
+/* Score matrix table */
+.matrix-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 0.75rem;
+}
+
+.matrix-table th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  background: rgba(17, 22, 34, 0.6);
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.matrix-table th:first-child,
+.matrix-table td:first-child {
+  text-align: left;
+  font-weight: 700;
+  padding-left: 0;
+  min-width: 180px;
+}
+
+.matrix-table td {
+  padding: 0.85rem 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.matrix-input {
+  width: 62px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: rgba(17, 22, 34, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--text-main);
+  padding: 0.4rem 0.2rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.matrix-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.15);
+}
+
+.matrix-total {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* Stat input table */
+.stat-input-num {
+  width: 46px;
+  text-align: center;
+  background: rgba(17, 22, 34, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  color: var(--text-main);
+  padding: 0.35rem 0.1rem;
+  font-size: 0.83rem;
+  font-weight: 600;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.stat-input-num:focus {
+  border-color: var(--primary);
+  background: rgba(22, 28, 43, 1);
+}
+
+.stat-input-num.pts-field {
+  font-weight: 800;
+  color: #fbbf24;
+}
+
+.stat-row-total {
+  background: rgba(249, 115, 22, 0.07) !important;
+  font-weight: 700;
+}
+
+/* Sticky footer action bar */
+.admin-sticky-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  background: rgba(17, 22, 34, 0.97);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border-orange);
+  padding: 1.25rem 0;
+  margin-top: 2rem;
+}
+
+.admin-sticky-footer .btn {
+  min-height: 44px;
+  padding: 0.7rem 1.5rem;
+  font-size: 0.9rem;
+}
+
+/* Quick game selector bar */
+.game-selector-bar {
+  margin-top: 1.5rem;
+  background: rgba(17, 22, 34, 0.8);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Mode badge indicator */
+#modeBadge {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+
+/* Scoreboard team label */
+#labelHomeTeamName { color: var(--cyan-highlight); }
+#labelAwayTeamName { color: #f43f5e; }
+
+/* Tab buttons on box score section */
+.tab-btn {
+  padding: 0.6rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   COACH ROSTER PAGE — Premium Athlete Cards
+   ========================================================================== */
+
+/* Hero */
+.coach-hero {
+  padding: 48px 0 32px;
+  background: radial-gradient(ellipse at 50% -30%, rgba(249, 115, 22, 0.12) 0%, transparent 65%);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 0;
+}
+
+.coach-hero h1 {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1.15;
+}
+
+/* KPI summary grid — tighter margin */
+.roster-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+@media (max-width: 900px) {
+  .roster-summary-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .roster-summary-grid { grid-template-columns: 1fr; }
+}
+
+.roster-metric-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s ease;
+}
+
+.roster-metric-card:hover {
+  border-color: var(--border-orange);
+}
+
+.roster-metric-val {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.roster-metric-lbl {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Filter bar */
+.filter-bar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.75rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.search-input-wrap input {
+  height: 44px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}
+
+/* Athlete card grid — 3/2/1 breakpoints */
+.athlete-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 1100px) {
+  .athlete-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .athlete-grid { grid-template-columns: 1fr; }
+}
+
+/* Athlete card — taller, more padded */
+.athlete-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  min-height: 380px;
+}
+
+.athlete-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-orange);
+  box-shadow: var(--shadow-md);
+}
+
+.athlete-card.inactive-card {
+  opacity: 0.6;
+  border-style: dashed;
+}
+
+.athlete-card-header {
+  padding: 1.5rem 1.5rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+/* Avatar — bigger, square with rounded corners */
+.athlete-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-md);
+  background: rgba(249, 115, 22, 0.1);
+  border: 2px solid rgba(249, 115, 22, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--primary);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.athlete-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.athlete-meta { flex: 1; min-width: 0; }
+
+/* Jersey number — big & bold */
+.athlete-jersey-num {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+/* Player full name — larger */
+.athlete-name {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+  margin-bottom: 4px;
+  color: var(--text-main);
+}
+
+.athlete-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Stat row */
+.athlete-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 0.9rem 1.5rem;
+  background: rgba(17, 22, 34, 0.5);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.athlete-stat-box .val {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+.athlete-stat-box .lbl {
+  font-size: 0.67rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+
+/* Bio snippet */
+.athlete-bio-snippet {
+  padding: 1rem 1.5rem 0.25rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  flex: 1;
+}
+
+/* Consistent action buttons */
+.athlete-card-actions {
+  padding: 1rem 1.5rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.athlete-card-actions .btn,
+.athlete-card-actions button {
+  flex: 1;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  justify-content: center;
+}
+
+/* Status badge — cleaner */
+.athlete-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-full);
+}
+
+.athlete-status-badge.active-badge {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.athlete-status-badge.injured-badge {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.athlete-status-badge.inactive-badge {
+  background: rgba(148, 163, 184, 0.1);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+/* Add player modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(11, 14, 20, 0.88);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.modal-content-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-orange);
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 640px;
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 2.25rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(249, 115, 22, 0.1);
+  animation: modalScaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalScaleIn {
+  from { transform: scale(0.96) translateY(8px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Toast notifications */
+.toast-container {
+  position: fixed;
+  top: 88px; /* below navbar */
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toast {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-left: 4px solid var(--primary);
+  box-shadow: var(--shadow-md);
+  color: var(--text-main);
+  padding: 0.9rem 1.1rem;
+  border-radius: var(--radius-sm);
+  min-width: 300px;
+  max-width: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  animation: toastSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast.success { border-left-color: #10b981; }
+.toast.error   { border-left-color: #ef4444; }
+.toast.warning { border-left-color: #f59e0b; }
+.toast.info    { border-left-color: var(--cyan-highlight); }
+
+@keyframes toastSlideIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0);   opacity: 1; }
+}
+
+/* ==========================================================================
+   GAME DETAILS PAGE — score hero, quarters, box score
+   ========================================================================== */
+.game-score-hero {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 2.25rem 2.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.game-score-hero .team-name-large {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+}
+
+.game-score-hero .final-score {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 7vw, 5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.box-score-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.87rem;
+}
+
+.box-score-table th {
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 0.6rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-light);
+  white-space: nowrap;
+}
+
+.box-score-table td {
+  padding: 0.7rem 0.6rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background 0.15s ease;
+}
+
+.box-score-table tr:hover td {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.box-score-table .stat-hi {
+  color: #fbbf24;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   PLAYERS LIST PAGE — player cards, filters
+   ========================================================================== */
+.player-card {
+  border-radius: var(--radius-xl);
+}
+
+.player-header-bg {
+  background: linear-gradient(135deg, rgba(28, 36, 56, 1) 0%, rgba(17, 22, 34, 1) 100%);
+}
+
+/* Filter select */
+.filter-select {
+  background: rgba(17, 22, 34, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  padding: 0.6rem 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.filter-select:focus {
+  border-color: var(--primary);
+}
+
+/* ==========================================================================
+   LEAGUES LIST PAGE
+   ========================================================================== */
+.league-badge {
+  background: rgba(249, 115, 22, 0.1);
+  color: var(--primary);
+  font-size: 0.72rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.footer {
+  padding: 48px 0 32px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* ==========================================================================
+   SCROLLBAR — dark themed
+   ========================================================================== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(249, 115, 22, 0.5);
+}
+
+/* ==========================================================================
+   SELECTION COLOUR
+   ========================================================================== */
+::selection {
+  background: rgba(249, 115, 22, 0.3);
+  color: #fff;
+}
