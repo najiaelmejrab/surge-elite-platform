@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Entry / Scorer | Surge Elite Admin</title>
+  <meta name="description" content="Surge Elite Admin — Game Entry and Box Score Scorer workflow.">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Oswald -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/design-refinements.css">
+  <link rel="stylesheet" href="../css/admin.css">
+
+  <style>
+    /* ── Game Entry Specific Styles ─────────────────────────────────── */
+
+    /* Score Hero */
+    .ge-score-hero {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      padding: 1.5rem 1rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      margin-bottom: 1.75rem;
+    }
+    .ge-score-team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      min-width: 120px;
+    }
+    .ge-score-badge {
+      width: 52px; height: 52px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 1.1rem;
+      color: var(--text-main);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border-light);
+    }
+    .ge-score-team-name {
+      font-size: 0.85rem; font-weight: 700; color: var(--text-main);
+      text-align: center;
+    }
+    .ge-score-number {
+      font-family: var(--font-display);
+      font-size: 3rem; font-weight: 700; letter-spacing: 0.04em;
+      color: var(--primary);
+      line-height: 1;
+    }
+    .ge-score-vs {
+      font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* Quarter Grid */
+    .ge-quarter-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      margin-bottom: 1.75rem;
+    }
+    .ge-quarter-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+    #geQuarterGrid {
+      display: grid;
+      grid-template-columns: 100px 1fr 1fr;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .ge-q-header {
+      font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--text-muted);
+      padding: 0.35rem 0.5rem;
+    }
+    .ge-q-label {
+      font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);
+      padding: 0.35rem 0.5rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .ge-q-label.ge-q-final {
+      font-weight: 800; color: var(--primary);
+    }
+    .ge-q-input {
+      width: 100%;
+      padding: 0.55rem 0.6rem;
+      font-size: 0.95rem; font-weight: 700;
+      text-align: center;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .ge-q-input:focus {
+      border-color: var(--primary);
+    }
+    .ge-q-total {
+      font-family: var(--font-display);
+      font-size: 1.3rem; font-weight: 700; color: var(--primary);
+      text-align: center;
+      padding: 0.35rem 0.5rem;
+    }
+    .ge-ot-remove {
+      background: none; border: none; cursor: pointer;
+      color: #ef4444; font-size: 1rem; font-weight: 800;
+      line-height: 1; padding: 0 0.15rem;
+    }
+    .ge-ot-actions {
+      display: flex; gap: 0.65rem; margin-top: 0.75rem;
+    }
+
+    /* Box Score Tables */
+    .ge-box-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      margin-bottom: 1.75rem;
+      overflow-x: auto;
+    }
+    .ge-box-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.15rem; text-transform: uppercase; letter-spacing: 0.04em;
+      margin-bottom: 0.75rem;
+    }
+    .ge-box-table {
+      width: 100%; border-collapse: collapse; font-size: 0.82rem;
+    }
+    .ge-box-table th {
+      padding: 0.55rem 0.4rem;
+      font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--text-muted);
+      border-bottom: 1px solid var(--border-light);
+      text-align: center;
+      white-space: nowrap;
+    }
+    .ge-box-table th:first-child { text-align: left; min-width: 160px; }
+    .ge-box-table td {
+      padding: 0.4rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .ge-box-player-cell {
+      text-align: left !important;
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 0.4rem !important;
+      white-space: nowrap;
+    }
+    .ge-box-jersey {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 0.78rem; color: var(--primary);
+      min-width: 30px;
+    }
+    .ge-box-name {
+      font-weight: 600; color: var(--text-main); font-size: 0.82rem;
+    }
+    .ge-box-remove {
+      background: none; border: none; cursor: pointer;
+      color: #ef4444; font-size: 0.95rem; font-weight: 800;
+      line-height: 1; margin-left: auto; padding: 0 0.25rem;
+      opacity: 0.5; transition: opacity 0.2s;
+    }
+    .ge-box-remove:hover { opacity: 1; }
+    .ge-stat-input {
+      width: 48px;
+      padding: 0.3rem 0.2rem;
+      font-size: 0.82rem; font-weight: 600;
+      text-align: center;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      outline: none;
+    }
+    .ge-stat-input:focus { border-color: var(--primary); }
+
+    /* Add Player btn */
+    .ge-add-player-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      margin-top: 0.65rem;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.8rem; font-weight: 700;
+      color: var(--primary);
+      background: rgba(249,115,22,0.08);
+      border: 1px solid rgba(249,115,22,0.25);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .ge-add-player-btn:hover { background: rgba(249,115,22,0.15); }
+
+    /* Player Picker Modal */
+    .ge-picker-empty {
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+    .ge-picker-row {
+      display: flex; align-items: center; gap: 0.65rem;
+      padding: 0.65rem 0.85rem;
+      border-bottom: 1px solid var(--border-light);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .ge-picker-row:hover { background: rgba(249,115,22,0.06); }
+    .ge-picker-row.ge-picker-disabled {
+      opacity: 0.45; cursor: default; pointer-events: none;
+    }
+    .ge-picker-jersey {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 0.85rem; color: var(--primary);
+      min-width: 35px;
+    }
+    .ge-picker-name { font-weight: 600; font-size: 0.88rem; color: var(--text-main); }
+    .ge-picker-pos { font-size: 0.78rem; color: var(--text-muted); margin-left: auto; }
+    .ge-picker-added {
+      font-size: 0.72rem; font-weight: 800; color: #10b981;
+      margin-left: auto;
+    }
+
+    /* Info Grid */
+    .ge-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.75rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .ge-info-item label {
+      display: block;
+      font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--text-muted);
+      margin-bottom: 0.15rem;
+    }
+    .ge-info-item span {
+      font-size: 0.88rem; font-weight: 600; color: var(--text-main);
+    }
+
+    /* Actions bar */
+    .ge-actions-bar {
+      display: flex;
+      gap: 0.65rem;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 1.25rem 0;
+      border-top: 1px solid var(--border-light);
+      margin-top: 0.5rem;
+    }
+    .ge-actions-bar .btn { min-width: 140px; }
+
+    /* Status select inline */
+    .ge-status-select {
+      padding: 0.45rem 0.65rem;
+      font-size: 0.82rem; font-weight: 700;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    @media (max-width: 640px) {
+      .ge-score-hero { flex-direction: column; gap: 1rem; }
+      #geQuarterGrid { grid-template-columns: 70px 1fr 1fr; }
+      .ge-stat-input { width: 40px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="admin-layout">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="admin-sidebar-overlay" id="adminSidebarOverlay"></div>
+
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-brand">
+        <a href="../index.html" class="logo">
+          <div class="logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M5.5 5.5A10 10 0 0 1 18.5 18.5"></path>
+              <path d="M18.5 5.5A10 10 0 0 0 5.5 18.5"></path>
+              <line x1="12" y1="2" x2="12" y2="22"></line>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+            </svg>
+          </div>
+          SURGE <span>ELITE</span>
+        </a>
+        <span class="admin-portal-badge">ADMIN</span>
+      </div>
+
+      <nav class="admin-nav">
+        <div class="admin-nav-section">
+          <span class="admin-nav-label">Core Management</span>
+          <a href="index.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
+            Dashboard
+          </a>
+          <a href="leagues.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path></svg>
+            Leagues
+            <span class="nav-count">3</span>
+          </a>
+          <a href="teams.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            Teams
+            <span class="nav-count">8</span>
+          </a>
+          <a href="players.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            Players
+            <span class="nav-count">96</span>
+          </a>
+          <a href="games.html" class="admin-nav-link active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            Games
+            <span class="nav-count">24</span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="admin-sidebar-footer">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">AD</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">Admin Director</div>
+            <div class="admin-user-role">System Administrator</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      <!-- Top Bar -->
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <button class="admin-mobile-toggle" id="adminMobileToggle" aria-label="Toggle Menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <div class="admin-breadcrumb">
+            <a href="index.html">Admin</a>
+            <span class="sep">/</span>
+            <a href="games.html">Games</a>
+            <span class="sep">/</span>
+            <span class="current" id="geBreadcrumbTitle">Game Entry</span>
+          </div>
+        </div>
+        <div class="admin-topbar-right">
+          <a href="../login.html" class="btn btn-outline btn-sm">Log Out</a>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="admin-content">
+
+        <!-- Back Link & Game Header -->
+        <div style="margin-bottom: 1.5rem;">
+          <a href="javascript:void(0)" onclick="history.back()" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; margin-bottom: 0.75rem;">
+            &larr; Back to Game Details
+          </a>
+
+          <!-- Game Header Card -->
+          <div class="admin-table-card" style="padding: 1.5rem 2rem; margin-bottom: 0;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+              <div>
+                <span class="admin-status scheduled" id="geStatusBadge">Scheduled</span>
+                <h1 class="admin-topbar-title" id="geMatchupTitle" style="font-size: 1.8rem; margin-top: 0.5rem; letter-spacing: 0.03em;">GAME ENTRY</h1>
+                <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.25rem;" id="geSubMeta"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game Information -->
+        <div class="admin-table-card" style="padding: 1.25rem 1.75rem; margin-bottom: 1.75rem;">
+          <h3 style="font-family: var(--font-display); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; color: var(--text-muted);">Game Information</h3>
+          <div class="ge-info-grid">
+            <div class="ge-info-item"><label>League</label><span id="geInfoLeague">—</span></div>
+            <div class="ge-info-item"><label>Season</label><span id="geInfoSeason">—</span></div>
+            <div class="ge-info-item"><label>Venue</label><span id="geInfoVenue">—</span></div>
+            <div class="ge-info-item"><label>Date</label><span id="geInfoDate">—</span></div>
+            <div class="ge-info-item"><label>Time</label><span id="geInfoTime">—</span></div>
+            <div class="ge-info-item">
+              <label>Status</label>
+              <select id="geStatusSelect" class="ge-status-select">
+                <option value="scheduled">Scheduled</option>
+                <option value="in-progress">Live / In Progress</option>
+                <option value="completed">Final</option>
+                <option value="verified">Verified</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Score Hero -->
+        <div class="ge-score-hero">
+          <div class="ge-score-team">
+            <div class="ge-score-badge" id="geHomeBadge">HM</div>
+            <div class="ge-score-team-name" id="geHomeTeamName">Home</div>
+          </div>
+          <div class="ge-score-number" id="geHomeScoreHero">0</div>
+          <div class="ge-score-vs">VS</div>
+          <div class="ge-score-number" id="geAwayScoreHero">0</div>
+          <div class="ge-score-team">
+            <div class="ge-score-badge" id="geAwayBadge">AW</div>
+            <div class="ge-score-team-name" id="geAwayTeamName">Away</div>
+          </div>
+        </div>
+
+        <!-- Quarter Scoring -->
+        <div class="ge-quarter-card">
+          <h2>Period Scoring</h2>
+          <div id="geQuarterGrid">
+            <!-- Rendered by JS -->
+          </div>
+          <div class="ge-ot-actions">
+            <button class="ge-add-player-btn" onclick="geAddOT()">+ Add Overtime Period</button>
+          </div>
+        </div>
+
+        <!-- Reconciliation Warnings -->
+        <div id="geReconciliationWarnings" style="display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 1.75rem; color: #fca5a5; font-size: 0.9rem; font-weight: 600;">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- Player Scoring By Period (Home) -->
+        <div class="ge-box-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <h2 id="geHomePlayerPeriodTitle">Home — Player Scoring By Period</h2>
+          </div>
+          <table class="ge-box-table" style="margin-top: 0.5rem;">
+            <thead id="geHomePlayerPeriodHead">
+              <!-- Rendered by JS -->
+            </thead>
+            <tbody id="geHomePlayerPeriodBody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Player Scoring By Period (Away) -->
+        <div class="ge-box-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <h2 id="geAwayPlayerPeriodTitle">Away — Player Scoring By Period</h2>
+          </div>
+          <table class="ge-box-table" style="margin-top: 0.5rem;">
+            <thead id="geAwayPlayerPeriodHead">
+              <!-- Rendered by JS -->
+            </thead>
+            <tbody id="geAwayPlayerPeriodBody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Home Team Box Score -->
+        <div class="ge-box-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <h2 id="geHomeBoxTitle">Home — Box Score</h2>
+            <button class="ge-add-player-btn" onclick="geOpenAddPlayer('home')">+ Add Home Player</button>
+          </div>
+          <table class="ge-box-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>MIN</th><th>PTS</th><th>FGM</th><th>FGA</th>
+                <th>3PM</th><th>3PA</th><th>FTM</th><th>FTA</th>
+                <th>REB</th><th>AST</th><th>STL</th><th>BLK</th>
+                <th>TO</th><th>PF</th>
+              </tr>
+            </thead>
+            <tbody id="geHomeBoxBody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Away Team Box Score -->
+        <div class="ge-box-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <h2 id="geAwayBoxTitle">Away — Box Score</h2>
+            <button class="ge-add-player-btn" onclick="geOpenAddPlayer('away')">+ Add Away Player</button>
+          </div>
+          <table class="ge-box-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>MIN</th><th>PTS</th><th>FGM</th><th>FGA</th>
+                <th>3PM</th><th>3PA</th><th>FTM</th><th>FTA</th>
+                <th>REB</th><th>AST</th><th>STL</th><th>BLK</th>
+                <th>TO</th><th>PF</th>
+              </tr>
+            </thead>
+            <tbody id="geAwayBoxBody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Save Actions -->
+        <div class="ge-actions-bar">
+          <button class="btn btn-outline" onclick="geSaveDraft()">💾 Save Draft</button>
+          <button class="btn btn-primary" onclick="geFinalizeGame()">✓ Finalize Game</button>
+          <a href="javascript:void(0)" onclick="history.back()" class="btn btn-outline" style="margin-left: auto;">Cancel</a>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ==========================================
+       MODAL: ADD PLAYER PICKER
+       ========================================== -->
+  <div class="admin-modal-overlay" id="gePlayerPickerModal">
+    <div class="admin-modal" style="max-width: 520px;">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" id="gePlayerPickerTitle">Add Player</h3>
+        <button class="admin-modal-close" data-dismiss="modal">&times;</button>
+      </div>
+      <div style="max-height: 400px; overflow-y: auto;">
+        <div id="gePlayerPickerList">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+      <div class="admin-modal-actions" style="margin-top: 0.75rem;">
+        <button type="button" class="btn btn-outline" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL: FINALIZE GAME CONFIRM
+       ========================================== -->
+  <div class="admin-modal-overlay" id="geFinalizeModal">
+    <div class="admin-modal" style="max-width: 480px;">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title">Finalize Game</h3>
+        <button class="admin-modal-close" data-dismiss="modal">&times;</button>
+      </div>
+      <div style="padding: 1rem 0;">
+        <p style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">Are you sure you want to finalize this game? The final score and player statistics will be submitted as the official game result.</p>
+      </div>
+      <div class="admin-modal-actions" style="margin-top: 1rem;">
+        <button type="button" class="btn btn-outline" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="geConfirmFinalize()">Confirm Finalize</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/admin.js"></script>
+  <script src="../js/admin-game-entry.js"></script>
+</body>
+
+</html>

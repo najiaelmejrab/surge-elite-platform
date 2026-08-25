@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Game &amp; Live Broadcast | Surge Elite Admin</title>
+  <meta name="description" content="Surge Elite Admin Game Management & Live Broadcast Control Center.">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Oswald -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/design-refinements.css">
+  <link rel="stylesheet" href="../css/admin.css">
+
+  <style>
+    /* Live Broadcast Management Card Styles */
+    .broadcast-management-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-orange);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      margin-top: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .broadcast-header-glow {
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(249, 115, 22, 0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .broadcast-status-hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .broadcast-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: var(--radius-full);
+    }
+
+    .broadcast-pill.live {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    .broadcast-pill.scheduled {
+      background: rgba(249, 115, 22, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(249, 115, 22, 0.35);
+    }
+
+    .broadcast-pill.ended {
+      background: rgba(148, 163, 184, 0.12);
+      color: #94a3b8;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .broadcast-pill.none {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border: 1px solid var(--border-light);
+    }
+
+    .broadcast-pulse-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 0 0 10px #ef4444;
+      animation: pulseLive 1.5s infinite;
+    }
+
+    @keyframes pulseLive {
+      0% { transform: scale(0.95); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.5; }
+      100% { transform: scale(0.95); opacity: 1; }
+    }
+
+    .broadcast-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 1.75rem;
+      align-items: start;
+    }
+
+    @media (max-width: 860px) {
+      .broadcast-grid { grid-template-columns: 1fr; }
+    }
+
+    .broadcast-thumb-box {
+      width: 100%;
+      height: 175px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .broadcast-thumb-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .broadcast-details-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .broadcast-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+    }
+
+    .broadcast-meta-item strong {
+      color: var(--text-main);
+    }
+
+    .video-preview-wrapper {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 ratio */
+      height: 0;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      background: #000;
+      border: 1px solid var(--border-light);
+    }
+
+    .video-preview-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="admin-layout">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="admin-sidebar-overlay" id="adminSidebarOverlay"></div>
+
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-brand">
+        <a href="../index.html" class="logo">
+          <div class="logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M5.5 5.5A10 10 0 0 1 18.5 18.5"></path>
+              <path d="M18.5 5.5A10 10 0 0 0 5.5 18.5"></path>
+              <line x1="12" y1="2" x2="12" y2="22"></line>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+            </svg>
+          </div>
+          SURGE <span>ELITE</span>
+        </a>
+        <span class="admin-portal-badge">ADMIN</span>
+      </div>
+
+      <nav class="admin-nav">
+        <div class="admin-nav-section">
+          <span class="admin-nav-label">Core Management</span>
+          <a href="index.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
+            Dashboard
+          </a>
+          <a href="leagues.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path></svg>
+            Leagues
+            <span class="nav-count">3</span>
+          </a>
+          <a href="teams.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            Teams
+            <span class="nav-count">8</span>
+          </a>
+          <a href="players.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            Players
+            <span class="nav-count">96</span>
+          </a>
+          <a href="games.html" class="admin-nav-link active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            Games
+            <span class="nav-count">24</span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="admin-sidebar-footer">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">AD</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">Admin Director</div>
+            <div class="admin-user-role">System Administrator</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      <!-- Top Bar -->
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <button class="admin-mobile-toggle" id="adminMobileToggle" aria-label="Toggle Menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <div class="admin-breadcrumb">
+            <a href="index.html">Admin</a>
+            <span class="sep">/</span>
+            <a href="games.html">Games</a>
+            <span class="sep">/</span>
+            <span class="current" id="adminBreadcrumbGameTitle">Manage Game</span>
+          </div>
+        </div>
+        <div class="admin-topbar-right">
+          <a href="../login.html" class="btn btn-outline btn-sm">Log Out</a>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="admin-content">
+
+        <!-- Back Link & Game Info Card -->
+        <div style="margin-bottom: 1.5rem;">
+          <a href="games.html" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; margin-bottom: 0.75rem;">
+            &larr; Back to Games List
+          </a>
+
+          <!-- Game Overview Card -->
+          <div class="admin-table-card" style="padding: 1.75rem 2rem; margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+              <div>
+                <span class="admin-status scheduled" id="adminGameStatusBadge">Scheduled Match</span>
+                <h1 class="admin-topbar-title" id="adminGameMatchupTitle" style="font-size: 2.2rem; margin-top: 0.5rem; letter-spacing: 0.03em;">SURGE WOLVES VS APEX TITANS</h1>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.25rem;" id="adminGameSubMeta">U19 Elite League • October 24, 2026 at 6:00 PM EST • Surge Arena (Main Court)</p>
+              </div>
+              <div style="display: flex; gap: 0.65rem; align-items: center;">
+                <a class="btn btn-outline btn-sm" id="geOpenEntryBtn" href="admin-game-entry.html?id=g001">Open Game Entry / Scorer</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             LIVE BROADCAST SECTION
+             ========================================== -->
+        <div class="broadcast-management-card" id="broadcastCard">
+          <div class="broadcast-header-glow"></div>
+
+          <!-- Section Header Bar -->
+          <div class="broadcast-status-hero">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.35rem;">
+                <h2 style="font-family: var(--font-display); font-size: 1.5rem; text-transform: uppercase; letter-spacing: 0.04em; margin: 0;">LIVE BROADCAST</h2>
+                <div id="broadcastStatusPill">
+                  <!-- Injected via JavaScript -->
+                </div>
+              </div>
+              <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">Manage external stream URL, scheduled start time, live status, and stream metadata for public view.</p>
+            </div>
+
+            <!-- Header Action Buttons -->
+            <div id="broadcastHeaderActions" style="display: flex; gap: 0.65rem; flex-wrap: wrap; align-items: center;">
+              <!-- Injected via JavaScript -->
+            </div>
+          </div>
+
+          <!-- Broadcast Body Area -->
+          <div id="broadcastBodyContent">
+            <!-- Injected via JavaScript -->
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ==========================================
+       MODAL: SET UP / EDIT LIVE STREAM
+       ========================================== -->
+  <div class="admin-modal-overlay" id="broadcastConfigModal">
+    <div class="admin-modal" style="max-width: 660px;">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" id="broadcastModalTitle">Set Up Live Stream</h3>
+        <button class="admin-modal-close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <form id="broadcastForm">
+        <!-- Enabled Toggle -->
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-sm); margin-bottom: 1.25rem;">
+          <div>
+            <div style="font-weight: 700; font-size: 0.9rem;">Enable Live Broadcast</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted);">Enable public stream player and broadcast status indicator</div>
+          </div>
+          <input type="checkbox" id="broadcastEnableToggle" style="width: 20px; height: 20px; accent-color: var(--primary);" checked>
+        </div>
+
+        <!-- Stream Title -->
+        <div class="admin-form-group" style="margin-bottom: 1rem;">
+          <label class="admin-form-label" for="broadcastTitleInput">Stream Title *</label>
+          <input type="text" id="broadcastTitleInput" class="admin-form-input" placeholder="e.g. Venice Wave vs Gotham Knights" required>
+        </div>
+
+        <!-- Live Stream URL / Embed URL -->
+        <div class="admin-form-group" style="margin-bottom: 1rem;">
+          <label class="admin-form-label" for="broadcastUrlInput">Live Stream URL / Embed URL *</label>
+          <input type="url" id="broadcastUrlInput" class="admin-form-input" placeholder="e.g. https://www.youtube.com/embed/dQw4w9WgXcQ" required>
+          <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Supports YouTube Live, Twitch, Vimeo, or external embed links</span>
+        </div>
+
+        <!-- Scheduled Date & Time -->
+        <div class="admin-form-row cols-2">
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="broadcastDateInput">Scheduled Date *</label>
+            <input type="date" id="broadcastDateInput" class="admin-form-input" required>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="broadcastTimeInput">Scheduled Time *</label>
+            <input type="time" id="broadcastTimeInput" class="admin-form-input" required>
+          </div>
+        </div>
+
+        <!-- Thumbnail & Broadcast Status -->
+        <div class="admin-form-row cols-2">
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="broadcastThumbInput">Thumbnail / Cover Image URL</label>
+            <input type="url" id="broadcastThumbInput" class="admin-form-input" placeholder="https://images.unsplash.com/...">
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="broadcastStatusSelect">Broadcast Status *</label>
+            <select id="broadcastStatusSelect" class="admin-form-select" required>
+              <option value="scheduled">🟠 Scheduled</option>
+              <option value="live">🔴 Live</option>
+              <option value="ended">✓ Ended</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="admin-form-group" style="margin-bottom: 1.25rem;">
+          <label class="admin-form-label" for="broadcastDescInput">Description</label>
+          <textarea id="broadcastDescInput" class="admin-form-textarea" rows="3" placeholder="Enter stream summary, commentary notes, or sponsor info..."></textarea>
+        </div>
+
+        <!-- Modal Actions -->
+        <div class="admin-modal-actions">
+          <button type="button" class="btn btn-outline" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Broadcast</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL: PREVIEW STREAM
+       ========================================== -->
+  <div class="admin-modal-overlay" id="broadcastPreviewModal">
+    <div class="admin-modal" style="max-width: 800px;">
+      <div class="admin-modal-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <h3 class="admin-modal-title">Live Stream Preview</h3>
+          <span class="broadcast-pill live" id="previewStatusPill">🔴 LIVE NOW</span>
+        </div>
+        <button class="admin-modal-close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <h4 id="previewStreamTitle" style="font-family: var(--font-display); font-size: 1.3rem; text-transform: uppercase;">Stream Title</h4>
+        <p id="previewStreamMeta" style="font-size: 0.85rem; color: var(--text-muted);">Scheduled Start: August 24, 2026 · 7:00 PM</p>
+      </div>
+
+      <!-- Video Player Container -->
+      <div class="video-preview-wrapper" id="previewPlayerContainer">
+        <iframe id="previewIframe" src="about:blank" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+      </div>
+
+      <p id="previewStreamDesc" style="margin-top: 1rem; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;"></p>
+
+      <div class="admin-modal-actions" style="margin-top: 1.25rem;">
+        <button type="button" class="btn btn-outline" data-dismiss="modal">Close Preview</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/admin.js"></script>
+  <script>
+    // Extract Game ID from URL parameters (default 'g001')
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentGameId = urlParams.get('id') || 'g001';
+
+    // Fetch from central local storage game store
+    const game = getAdminGameById(currentGameId);
+    if (!game) {
+      alert('Game fixture not found!');
+      window.location.href = 'games.html';
+    }
+
+    const leagues = getAdminLeagues();
+    const teams = getAdminTeams();
+
+    const homeObj = teams[game.homeTeamId];
+    const homeName = homeObj ? homeObj.name : (game.homeTeam || 'Home Team');
+    const awayObj = teams[game.awayTeamId];
+    const awayName = awayObj ? awayObj.name : (game.awayTeam || 'Away Team');
+    const leagueObj = leagues[game.leagueId];
+    const leagueName = leagueObj ? leagueObj.name : (game.league || 'Unassigned');
+
+    const homeScoreText = game.homeScore !== null && game.homeScore !== undefined ? ` (${game.homeScore})` : '';
+    const awayScoreText = game.awayScore !== null && game.awayScore !== undefined ? ` (${game.awayScore})` : '';
+
+    let dateFormatted = game.date || '';
+    try {
+      const dObj = new Date(game.date + 'T' + (game.time || '00:00'));
+      dateFormatted = dObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    } catch(e) {}
+
+    const currentGame = {
+      id: game.id,
+      title: `${homeName} vs ${awayName}`,
+      league: leagueName,
+      date: dateFormatted,
+      time: game.time,
+      venue: game.venue || 'TBD Venue',
+      status: game.status === 'completed' ? `Completed (${game.homeScore} - ${game.awayScore})` : (game.status === 'in-progress' ? 'Live' : 'Scheduled')
+    };
+
+    // Update Header Text
+    document.getElementById('adminBreadcrumbGameTitle').textContent = currentGame.title;
+    document.getElementById('adminGameMatchupTitle').textContent = `${homeName}${homeScoreText} VS ${awayName}${awayScoreText}`;
+    document.getElementById('adminGameSubMeta').textContent = `${currentGame.league} • ${currentGame.date} at ${currentGame.time} • ${currentGame.venue}`;
+
+    // Wire the Game Entry link to current game
+    const entryBtn = document.getElementById('geOpenEntryBtn');
+    if (entryBtn) entryBtn.href = `admin-game-entry.html?id=${currentGameId}`;
+    
+    // Status Badge
+    const badgeEl = document.getElementById('adminGameStatusBadge');
+    if (game.status === 'completed') {
+      badgeEl.className = 'admin-status completed';
+      badgeEl.textContent = 'Completed';
+    } else if (game.status === 'in-progress') {
+      badgeEl.className = 'admin-status live';
+      badgeEl.textContent = 'Live / In Progress';
+    } else {
+      badgeEl.className = 'admin-status scheduled';
+      badgeEl.textContent = 'Scheduled Match';
+    }
+
+    // Render Live Broadcast UI section
+    function renderBroadcastSection() {
+      const bc = getBroadcastForGame(currentGameId);
+      const pillContainer = document.getElementById('broadcastStatusPill');
+      const actionsContainer = document.getElementById('broadcastHeaderActions');
+      const bodyContainer = document.getElementById('broadcastBodyContent');
+
+      // Unconfigured or disabled state
+      if (!bc || !bc.enabled) {
+        pillContainer.innerHTML = `<span class="broadcast-pill none">⚪ No broadcast configured</span>`;
+        actionsContainer.innerHTML = `
+          <button class="btn btn-primary btn-sm" onclick="openBroadcastModal('setup')">
+            + Set Up Live Stream
+          </button>
+        `;
+        bodyContainer.innerHTML = `
+          <div class="admin-empty-state" style="padding: 2.5rem 1rem;">
+            <div class="admin-empty-icon" style="background: rgba(255,255,255,0.04);">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+            </div>
+            <h3 class="admin-empty-title">No broadcast configured</h3>
+            <p class="admin-empty-desc">No live video stream has been configured for this game yet.</p>
+            <button class="btn btn-primary" onclick="openBroadcastModal('setup')">+ Set Up Live Stream</button>
+          </div>
+        `;
+        return;
+      }
+
+      // Configured broadcast state
+      let statusPillHtml = '';
+      let actionButtonsHtml = '';
+
+      const formattedDateStr = `${bc.scheduledDate || 'August 24, 2026'} · ${bc.scheduledTimeVal || '7:00 PM'}`;
+
+      if (bc.status === 'live') {
+        statusPillHtml = `<span class="broadcast-pill live"><span class="broadcast-pulse-dot"></span> 🔴 LIVE NOW</span>`;
+        actionButtonsHtml = `
+          <button class="btn btn-primary btn-sm" onclick="openPreviewModal()">Preview</button>
+          <button class="btn btn-outline btn-sm" onclick="updateBroadcastStatus('ended')">End Broadcast</button>
+          <button class="btn btn-outline btn-sm" onclick="openBroadcastModal('edit')">Edit</button>
+          <button class="btn btn-outline btn-sm" style="color:#ef4444; border-color:rgba(239,68,68,0.3);" onclick="confirmRemoveBroadcast()">Remove</button>
+        `;
+      } else if (bc.status === 'scheduled') {
+        statusPillHtml = `<span class="broadcast-pill scheduled">🟠 SCHEDULED</span>`;
+        actionButtonsHtml = `
+          <button class="btn btn-outline btn-sm" onclick="openPreviewModal()">Preview</button>
+          <button class="btn btn-outline btn-sm" onclick="openBroadcastModal('edit')">Edit</button>
+          <button class="btn btn-primary btn-sm" style="background: var(--primary-gradient);" onclick="updateBroadcastStatus('live')">
+            <span class="broadcast-pulse-dot" style="width:8px;height:8px;"></span> Start Live Stream
+          </button>
+          <button class="btn btn-outline btn-sm" style="color:#ef4444; border-color:rgba(239,68,68,0.3);" onclick="confirmRemoveBroadcast()">Remove</button>
+        `;
+      } else if (bc.status === 'ended') {
+        statusPillHtml = `<span class="broadcast-pill ended">✓ BROADCAST ENDED</span>`;
+        actionButtonsHtml = `
+          <button class="btn btn-outline btn-sm" onclick="openPreviewModal()">Preview Replay</button>
+          <button class="btn btn-outline btn-sm" onclick="openBroadcastModal('edit')">Edit</button>
+          <button class="btn btn-outline btn-sm" style="color:#ef4444; border-color:rgba(239,68,68,0.3);" onclick="confirmRemoveBroadcast()">Remove</button>
+        `;
+      }
+
+      pillContainer.innerHTML = statusPillHtml;
+      actionsContainer.innerHTML = actionButtonsHtml;
+
+      const thumbUrl = bc.thumbnail || 'https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80';
+
+      bodyContainer.innerHTML = `
+        <div class="broadcast-grid">
+          <div class="broadcast-thumb-box">
+            <img src="${thumbUrl}" alt="Broadcast Thumbnail">
+          </div>
+
+          <div class="broadcast-details-box">
+            <h3 style="font-family: var(--font-display); font-size: 1.35rem; text-transform: uppercase; color: var(--text-main); line-height: 1.2;">
+              ${bc.title}
+            </h3>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
+              <div class="broadcast-meta-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span>Scheduled: <strong>${formattedDateStr}</strong></span>
+              </div>
+              <div class="broadcast-meta-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                <span>Stream URL: <a href="${bc.url}" target="_blank" style="color:var(--cyan-highlight); font-weight:700;">Open External Stream &nearr;</a></span>
+              </div>
+            </div>
+
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-top: 0.25rem;">
+              ${bc.description || 'No description entered for this stream.'}
+            </p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Modal Form Helper
+    function openBroadcastModal(mode) {
+      const bc = getBroadcastForGame(currentGameId);
+      const titleEl = document.getElementById('broadcastModalTitle');
+      const toggleEl = document.getElementById('broadcastEnableToggle');
+      const titleInp = document.getElementById('broadcastTitleInput');
+      const urlInp = document.getElementById('broadcastUrlInput');
+      const dateInp = document.getElementById('broadcastDateInput');
+      const timeInp = document.getElementById('broadcastTimeInput');
+      const statusSelect = document.getElementById('broadcastStatusSelect');
+      const thumbInp = document.getElementById('broadcastThumbInput');
+      const descInp = document.getElementById('broadcastDescInput');
+
+      if (bc && mode === 'edit') {
+        titleEl.textContent = 'Edit Live Stream Settings';
+        toggleEl.checked = bc.enabled;
+        titleInp.value = bc.title || '';
+        urlInp.value = bc.url || '';
+        dateInp.value = bc.scheduledDateIso || '2026-08-24';
+        timeInp.value = bc.scheduledTimeVal || '19:00';
+        statusSelect.value = bc.status || 'scheduled';
+        thumbInp.value = bc.thumbnail || '';
+        descInp.value = bc.description || '';
+      } else {
+        titleEl.textContent = 'Set Up Live Stream';
+        document.getElementById('broadcastForm').reset();
+        toggleEl.checked = true;
+        titleInp.value = currentGame.title;
+        urlInp.value = 'https://www.youtube.com/embed/dQw4w9WgXcQ';
+        dateInp.value = '2026-08-24';
+        timeInp.value = '19:00';
+        statusSelect.value = 'scheduled';
+      }
+
+      adminOpenModal('broadcastConfigModal');
+    }
+
+    // Form Submit Handler
+    document.getElementById('broadcastForm')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const rawDate = document.getElementById('broadcastDateInput').value;
+      const rawTime = document.getElementById('broadcastTimeInput').value;
+
+      let dateFormatted = rawDate;
+      if (rawDate) {
+        const dObj = new Date(rawDate + 'T' + (rawTime || '00:00'));
+        dateFormatted = dObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      }
+
+      const updated = {
+        enabled: document.getElementById('broadcastEnableToggle').checked,
+        title: document.getElementById('broadcastTitleInput').value,
+        url: document.getElementById('broadcastUrlInput').value,
+        scheduledDateIso: rawDate,
+        scheduledDate: dateFormatted,
+        scheduledTimeVal: rawTime,
+        scheduledTime: `${rawDate}T${rawTime}`,
+        status: document.getElementById('broadcastStatusSelect').value,
+        thumbnail: document.getElementById('broadcastThumbInput').value,
+        description: document.getElementById('broadcastDescInput').value
+      };
+
+      saveBroadcastForGame(currentGameId, updated);
+      adminCloseModal('broadcastConfigModal');
+      adminToast('Live Stream configuration saved!', 'success');
+      renderBroadcastSection();
+    });
+
+    // Stream Preview Modal Helper
+    function openPreviewModal() {
+      const bc = getBroadcastForGame(currentGameId);
+      if (!bc) return;
+
+      document.getElementById('previewStreamTitle').textContent = bc.title;
+      document.getElementById('previewStreamMeta').textContent = `Scheduled: ${bc.scheduledDate || ''} · ${bc.scheduledTimeVal || ''}`;
+      document.getElementById('previewStreamDesc').textContent = bc.description || '';
+
+      const pill = document.getElementById('previewStatusPill');
+      if (bc.status === 'live') {
+        pill.className = 'broadcast-pill live';
+        pill.innerHTML = `🔴 LIVE NOW`;
+      } else if (bc.status === 'scheduled') {
+        pill.className = 'broadcast-pill scheduled';
+        pill.innerHTML = `🟠 SCHEDULED`;
+      } else {
+        pill.className = 'broadcast-pill ended';
+        pill.innerHTML = `✓ ENDED`;
+      }
+
+      const iframe = document.getElementById('previewIframe');
+      iframe.src = bc.url || 'about:blank';
+
+      adminOpenModal('broadcastPreviewModal');
+    }
+
+    // Quick Status Switch
+    function updateBroadcastStatus(newStatus) {
+      const bc = getBroadcastForGame(currentGameId);
+      if (bc) {
+        bc.status = newStatus;
+        saveBroadcastForGame(currentGameId, bc);
+        adminToast(`Broadcast status changed to ${newStatus.toUpperCase()}`, 'success');
+        renderBroadcastSection();
+      }
+    }
+
+    // Remove Broadcast
+    function confirmRemoveBroadcast() {
+      adminConfirmDelete('Live Broadcast', () => {
+        removeBroadcastForGame(currentGameId);
+        renderBroadcastSection();
+      });
+    }
+
+    // Initial render
+    renderBroadcastSection();
+  </script>
+</body>
+
+</html>

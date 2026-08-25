@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>League Details | Surge Elite Admin</title>
+  <meta name="description" content="View league information, season details, and all participating teams.">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Oswald -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/design-refinements.css">
+  <link rel="stylesheet" href="../css/admin.css">
+
+  <style>
+    .league-header-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .league-badge-xl {
+      width: 68px;
+      height: 68px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .league-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .league-meta-item {
+      background: var(--bg-deep);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+    }
+
+    .league-meta-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.35rem;
+    }
+
+    .league-meta-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .teams-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .teams-card-header {
+      padding: 1.5rem 1.75rem;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="admin-layout">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="admin-sidebar-overlay" id="adminSidebarOverlay"></div>
+
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-brand">
+        <a href="../index.html" class="logo">
+          <div class="logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M5.5 5.5A10 10 0 0 1 18.5 18.5"></path>
+              <path d="M18.5 5.5A10 10 0 0 0 5.5 18.5"></path>
+              <line x1="12" y1="2" x2="12" y2="22"></line>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+            </svg>
+          </div>
+          SURGE <span>ELITE</span>
+        </a>
+        <span class="admin-portal-badge">ADMIN</span>
+      </div>
+
+      <nav class="admin-nav">
+        <div class="admin-nav-section">
+          <span class="admin-nav-label">Core Management</span>
+          <a href="index.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
+            Dashboard
+          </a>
+          <a href="leagues.html" class="admin-nav-link active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path></svg>
+            Leagues
+            <span class="nav-count" id="navLeaguesCount">—</span>
+          </a>
+          <a href="teams.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            Teams
+            <span class="nav-count" id="navTeamsCount">—</span>
+          </a>
+          <a href="players.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            Players
+            <span class="nav-count">—</span>
+          </a>
+          <a href="games.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            Games
+            <span class="nav-count">—</span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="admin-sidebar-footer">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">AD</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">Admin Director</div>
+            <div class="admin-user-role">System Administrator</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      <!-- Top Bar -->
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <button class="admin-mobile-toggle" id="adminMobileToggle" aria-label="Toggle Menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <div class="admin-breadcrumb">
+            <a href="index.html">Admin</a>
+            <span class="sep">/</span>
+            <a href="leagues.html">Leagues</a>
+            <span class="sep">/</span>
+            <span class="current" id="breadcrumbLeagueName">League Details</span>
+          </div>
+        </div>
+        <div class="admin-topbar-right">
+          <a href="../login.html" class="btn btn-outline btn-sm">Log Out</a>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="admin-content">
+
+        <!-- Not-found state (hidden by default) -->
+        <div id="leagueNotFound" style="display:none; text-align:center; padding:4rem 2rem; color:var(--text-muted);">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 1rem; opacity:0.3; display:block;"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+          <h2 style="font-size:1.3rem; margin-bottom:0.5rem; color:var(--text-main);">League not found</h2>
+          <p style="margin-bottom:1.5rem;">This league may have been deleted or the link is invalid.</p>
+          <a href="leagues.html" class="btn btn-primary">Back to Leagues</a>
+        </div>
+
+        <!-- League Details (shown when league exists) -->
+        <div id="leagueDetailsContent">
+
+          <!-- Header Card -->
+          <div class="league-header-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1.25rem;">
+              <div style="display:flex; align-items:center; gap:1.25rem;">
+                <div class="league-badge-xl" id="lgBadge">LG</div>
+                <div>
+                  <div class="section-tag" style="margin-bottom:0.3rem;">LEAGUE</div>
+                  <h1 id="lgName" style="font-family:var(--font-display); font-size:1.75rem; font-weight:700; color:var(--text-main); line-height:1.2;">—</h1>
+                  <p id="lgDesc" style="color:var(--text-muted); font-size:0.88rem; margin-top:0.3rem; max-width:520px;"></p>
+                </div>
+              </div>
+              <div style="display:flex; gap:0.65rem; flex-wrap:wrap;">
+                <span id="lgStatusBadge" class="admin-status active">Active</span>
+                <button class="btn btn-outline btn-sm" id="editLeagueBtn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Edit League
+                </button>
+                <a href="leagues.html" class="btn btn-outline btn-sm">← Back</a>
+              </div>
+            </div>
+
+            <!-- Meta Grid -->
+            <div class="league-meta-grid">
+              <div class="league-meta-item">
+                <div class="league-meta-label">Season</div>
+                <div class="league-meta-value" id="lgSeason">—</div>
+              </div>
+              <div class="league-meta-item">
+                <div class="league-meta-label">Format</div>
+                <div class="league-meta-value" id="lgFormat">—</div>
+              </div>
+              <div class="league-meta-item">
+                <div class="league-meta-label">Team Capacity</div>
+                <div class="league-meta-value" id="lgCapacity">—</div>
+              </div>
+              <div class="league-meta-item">
+                <div class="league-meta-label">Enrolled Teams</div>
+                <div class="league-meta-value" id="lgEnrolled" style="color:var(--primary);">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Participating Teams Card -->
+          <div class="teams-card">
+            <div class="teams-card-header">
+              <div>
+                <h2 style="font-family:var(--font-display); font-size:1.1rem; font-weight:700; color:var(--text-main); letter-spacing:0.04em;" id="teamsCardTitle">PARTICIPATING TEAMS (—)</h2>
+                <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.2rem;">Teams assigned to this league &amp; season. Click a team to manage its coach and roster.</p>
+              </div>
+              <a href="teams.html" class="btn btn-outline btn-sm" style="font-size:0.8rem;">
+                Manage All Teams →
+              </a>
+            </div>
+
+            <table class="admin-table" id="leagueTeamsTable">
+              <thead>
+                <tr>
+                  <th>Team Name</th>
+                  <th>Coach</th>
+                  <th>Players</th>
+                  <th>Status</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="leagueTeamsBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+
+            <div class="admin-table-footer">
+              <span id="teamsFooterText">—</span>
+            </div>
+          </div>
+
+        </div><!-- /leagueDetailsContent -->
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ── Edit League Modal ───────────────────────────────────────────────── -->
+  <div class="admin-modal-overlay" id="editLeagueModal">
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title">Edit League Details</h3>
+        <button class="admin-modal-close" data-dismiss="modal">&times;</button>
+      </div>
+      <form id="editLeagueForm">
+        <input type="hidden" id="editLeagueId">
+
+        <div class="admin-form-group" style="margin-bottom:1rem;">
+          <label class="admin-form-label" for="editLeagueName">League Name *</label>
+          <input type="text" id="editLeagueName" class="admin-form-input" required>
+        </div>
+
+        <div class="admin-form-row cols-2">
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="editLeagueSeason">Season *</label>
+            <input type="text" id="editLeagueSeason" class="admin-form-input" required>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="editLeagueStatus">Status *</label>
+            <select id="editLeagueStatus" class="admin-form-select">
+              <option value="upcoming">Registration Open</option>
+              <option value="active">Active / Mid-Season</option>
+              <option value="draft">Draft / Planning</option>
+              <option value="ended">Ended</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="admin-form-row cols-2">
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="editLeagueFormat">Tournament Format</label>
+            <input type="text" id="editLeagueFormat" class="admin-form-input">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="editLeagueMax">Team Limit</label>
+            <input type="number" id="editLeagueMax" class="admin-form-input" min="2" max="64">
+          </div>
+        </div>
+
+        <div class="admin-form-group" style="margin-bottom:1rem;">
+          <label class="admin-form-label" for="editLeagueDesc">Description &amp; Division Overview</label>
+          <textarea id="editLeagueDesc" class="admin-form-textarea" rows="3"></textarea>
+        </div>
+
+        <div class="admin-modal-actions">
+          <button type="button" class="btn btn-outline" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/admin.js"></script>
+  <script>
+    // ── Resolve league from URL param ─────────────────────────────────────
+    const params = new URLSearchParams(window.location.search);
+    const currentLeagueId = params.get('id');
+
+    function statusBadge(status) {
+      const map = {
+        active:   { cls: 'active',   label: 'Active' },
+        upcoming: { cls: 'upcoming', label: 'Registration Open' },
+        draft:    { cls: 'draft',    label: 'Draft' },
+        ended:    { cls: 'draft',    label: 'Ended' }
+      };
+      const s = map[status] || { cls: 'draft', label: status };
+      return `<span class="admin-status ${s.cls}">${s.label}</span>`;
+    }
+
+    // ── Render League Details + Teams Table ────────────────────────────────
+    function renderLeagueDetails() {
+      if (!currentLeagueId) {
+        document.getElementById('leagueNotFound').style.display = 'block';
+        document.getElementById('leagueDetailsContent').style.display = 'none';
+        return;
+      }
+
+      const league = getAdminLeagueById(currentLeagueId);
+      if (!league) {
+        document.getElementById('leagueNotFound').style.display = 'block';
+        document.getElementById('leagueDetailsContent').style.display = 'none';
+        return;
+      }
+
+      // Nav counts
+      const allLeagues = getAdminLeagues();
+      document.getElementById('navLeaguesCount').textContent = Object.keys(allLeagues).length;
+      const allTeams = getAdminTeams();
+      document.getElementById('navTeamsCount').textContent = Object.keys(allTeams).length;
+
+      // Breadcrumb
+      document.getElementById('breadcrumbLeagueName').textContent = league.name;
+      document.title = `${league.name} | Surge Elite Admin`;
+
+      // Header card
+      const badge = document.getElementById('lgBadge');
+      badge.textContent = league.badge || 'LG';
+      badge.style.background = league.badgeColor || 'rgba(249,115,22,0.15)';
+      badge.style.color = league.badgeTextColor || 'var(--primary)';
+
+      document.getElementById('lgName').textContent = league.name;
+      document.getElementById('lgDesc').textContent = league.description || '';
+      document.getElementById('lgSeason').textContent = league.season || '—';
+      document.getElementById('lgFormat').textContent = league.format || '—';
+      document.getElementById('lgCapacity').textContent = league.maxTeams ? `${league.maxTeams} Teams` : 'Unlimited';
+
+      // Count enrolled teams by matching league ID
+      const enrolledTeams = Object.values(allTeams).filter(t => t.leagueId === league.id);
+      document.getElementById('lgEnrolled').textContent = enrolledTeams.length;
+      document.getElementById('teamsCardTitle').textContent = `PARTICIPATING TEAMS (${enrolledTeams.length})`;
+      document.getElementById('teamsFooterText').textContent =
+        `${enrolledTeams.length} team(s) assigned to ${league.name}`;
+
+      // Status badge
+      document.getElementById('lgStatusBadge').outerHTML = statusBadge(league.status);
+
+      // Teams table
+      const tbody = document.getElementById('leagueTeamsBody');
+      if (enrolledTeams.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align:center; padding:2.5rem; color:var(--text-muted);">
+              No teams are currently assigned to <strong>${league.name}</strong>.
+              Go to <a href="teams.html" style="color:var(--primary);">Teams</a> to assign a team to this league.
+            </td>
+          </tr>`;
+        return;
+      }
+
+      tbody.innerHTML = enrolledTeams.map(t => {
+        const coachName = t.coach
+          ? (typeof t.coach === 'string' ? t.coach : t.coach.name)
+          : '<span style="color:var(--text-muted);">Unassigned</span>';
+        const playerCount = (t.players || []).length;
+        const tBadge = t.badge || 'TM';
+        const statusBadgeHtml = t.status === 'active'
+          ? `<span class="admin-status active">Active</span>`
+          : `<span class="admin-status draft">Inactive</span>`;
+
+        return `
+          <tr>
+            <td>
+              <div class="admin-cell-entity">
+                <div class="admin-cell-icon" style="background:rgba(249,115,22,0.12); color:var(--primary);">${tBadge}</div>
+                <div>
+                  <div class="admin-cell-name">${t.name}</div>
+                  <div class="admin-cell-sub">${t.season || league.season || '—'}</div>
+                </div>
+              </div>
+            </td>
+            <td>${coachName}</td>
+            <td><strong>${playerCount}</strong> Players</td>
+            <td>${statusBadgeHtml}</td>
+            <td>
+              <div class="admin-row-actions" style="justify-content:flex-end;">
+                <a href="team-details.html?id=${t.id}" class="btn btn-outline btn-sm" style="padding:0.35rem 0.65rem; font-size:0.78rem;">View Team</a>
+              </div>
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    // ── Edit League Handler ────────────────────────────────────────────────
+    document.getElementById('editLeagueBtn')?.addEventListener('click', () => {
+      const league = getAdminLeagueById(currentLeagueId);
+      if (!league) return;
+      document.getElementById('editLeagueId').value    = league.id;
+      document.getElementById('editLeagueName').value  = league.name;
+      document.getElementById('editLeagueSeason').value = league.season || '';
+      document.getElementById('editLeagueStatus').value = league.status || 'upcoming';
+      document.getElementById('editLeagueFormat').value = league.format || '';
+      document.getElementById('editLeagueMax').value    = league.maxTeams || '';
+      document.getElementById('editLeagueDesc').value   = league.description || '';
+      adminOpenModal('editLeagueModal');
+    });
+
+    document.getElementById('editLeagueForm')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const updated = {
+        id:          document.getElementById('editLeagueId').value,
+        name:        document.getElementById('editLeagueName').value.trim(),
+        season:      document.getElementById('editLeagueSeason').value.trim(),
+        status:      document.getElementById('editLeagueStatus').value,
+        format:      document.getElementById('editLeagueFormat').value.trim(),
+        maxTeams:    parseInt(document.getElementById('editLeagueMax').value) || null,
+        description: document.getElementById('editLeagueDesc').value.trim()
+      };
+      saveAdminLeague(updated);
+      adminCloseModal('editLeagueModal');
+      adminToast('League updated successfully!', 'success');
+      renderLeagueDetails();
+    });
+
+    // Initial render
+    renderLeagueDetails();
+  </script>
+</body>
+
+</html>

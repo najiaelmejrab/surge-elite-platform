@@ -175,6 +175,10 @@
     
     <div style="display: grid; grid-template-columns: 1fr; gap: 2.5rem;">
 
+      <!-- LIVE BROADCAST SECTION (DYNAMICALLY DISPLAYED IF CONFIGURED) -->
+      <section id="publicBroadcastSection" style="display: none; background: var(--bg-card); border: 1px solid var(--border-orange); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm); position: relative; overflow: hidden;">
+      </section>
+
       <!-- SECTION 1: QUARTER-BY-QUARTER SCOREBOARD -->
       <section class="card" style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm);">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
@@ -1034,7 +1038,90 @@
         const aStl = document.getElementById('leadAwayStlName'); if (aStl) aStl.textContent = g.away.leaders.stl.name;
         const aStlV = document.getElementById('leadAwayStlVal'); if (aStlV) aStlV.textContent = g.away.leaders.stl.val;
       }
+
+      // Render Public Live Broadcast Section
+      renderPublicBroadcast(gameId);
     });
+
+    function renderPublicBroadcast(gameId) {
+      const section = document.getElementById('publicBroadcastSection');
+      if (!section) return;
+
+      const bc = typeof getBroadcastForGame === 'function' ? getBroadcastForGame(gameId) : null;
+
+      // Do NOT show empty or broken video player if no broadcast exists or disabled
+      if (!bc || !bc.enabled) {
+        section.style.display = 'none';
+        section.innerHTML = '';
+        return;
+      }
+
+      section.style.display = 'block';
+
+      const dateDisplay = bc.scheduledDate || (bc.scheduledTime ? new Date(bc.scheduledTime).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '');
+      const timeDisplay = bc.scheduledTimeVal || (bc.scheduledTime ? new Date(bc.scheduledTime).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : '');
+      const formattedTime = `${dateDisplay} · ${timeDisplay}`.trim();
+
+      if (bc.status === 'live') {
+        // LIVE NOW
+        section.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span class="game-status-badge status-live" style="background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.35); font-weight:800; font-size:0.85rem; padding: 0.35rem 0.85rem;">
+                <span class="pulse-dot" style="background:#ef4444; width:8px; height:8px; display:inline-block; border-radius:50%; margin-right:4px;"></span>
+                🔴 LIVE NOW
+              </span>
+              <h3 style="font-family: var(--font-display); font-size: 1.35rem; text-transform: uppercase; margin: 0;">${bc.title}</h3>
+            </div>
+            <a href="#videoPlayerBox" class="btn btn-primary btn-sm" onclick="togglePlayerVisibility(true)">Watch Live Stream &darr;</a>
+          </div>
+
+          <div id="videoPlayerBox" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: var(--radius-md); background: #000; border: 1px solid var(--border-light); margin-bottom: 1rem;">
+            <iframe src="${bc.url}" style="position: absolute; top:0; left:0; width:100%; height:100%; border:0;" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+          </div>
+
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">${bc.description || ''}</p>
+        `;
+      } else if (bc.status === 'scheduled') {
+        // UPCOMING LIVE
+        section.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <span class="game-status-badge status-upcoming" style="background: rgba(249,115,22,0.15); color: var(--primary); font-size:0.8rem; font-weight:800; padding: 0.3rem 0.75rem;">
+                🟠 UPCOMING LIVE
+              </span>
+              <h3 style="font-family: var(--font-display); font-size: 1.35rem; text-transform: uppercase; margin-top: 0.5rem; margin-bottom: 0.25rem;">${bc.title}</h3>
+              <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
+                Broadcast Starts: <strong>${formattedTime}</strong>
+              </p>
+            </div>
+            <div>
+              <span class="btn btn-outline btn-sm" style="opacity: 0.8; cursor: default;">Stream Scheduled</span>
+            </div>
+          </div>
+          ${bc.description ? `<p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 1rem; margin-bottom: 0;">${bc.description}</p>` : ''}
+        `;
+      } else if (bc.status === 'ended') {
+        // LIVE BROADCAST ENDED
+        section.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <span class="game-status-badge" style="background: rgba(148,163,184,0.12); color: #94a3b8; font-size:0.8rem; font-weight:800; padding: 0.3rem 0.75rem;">
+                ✓ LIVE BROADCAST ENDED
+              </span>
+              <h3 style="font-family: var(--font-display); font-size: 1.35rem; text-transform: uppercase; margin-top: 0.5rem; margin-bottom: 0.25rem;">${bc.title}</h3>
+              <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
+                The official live stream for this match has concluded.
+              </p>
+            </div>
+            <div>
+              <a href="${bc.url}" target="_blank" class="btn btn-outline btn-sm">Watch Replay &nearr;</a>
+            </div>
+          </div>
+        `;
+      }
+    }
   </script>
+  <script src="js/admin.js"></script>
 </body>
 </html>
