@@ -460,10 +460,16 @@
 
   window.deleteAdminTeam = function (teamId) {
     const teams = window.getAdminTeams();
+    const games = window.getAdminGames ? window.getAdminGames() : {};
+    const isReferenced = Object.values(games).some(game => game.homeTeamId === teamId || game.awayTeamId === teamId);
+    if (isReferenced) return false;
+
     if (teams[teamId]) {
       delete teams[teamId];
       localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
+      return true;
     }
+    return false;
   };
 
   // Coach CRUD within Team
@@ -671,7 +677,7 @@
   };
 
   // Sync nav bar counts across admin portal on load
-  document.addEventListener('DOMContentLoaded', () => {
+  function syncAdminNavigationCounts() {
     try {
       const teams = window.getAdminTeams();
       const tCount = Object.keys(teams).length;
@@ -695,6 +701,239 @@
         el.textContent = gCount;
       });
     } catch (e) {}
+  }
+
+  function buildDashboardKpis() {
+    const cards = document.querySelectorAll('.admin-kpi-card');
+    if (!cards.length) return;
+
+    const leagues = window.getAdminLeagues() || {};
+    const teams = window.getAdminTeams() || {};
+    const players = window.getAdminPlayers() || [];
+    const games = window.getAdminGames() || {};
+
+    const metrics = [
+      {
+        label: 'Total Leagues',
+        value: Object.keys(leagues).length,
+        emptyText: 'No leagues yet'
+      },
+      {
+        label: 'Active Teams',
+        value: Object.values(teams).filter(team => String(team.status || '').toLowerCase() === 'active').length,
+        emptyText: 'No teams yet'
+      },
+      {
+        label: 'Registered Players',
+        value: players.length,
+        emptyText: 'No players registered'
+      },
+      {
+        label: 'Scheduled Games',
+        value: Object.values(games).filter(game => String(game.status || '').toLowerCase() === 'scheduled').length,
+        emptyText: 'No games scheduled'
+      },
+      {
+        label: 'Completed Games',
+        value: Object.values(games).filter(game => String(game.status || '').toLowerCase() === 'completed').length,
+        emptyText: 'No games scheduled'
+      }
+    ];
+
+    cards.forEach((card) => {
+      const labelEl = card.querySelector('.admin-kpi-label');
+      const valueEl = card.querySelector('.admin-kpi-value');
+      const trendEl = card.querySelector('.admin-kpi-trend span');
+      if (!labelEl || !valueEl || !trendEl) return;
+
+      const label = labelEl.textContent.trim();
+      const metric = metrics.find(item => item.label === label);
+      if (!metric) return;
+
+      valueEl.textContent = String(metric.value);
+      if (metric.value === 0) {
+        trendEl.textContent = metric.emptyText;
+      }
+    });
+  }
+
+  function getSafeTeamName(teamId) {
+    const team = window.getAdminTeamById(teamId);
+    return team && team.name ? team.name : 'Unknown Team';
+  }
+
+  function getSafeLeagueName(leagueId) {
+    const league = window.getAdminLeagueById(leagueId);
+    return league && league.name ? league.name : 'Unknown League';
+  }
+
+  function gameTimestampValue(game) {
+    if (!game) return 0;
+    const date = game.date || '1970-01-01';
+    const time = game.time || '00:00';
+    const parsed = new Date(`${date}T${time}:00`);
+    if (Number.isNaN(parsed.getTime())) return 0;
+    return parsed.getTime();
+  }
+
+  function formatGameDateTime(game) {
+    const date = game && game.date ? game.date : '';
+    const time = game && game.time ? game.time : '';
+    if (!date && !time) return 'Date unavailable';
+
+    const normalized = `${date || '1970-01-01'}T${time || '00:00'}:00`;
+    const parsed = new Date(normalized);
+    if (Number.isNaN(parsed.getTime())) {
+      return [date, time].filter(Boolean).join(' • ');
+    }
+
+    const formattedDate = parsed.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+    const formattedTime = parsed.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit'
+    });
+
+    return `${formattedDate} • ${formattedTime}`;
+  }
+
+  function getGameStatusMarkup(game) {
+    const status = String(game.status || '').toLowerCase();
+
+    if (status === 'completed') {
+      const homeScore = game.homeScore !== null && game.homeScore !== undefined ? game.homeScore : '—';
+      const awayScore = game.awayScore !== null && game.awayScore !== undefined ? game.awayScore : '—';
+      return `<span class="admin-status completed">Completed (${homeScore} - ${awayScore})</span>`;
+    }
+
+    if (status === 'in-progress' || status === 'in_progress' || status === 'live' || status === 'in progress') {
+      return '<span class="admin-status scheduled">In Progress</span>';
+    }
+
+    return '<span class="admin-status scheduled">Scheduled</span>';
+  }
+
+  function renderRecentGames() {
+    const tableBody = document.querySelector('.admin-table-card .admin-table tbody');
+    if (!tableBody) return;
+
+    const games = Object.values(window.getAdminGames() || {}).sort((a, b) => gameTimestampValue(b) - gameTimestampValue(a));
+    if (!games.length) {
+      tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);">No games scheduled</td></tr>';
+      return;
+    }
+
+    tableBody.innerHTML = games.map((game) => {
+      const homeName = getSafeTeamName(game.homeTeamId);
+      const awayName = getSafeTeamName(game.awayTeamId);
+      const leagueName = getSafeLeagueName(game.leagueId);
+      return `
+        <tr>
+          <td>
+            <div class="admin-matchup-cell">
+              <span>${homeName}</span>
+              <span class="admin-matchup-vs">VS</span>
+              <span>${awayName}</span>
+            </div>
+          </td>
+          <td>${leagueName}</td>
+          <td>${formatGameDateTime(game)}</td>
+          <td>${getGameStatusMarkup(game)}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function formatActivityTimestamp(isoString) {
+    if (!isoString) return 'Unknown date';
+    const parsed = new Date(isoString);
+    if (Number.isNaN(parsed.getTime())) return 'Unknown date';
+    return parsed.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    });
+  }
+
+  function renderRecentActivity() {
+    const list = document.querySelector('.admin-activity-list');
+    if (!list) return;
+
+    const entries = [];
+
+    Object.values(window.getAdminLeagues() || {}).forEach((league) => {
+      if (league && league.updatedAt) {
+        entries.push({
+          type: 'league',
+          badge: 'orange',
+          description: `<strong>League updated:</strong> ${league.name || 'League'} was updated.`,
+          timestamp: league.updatedAt
+        });
+      }
+    });
+
+    Object.values(window.getAdminTeams() || {}).forEach((team) => {
+      if (team && team.updatedAt) {
+        entries.push({
+          type: 'team',
+          badge: 'cyan',
+          description: `<strong>Team updated:</strong> ${team.name || 'Team'} was updated.`,
+          timestamp: team.updatedAt
+        });
+      }
+    });
+
+    Object.values(window.getAdminGames() || {}).forEach((game) => {
+      if (game && game.updatedAt) {
+        const matchup = `${getSafeTeamName(game.homeTeamId)} vs ${getSafeTeamName(game.awayTeamId)}`;
+        entries.push({
+          type: 'game',
+          badge: 'green',
+          description: `<strong>Game updated:</strong> ${matchup} was updated.`,
+          timestamp: game.updatedAt
+        });
+      }
+    });
+
+    entries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    if (!entries.length) {
+      list.innerHTML = '<li class="admin-activity-item"><div class="admin-activity-text">No recent activity available.</div></li>';
+      return;
+    }
+
+    list.innerHTML = entries.slice(0, 4).map((entry) => `
+      <li class="admin-activity-item">
+        <div class="admin-activity-dot ${entry.badge}"></div>
+        <div>
+          <div class="admin-activity-text">${entry.description}</div>
+          <div class="admin-activity-time">${formatActivityTimestamp(entry.timestamp)}</div>
+        </div>
+      </li>
+    `).join('');
+  }
+
+  function initAdminDashboard() {
+    const hasDashboardKpis = !!document.querySelector('.admin-kpi-card');
+    const hasDashboardActivity = !!document.querySelector('.admin-activity-list');
+
+    if (!hasDashboardKpis || !hasDashboardActivity) {
+      return;
+    }
+
+    buildDashboardKpis();
+    renderRecentGames();
+    renderRecentActivity();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    syncAdminNavigationCounts();
+    initAdminDashboard();
   });
 
   // ─── CENTRAL GAMES DATA STORE ─────────────────────────────────────────────

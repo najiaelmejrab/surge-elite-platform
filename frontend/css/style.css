@@ -7,6 +7,9 @@
    1. Design System & CSS Variables (8px Spacing System)
    -------------------------------------------------------------------------- */
 :root {
+  /* Keep fixed-header offsets in one place for public pages and anchor jumps. */
+  --header-height: 72px;
+
   --bg-main: #0b0e14;
   --bg-surface: #111622;
   --bg-card: #161c2b;
@@ -60,6 +63,25 @@
 }
 
 /* --------------------------------------------------------------------------
+   Responsive Breakpoints (Mobile-First Design)
+   Use these in order when building responsive layouts:
+   
+   - Small Mobile: 360px - 480px  (@media (max-width: 480px))
+   - Mobile: 480px - 768px         (@media (max-width: 768px))
+   - Tablet: 768px - 1024px        (@media (max-width: 1024px))
+   - Desktop: 1024px+              (default/no media query)
+   
+   Standard viewports to test:
+   - 360 × 800 (small mobile)
+   - 390 × 844 (mobile)
+   - 430 × 932 (mobile)
+   - 768 × 1024 (tablet landscape)
+   - 1024 × 768 (tablet portrait)
+   - 1280 × 800 (desktop)
+   - 1440 × 900 (desktop)
+   -------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------
    2. Global Resets & Base Styles
    -------------------------------------------------------------------------- */
 * {
@@ -70,6 +92,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: var(--header-height);
   font-size: 16px;
 }
 
@@ -78,7 +101,6 @@ body {
   background-color: var(--bg-main);
   color: var(--text-main);
   line-height: 1.65;
-  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -211,13 +233,17 @@ button {
 /* --------------------------------------------------------------------------
    4. Navigation Bar (~72px Height)
    -------------------------------------------------------------------------- */
+.page-header-buffer {
+  padding-top: var(--header-height) !important;
+}
+
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
-  height: 72px;
+  height: var(--header-height);
   display: flex;
   align-items: center;
   transition: all var(--transition-normal);
@@ -392,8 +418,8 @@ button {
 .hero {
   position: relative;
   min-height: 100vh;
-  padding-top: 9rem;
-  padding-bottom: 5rem;
+  padding-top: 96px;
+  padding-bottom: 80px;
   display: flex;
   align-items: center;
   background-color: var(--bg-main);
@@ -785,6 +811,31 @@ button {
   transition: all var(--transition-normal);
   display: flex;
   flex-direction: column;
+  min-height: 360px;
+}
+
+.public-player-link {
+  display: block;
+  height: 100%;
+  min-width: 0;
+}
+
+.public-player-link .player-card {
+  height: 100%;
+}
+
+.public-player-status {
+  max-width: 58%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
 }
 
 .player-card:hover {
@@ -1060,11 +1111,34 @@ button {
   padding: 5rem 0 2.5rem 0;
 }
 
+.footer .container {
+  max-width: 1200px;
+}
+
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr repeat(3, 1fr);
-  gap: 3rem;
+  grid-template-columns: minmax(0, 1.8fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 3vw, 3rem);
   margin-bottom: 4rem;
+  align-items: start;
+  justify-items: center;
+}
+
+.footer-brand,
+.footer-col {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.footer-brand {
+  max-width: 360px;
+}
+
+.footer-brand .logo {
+  margin: 0 auto;
 }
 
 .footer-brand p {
@@ -1072,6 +1146,11 @@ button {
   margin-top: 1rem;
   max-width: 320px;
   font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.footer-col {
+  max-width: 220px;
 }
 
 .footer-col h4 {
@@ -1086,23 +1165,30 @@ button {
 .footer-links {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.85rem;
+  width: 100%;
 }
 
 .footer-links a {
   color: var(--text-muted);
   font-size: 0.925rem;
+  line-height: 1.5;
+  text-align: center;
 }
 
 .footer-links a:hover {
   color: var(--primary);
-  padding-left: 4px;
+  padding-left: 0;
 }
 
 .social-links {
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 1rem;
   margin-top: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .social-icon {
@@ -1130,11 +1216,77 @@ button {
   border-top: 1px solid var(--border-light);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  text-align: center;
   color: var(--text-muted);
   font-size: 0.875rem;
   flex-wrap: wrap;
   gap: 1rem;
+}
+
+.footer-bottom > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.footer-bottom a {
+  color: var(--text-muted);
+}
+
+.footer-bottom a:hover {
+  color: var(--primary);
+}
+
+@media (max-width: 900px) {
+  .footer-grid {
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+   gap: 2.25rem;
+  }
+
+  .footer-brand {
+   grid-column: 1 / -1;
+   max-width: 100%;
+  }
+
+  .footer-brand p {
+   max-width: 520px;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer {
+   padding-top: 4rem;
+  }
+
+  .footer-grid {
+   grid-template-columns: 1fr;
+   gap: 2rem;
+   margin-bottom: 3rem;
+  }
+
+  .footer-brand,
+  .footer-col {
+   max-width: 100%;
+  }
+
+  .footer-brand p,
+  .footer-links a {
+   max-width: 100%;
+   word-break: break-word;
+  }
+
+  .footer-bottom {
+   flex-direction: column;
+   gap: 0.85rem;
+  }
+
+  .footer-bottom > div {
+   flex-direction: column;
+   gap: 0.75rem;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -1473,11 +1625,108 @@ button {
 /* Standings Table */
 .table-responsive {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overflow-y: hidden;
+  touch-action: pan-x;
   background: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-lg);
 }
+
+.box-score-scroll {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+}
+
+/* Local horizontal scroll utility for small screens */
+@media (max-width: 600px) {
+  .horizontal-scroll {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+  }
+
+  /* Ensure existing scroll helpers behave consistently on mobile */
+  .table-responsive,
+  .box-score-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overflow-y: hidden;
+    touch-action: pan-x;
+  }
+
+  /* Keep table columns aligned by preventing column wrapping and providing a sensible min-width so horizontal scroll is available */
+  /* Reduced min-width so smaller phones still produce horizontal overflow without squishing columns */
+  .quarter-scoreboard,
+  .box-score-table,
+  .team-leaders-grid,
+  .highlights-placeholder {
+    min-width: 560px;
+  }
+
+  .quarter-scoreboard th,
+  .box-score-table th {
+    white-space: nowrap;
+  }
+
+  /* Visual and touch affordances for local horizontal scroll areas */
+  .horizontal-scroll {
+    position: relative; /* for gradient hint pseudo-element */
+    scrollbar-gutter: stable; /* avoid layout shift when scrollbar appears */
+    overscroll-behavior-x: contain; /* prevent page from scrolling when swiping */
+    box-sizing: border-box;
+  }
+
+  /* Constrain horizontal scrollers to parent container */
+  .horizontal-scroll,
+  .box-score-scroll {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-gutter: stable;
+  }
+
+  /* Ensure section titles and parents are properly sized */
+  section.card h2 {
+    width: 100%;
+    box-sizing: border-box;
+    word-break: break-word;
+  }
+
+  /* Remove the gradient seam pseudo-element */
+  .horizontal-scroll::after {
+    display: none;
+  }
+
+  /* Basic horizontal scrollbar styling for WebKit-based browsers */
+  .horizontal-scroll::-webkit-scrollbar {
+    height: 8px;
+  }
+  .horizontal-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+  }
+  .horizontal-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
 
 .standings-table {
   width: 100%;
@@ -1718,6 +1967,65 @@ button {
   }
 }
 
+/* Mobile table strategy: keep normal tables, allow wrapper scroll */
+@media (max-width: 600px) {
+  .table-responsive,
+  .box-score-scroll {
+   width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   overflow-x: auto;
+   overflow-y: hidden;
+   -webkit-overflow-scrolling: touch;
+   touch-action: pan-x;
+  }
+
+  .box-score-table,
+  .quarter-scoreboard,
+  .standings-table,
+  .roster-table {
+   display: table;
+   width: max-content;
+   min-width: 760px;
+   border-collapse: collapse;
+   table-layout: auto;
+  }
+
+  .quarter-scoreboard {
+   min-width: 520px;
+  }
+
+  .standings-table,
+  .roster-table {
+   min-width: 650px;
+  }
+
+  .box-score-table th,
+  .quarter-scoreboard th,
+  .standings-table th,
+  .roster-table th,
+  .box-score-table td,
+  .quarter-scoreboard td,
+  .standings-table td,
+  .roster-table td {
+   display: table-cell;
+   position: static !important;
+   white-space: nowrap;
+  }
+
+  .box-score-table td::before,
+  .quarter-scoreboard td::before,
+  .standings-table td::before,
+  .roster-table td::before {
+   content: none !important;
+   position: static !important;
+   left: auto !important;
+   top: auto !important;
+   width: auto !important;
+   padding: 0 !important;
+  }
+}
+
 /* --------------------------------------------------------------------------
    15. Milestone 3: Team Module Styles
    -------------------------------------------------------------------------- */
@@ -1794,6 +2102,7 @@ button {
   font-size: 1.5rem;
   letter-spacing: 0.02em;
   line-height: 1.15;
+  overflow-wrap: anywhere;
 }
 
 .team-card-division {
@@ -2753,7 +3062,8 @@ button {
 
 /* Box score table */
 .box-score-table {
-  width: 100%;
+  width: max-content;
+  min-width: 700px;
   border-collapse: collapse;
   font-size: 0.855rem;
   text-align: center;
@@ -2800,6 +3110,22 @@ button {
 .box-score-table .stat-hi {
   font-weight: 800;
   color: var(--primary);
+}
+
+/* Card sections must respect container constraints - CRITICAL FIX */
+main.container .card {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+/* Ensure horizontal-scroll containers don't overflow */
+.horizontal-scroll {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
 }
 
 /* Team Leaders Grid */
@@ -2872,10 +3198,28 @@ button {
   color: var(--primary);
 }
 
-/* Responsive Games */
+/* Comprehensive mobile-first responsive improvements */
 @media (max-width: 768px) {
+  /* Fix card overflow on tablet and below */
+  .card {
+    width: 100%;
+    max-width: 100%;
+    padding: 1.5rem;
+    box-sizing: border-box;
+  }
+
+  /* Ensure horizontal-scroll containers don't overflow */
+  .horizontal-scroll {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
+  }
+
+  /* Fix team leaders grid on tablet */
   .team-leaders-grid {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
   .game-score-hero-matchup {
@@ -2916,5 +3260,442 @@ button {
   .hero-team-block {
     flex-direction: row;
     justify-content: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   COMPREHENSIVE MOBILE-FIRST RESPONSIVE IMPROVEMENTS
+   Priority fixes for responsive design across all pages
+   -------------------------------------------------------------------------- */
+
+/* Ensure proper mobile viewport behavior */
+@media (max-width: 768px) {
+  /* Fix container padding on tablet */
+  .container {
+    padding: 0 var(--space-2);
+  }
+
+  /* Hero sections should stack properly on tablet */
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+  }
+
+  /* Improve grid layouts on tablet */
+  .leagues-grid,
+  .games-grid,
+  .players-grid,
+  .teams-grid,
+  .players-directory-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  /* Better card sizing on tablet */
+  .league-card,
+  .game-card,
+  .player-card,
+  .team-card {
+    padding: 1.5rem;
+  }
+
+  /* Improve typography on tablet */
+  .section-title {
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+
+  /* Fix modal/card overflow on tablet */
+  .modal-content,
+  .admin-card {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+  }
+}
+
+/* Comprehensive mobile layout fixes */
+@media (max-width: 600px) {
+  /* Mobile container padding */
+  .container {
+    padding: 0 var(--space-2);
+  }
+
+  /* Single column grids on mobile */
+  .leagues-grid,
+  .games-grid,
+  .players-grid,
+  .teams-grid,
+  .players-directory-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Reduce card padding on mobile */
+  .league-card,
+  .game-card,
+  .player-card,
+  .team-card,
+  .stat-card {
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+  }
+
+  /* Hero section mobile improvements */
+  .hero {
+    padding-top: 96px;
+    padding-bottom: 60px;
+    min-height: auto;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+  }
+
+  .hero-title {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+  }
+
+  .hero-subtitle {
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
+  }
+
+  /* Responsive stats strip */
+  .hero-stats-strip {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-top: 1.5rem;
+  }
+
+  .hero-stat-item {
+    width: 100%;
+  }
+
+  /* Fix section titles on mobile */
+  .section-title {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  .section-header {
+    margin: 0 auto 2rem auto;
+  }
+
+  /* Improve button sizing */
+  .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  /* Fix badge sizing */
+  .badge {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.65rem;
+  }
+
+  /* Improve table handling on mobile */
+  .table-responsive {
+    max-width: 100%;
+    border-radius: var(--radius-md);
+  }
+
+  /* Ensure sections don't have weird padding */
+  .section-heading {
+    padding: 0 0 1rem 0;
+  }
+
+  /* Game card improvements */
+  .game-card-top {
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+  }
+
+  .game-card-matchup {
+    flex-direction: column;
+  }
+
+  .game-matchup-team {
+    width: 100%;
+  }
+
+  /* Player card improvements */
+  .player-card-content {
+    padding: 1rem;
+  }
+
+  /* Team card improvements */
+  .team-card-info {
+    padding: 1rem;
+  }
+
+  /* Ensure modals don't overflow */
+  .modal-content {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    border-radius: var(--radius-lg);
+  }
+
+  /* Fix breadcrumb on mobile */
+  .breadcrumb {
+    font-size: 0.8rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  /* Responsive navbar */
+  .navbar {
+    height: auto;
+    min-height: var(--header-height);
+  }
+
+  .nav-container {
+    padding: var(--space-1) 0;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .mobile-toggle {
+    display: block;
+  }
+
+  /* Ensure hero stats are responsive */
+  .hero-stat-num {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  .hero-stat-label {
+    font-size: 0.7rem;
+  }
+}
+
+/* Extra small mobile improvements */
+@media (max-width: 480px) {
+  /* Reduce padding further on very small screens */
+  .container {
+    padding: 0 var(--space-1);
+  }
+
+  /* Single column for player cards */
+  .players-directory-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Reduce hero padding */
+  .hero {
+    padding-top: 80px;
+    padding-bottom: 50px;
+  }
+
+  /* Stack stat items */
+  .hero-stats-strip {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Full-width buttons */
+  .hero-buttons .btn {
+    width: 100%;
+  }
+
+  /* Smaller typography on very small screens */
+  .section-title {
+    font-size: 1.25rem;
+  }
+
+  .hero-title {
+    font-size: 1.5rem;
+  }
+
+  /* Compact card styling */
+  .league-card,
+  .game-card,
+  .player-card,
+  .team-card {
+    padding: 1rem;
+  }
+
+  /* Reduce button size further */
+  .btn {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.85rem;
+  }
+
+  /* Compact modal on small screens */
+  .modal-content {
+    margin: 0.5rem;
+    max-height: calc(100vh - 1rem);
+  }
+
+  /* Fix logo on very small screens */
+  .logo {
+    font-size: 1.2rem;
+    gap: 0.5rem;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Compact game card */
+  .game-card-top {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* Ensure tables have proper scroll */
+  .horizontal-scroll,
+  .box-score-scroll {
+    width: 100%;
+    max-width: 100%;
+    border-radius: var(--radius-md);
+  }
+
+  /* Player card adjustments */
+  .player-card {
+    min-height: 300px;
+  }
+
+  .player-header-bg {
+    height: 100px;
+  }
+
+  .player-avatar-wrapper {
+    width: 70px;
+    height: 70px;
+    margin-top: -35px;
+    margin-left: 1rem;
+  }
+
+  .player-name {
+    font-size: 1.15rem;
+  }
+
+  .player-stats-grid {
+    gap: 0.35rem;
+    padding: 0.6rem;
+  }
+
+  .player-stat-val {
+    font-size: 1rem;
+  }
+
+  .player-stat-lbl {
+    font-size: 0.6rem;
+  }
+
+  /* Team card adjustments */
+  .team-card {
+    padding: 0.75rem;
+  }
+
+  .team-card-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* Tablet improvements (768px to 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Better grid layout on tablet */
+  .players-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .teams-grid,
+  .leagues-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Player card sizing for tablet */
+  .player-card {
+    min-height: 380px;
+  }
+
+  .player-header-bg {
+    height: 110px;
+  }
+
+  .player-avatar-wrapper {
+    width: 80px;
+    height: 80px;
+    margin-top: -40px;
+  }
+
+  /* Game card improvements on tablet */
+  .game-card {
+    padding: 1.5rem;
+  }
+
+  .game-card-matchup {
+    flex-direction: row;
+  }
+
+  /* Section padding for tablet */
+  .container {
+    padding: 0 var(--space-3);
+  }
+}
+
+/* Desktop improvements (1024px+) */
+@media (min-width: 1024px) {
+  /* Optimal grid layout on desktop */
+  .players-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .teams-grid,
+  .leagues-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .games-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Full desktop spacing */
+  .container {
+    padding: 0 var(--space-3);
+  }
+
+  /* Section padding for desktop */
+  .leagues-section,
+  .games-section,
+  .players-section,
+  .stats-section,
+  .cta-section,
+  .testimonials-section {
+    padding: 96px 0;
+  }
+
+  /* Player card sizing for desktop */
+  .player-card {
+    min-height: 400px;
+  }
+
+  .player-header-bg {
+    height: 130px;
+  }
+
+  .player-avatar-wrapper {
+    width: 90px;
+    height: 90px;
+    margin-top: -50px;
   }
 }

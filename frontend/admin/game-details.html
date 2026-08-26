@@ -281,6 +281,16 @@
           </div>
         </div>
 
+        <section class="admin-table-card game-summary-card" id="gameSummarySection" aria-label="Game summary">
+          <div class="admin-table-header">
+            <div>
+              <h2 class="admin-table-title">Game Summary</h2>
+              <p class="admin-cell-sub">Period scoring and player box scores from the current game record.</p>
+            </div>
+          </div>
+          <div id="gameSummaryContent"></div>
+        </section>
+
         <!-- ==========================================
              LIVE BROADCAST SECTION
              ========================================== -->
@@ -432,9 +442,14 @@
     // Fetch from central local storage game store
     const game = getAdminGameById(currentGameId);
     if (!game) {
-      alert('Game fixture not found!');
-      window.location.href = 'games.html';
-    }
+      document.querySelector('.admin-content').innerHTML = `
+        <div class="admin-empty-state">
+          <h1 class="admin-topbar-title">Game Not Found</h1>
+          <p class="admin-empty-desc">This game may have been deleted or the link is invalid.</p>
+          <a class="btn btn-outline" href="games.html">Back to Games</a>
+        </div>
+      `;
+    } else {
 
     const leagues = getAdminLeagues();
     const teams = getAdminTeams();
@@ -485,6 +500,44 @@
     } else {
       badgeEl.className = 'admin-status scheduled';
       badgeEl.textContent = 'Scheduled Match';
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>'"]/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+      }[char]));
+    }
+
+    function renderGameSummary() {
+      const container = document.getElementById('gameSummaryContent');
+      if (!container) return;
+
+      const quarterScores = game.quarterScores || { home: [], away: [] };
+      const otScores = game.otScores || { home: [], away: [] };
+      const homePeriods = Array.isArray(quarterScores.home) ? quarterScores.home : [];
+      const awayPeriods = Array.isArray(quarterScores.away) ? quarterScores.away : [];
+      const homeOt = Array.isArray(otScores.home) ? otScores.home : [];
+      const awayOt = Array.isArray(otScores.away) ? otScores.away : [];
+      const periodCount = Math.max(homePeriods.length, awayPeriods.length, 4);
+      const periods = Array.from({ length: periodCount }, (_, index) => `
+        <tr><td>Q${index + 1}</td><td>${homePeriods[index] ?? '—'}</td><td>${awayPeriods[index] ?? '—'}</td></tr>
+      `).join('');
+      const overtime = homeOt.length || awayOt.length ? `
+        <tr class="game-summary-ot"><td>OT</td><td>${homeOt.join(' + ') || '—'}</td><td>${awayOt.join(' + ') || '—'}</td></tr>
+      ` : '';
+      const boxScore = (entries, label) => {
+        const rows = Array.isArray(entries) && entries.length ? entries.map(entry => {
+          const stats = entry.stats || {};
+          return `<tr><td>${escapeHtml(entry.name || 'Unknown Player')} <span class="admin-cell-sub">#${escapeHtml(entry.jersey || '—')}</span></td><td>${escapeHtml(entry.position || '—')}</td><td>${stats.min ?? 0}</td><td>${stats.pts ?? 0}</td><td>${stats.reb ?? 0}</td><td>${stats.ast ?? 0}</td><td>${stats.stl ?? 0}</td><td>${stats.blk ?? 0}</td></tr>`;
+        }).join('') : '<tr><td colspan="8" class="game-summary-empty">No player box score recorded.</td></tr>';
+        return `<div class="game-summary-box"><h3>${label}</h3><div class="admin-table-scroll"><table class="admin-table"><thead><tr><th>Player</th><th>POS</th><th>MIN</th><th>PTS</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+      };
+
+      container.innerHTML = `
+        <div class="game-summary-scoreline"><span>${escapeHtml(homeName)}</span><strong>${game.homeScore ?? 0} — ${game.awayScore ?? 0}</strong><span>${escapeHtml(awayName)}</span></div>
+        <div class="admin-table-scroll"><table class="admin-table game-summary-periods"><thead><tr><th>Period</th><th>${escapeHtml(homeName)}</th><th>${escapeHtml(awayName)}</th></tr></thead><tbody>${periods}${overtime}<tr class="game-summary-total"><td>Total</td><td>${game.homeScore ?? 0}</td><td>${game.awayScore ?? 0}</td></tr></tbody></table></div>
+        <div class="game-summary-boxes">${boxScore(game.homeBoxScore, homeName)}${boxScore(game.awayBoxScore, awayName)}</div>
+      `;
     }
 
     // Render Live Broadcast UI section
@@ -699,7 +752,9 @@
     }
 
     // Initial render
+    renderGameSummary();
     renderBroadcastSection();
+    }
   </script>
 </body>
 

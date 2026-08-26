@@ -403,13 +403,20 @@
       const data = getPlayerAndTeam(playerId);
       if (!data) return;
       const { player, team } = data;
+      const positionValues = {
+        PG: 'Point Guard (PG)',
+        SG: 'Shooting Guard (SG)',
+        SF: 'Small Forward (SF)',
+        PF: 'Power Forward (PF)',
+        C: 'Center (C)'
+      };
 
       document.getElementById('playerModalTitle').textContent = 'Edit Player Info';
       document.getElementById('playerIdInput').value = player.id;
       document.getElementById('playerOriginalTeamIdInput').value = team.id;
       document.getElementById('playerNameInput').value = player.name;
       document.getElementById('playerJerseyInput').value = player.jersey;
-      document.getElementById('playerPositionInput').value = player.position;
+      document.getElementById('playerPositionInput').value = positionValues[player.position] || player.position;
       document.getElementById('playerHeightInput').value = player.height || '';
       document.getElementById('playerWeightInput').value = player.weight || '';
       document.getElementById('playerStatusInput').value = player.status || 'active';

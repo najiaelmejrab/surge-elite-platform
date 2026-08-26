@@ -51,13 +51,13 @@
 /* --------------------------------------------------------------------------
    PAGE-LEVEL HERO SPACING  (leagues, teams, games, player pages)
    -------------------------------------------------------------------------- */
-/* Make sure content clears the 72px navbar on non-homepage pages */
+/* Keep header offset aligned with the navbar height used in style.css */
 body > header + * {
   /* hero sections on interior pages */
 }
 /* Fallback inline-padding-top used on most pages — increase via class */
 .page-hero-pad {
-  padding-top: 72px;
+  padding-top: var(--header-height);
 }
 
 /* --------------------------------------------------------------------------
@@ -913,7 +913,8 @@ body > header + * {
 }
 
 .box-score-table {
-  width: 100%;
+  width: max-content;
+  min-width: 700px;
   border-collapse: collapse;
   font-size: 0.87rem;
 }

@@ -67,7 +67,7 @@
           <a href="games.html" class="admin-nav-link active">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
             Games
-            <span class="nav-count">24</span>
+            <span class="nav-count" id="navGamesCount">24</span>
           </a>
         </div>
       </nav>
@@ -351,8 +351,11 @@
       const tbody = document.getElementById('gamesTableBody');
       const gamesList = Object.values(games);
 
-      document.getElementById('navGamesCount').textContent = gamesList.length;
-      document.querySelector('.admin-table-card .admin-table-title').textContent = `Scheduled & Completed Fixtures (${gamesList.length})`;
+      const navGamesCount = document.getElementById('navGamesCount');
+      if (navGamesCount) navGamesCount.textContent = gamesList.length;
+
+      const tableTitle = document.querySelector('.admin-table-card .admin-table-title');
+      if (tableTitle) tableTitle.textContent = `Scheduled & Completed Fixtures (${gamesList.length})`;
 
       if (gamesList.length === 0) {
         tbody.innerHTML = `
@@ -580,6 +583,11 @@
 
       const leagues = getAdminLeagues();
       const teams = getAdminTeams();
+
+      if (homeTeamIdVal && homeTeamIdVal === awayTeamIdVal) {
+        adminToast('Home and away teams must be different.', 'error');
+        return;
+      }
 
       const gameData = {
         id: gameId || null,

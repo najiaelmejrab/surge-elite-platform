@@ -402,8 +402,11 @@
     // Delete Team Handler
     function handleDeleteTeam(id, name) {
       adminConfirmDelete(name, () => {
-        deleteAdminTeam(id);
-        renderTeamsTable();
+        if (deleteAdminTeam(id)) {
+          renderTeamsTable();
+        } else {
+          adminToast('Team cannot be deleted while it is referenced by a game.', 'error');
+        }
       });
     }
 

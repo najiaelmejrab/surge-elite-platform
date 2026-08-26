@@ -84,7 +84,7 @@
   <!-- ==========================================
        BREADCRUMBS & TOP CONTEXT
        ========================================== -->
-  <div class="container" style="padding-top: 2rem;">
+  <div class="container page-header-buffer">
     <div class="breadcrumb" style="margin-bottom: 1rem;">
       <a href="index.html">Home</a>
       <span class="breadcrumb-separator">/</span>
@@ -189,7 +189,7 @@
           <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700;">4 Quarters • 10 Min</span>
         </div>
 
-        <div style="overflow-x: auto;">
+        <div class="horizontal-scroll">
           <table class="quarter-scoreboard">
             <thead>
               <tr>
@@ -230,6 +230,12 @@
                 <td id="qAway4">23</td>
                 <td class="total-cell" style="color: var(--text-main);" id="qAwayTotal">82</td>
               </tr>
+              <tr id="publicOtRow" style="display: none;">
+                <td>OT</td>
+                <td id="qHomeOt">—</td>
+                <td id="qAwayOt">—</td>
+                <td colspan="3"></td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -245,7 +251,7 @@
           <span style="font-size: 0.8rem; color: var(--text-muted);">Head-to-Head Leaders</span>
         </div>
 
-        <div class="team-leaders-grid">
+        <div class="horizontal-scroll"><div class="team-leaders-grid">
           
           <!-- Home Leaders -->
           <div class="team-leader-col">
@@ -372,6 +378,7 @@
           </div><!-- /.team-leader-col Away -->
 
         </div>
+        </div>
       </section>
 
       <!-- SECTION 3: FULL BOX SCORE TABLE -->
@@ -393,8 +400,9 @@
         </div>
 
         <!-- Home Box Score Table -->
-        <div id="boxScoreHomeWrapper" style="overflow-x: auto;">
-          <table class="box-score-table">
+        <div id="boxScoreHomeWrapper" class="box-score-scroll">
+          <div class="horizontal-scroll">
+            <table class="box-score-table">
             <thead>
               <tr>
                 <th>Player</th>
@@ -520,10 +528,12 @@
             </tfoot>
           </table>
         </div>
+        </div>
 
         <!-- Away Box Score Table (Initially hidden) -->
-        <div id="boxScoreAwayWrapper" style="display: none; overflow-x: auto;">
-          <table class="box-score-table">
+        <div id="boxScoreAwayWrapper" class="box-score-scroll" style="display: none;">
+          <div class="horizontal-scroll">
+            <table class="box-score-table">
             <thead>
               <tr>
                 <th>Player</th>
@@ -659,7 +669,7 @@
           <span class="badge badge-orange">HD 1080p</span>
         </div>
 
-        <div class="highlights-placeholder">
+        <div class="horizontal-scroll"><div class="highlights-placeholder">
           <div class="highlights-icon">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
               <polygon points="6 3 20 12 6 21 6 3"></polygon>
@@ -680,6 +690,7 @@
             </button>
             <a href="games.html" class="btn btn-primary btn-sm">← Back to All Games</a>
           </div>
+        </div>
         </div>
       </section>
 
@@ -750,6 +761,7 @@
   </div>
 
   <!-- Shared Javascript -->
+  <script src="js/public-data.js"></script>
   <script src="js/app.js"></script>
 
   <!-- Dynamic Game Details Script -->
