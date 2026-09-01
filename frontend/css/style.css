@@ -550,7 +550,7 @@ button {
   align-items: center;
   gap: 1.25rem;
   flex-wrap: wrap;
-  margin-bottom: 3.5rem;
+  margin-bottom: 0;
 }
 
 .hero-stats-strip {
@@ -1670,9 +1670,7 @@ button {
   /* Keep table columns aligned by preventing column wrapping and providing a sensible min-width so horizontal scroll is available */
   /* Reduced min-width so smaller phones still produce horizontal overflow without squishing columns */
   .quarter-scoreboard,
-  .box-score-table,
-  .team-leaders-grid,
-  .highlights-placeholder {
+  .box-score-table {
     min-width: 560px;
   }
 

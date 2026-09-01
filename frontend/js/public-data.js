@@ -152,7 +152,7 @@
     if (!document.getElementById('publicLeagueTeams') && teams.length) {
       const section = document.createElement('section');
       section.id = 'publicLeagueTeams';
-      section.className = 'container';
+      section.className = 'league-participating-teams';
       section.innerHTML = `<h2 class="section-title">Participating Teams</h2><div class="teams-grid">${teams.map(team => `<a href="team-details.html?id=${encodeURIComponent(team.id)}" class="team-card"><h3 class="team-card-title">${esc(team.name)}</h3><p>${list(team.players).length} players • ${esc(team.coach?.name || 'Coach unassigned')}</p></a>`).join('')}</div>`;
       document.querySelector('main')?.appendChild(section);
     }

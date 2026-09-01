@@ -31,23 +31,6 @@
   margin-bottom: 2.75rem;
 }
 
-.hero-stat-num {
-  font-size: 2.25rem;
-  letter-spacing: -0.01em;
-}
-
-.hero-stat-label {
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-top: 2px;
-}
-
-.hero-stats-strip {
-  gap: 3rem;
-  padding-top: 2.5rem;
-}
-
 /* --------------------------------------------------------------------------
    PAGE-LEVEL HERO SPACING  (leagues, teams, games, player pages)
    -------------------------------------------------------------------------- */
@@ -1016,4 +999,356 @@ body > header + * {
 ::selection {
   background: rgba(249, 115, 22, 0.3);
   color: #fff;
+}
+
+/* ==========================================================================
+   MOBILE-SPECIFIC QA REFINEMENTS (Index CTA, Game Details Highlights & Leaders)
+   Modeled after player-profile.html responsive quality
+   ========================================================================== */
+
+/* --- 1. HOME: PRO PLAYER SUITE RESPONSIVE REFINEMENTS --- */
+@media (max-width: 900px) {
+  .cta-section {
+    padding: 64px 0;
+  }
+
+  .cta-box {
+    padding: 2.75rem 2rem;
+  }
+
+  .cta-content {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+  }
+
+  .cta-text {
+    max-width: 100%;
+  }
+
+  .cta-features-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .cta-section {
+    padding: 48px 0;
+  }
+
+  .cta-box {
+    padding: 2rem 1.25rem;
+    border-radius: var(--radius-lg);
+  }
+
+  .cta-box::before {
+    width: 300px;
+    height: 300px;
+    top: -20%;
+    right: -10%;
+  }
+
+  .cta-text h2 {
+    font-size: clamp(1.65rem, 6.5vw, 2.15rem);
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+
+  .cta-text p {
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-text .btn-trigger-premium {
+    width: 100%;
+    justify-content: center;
+    padding: 0.85rem 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .cta-features-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .cta-feature-item {
+    padding: 1rem 1.15rem;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .cta-feature-item:hover {
+    background: rgba(249, 115, 22, 0.08);
+    border-color: var(--border-orange);
+  }
+
+  .feature-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .feature-title span {
+    font-size: 1.15rem;
+    line-height: 1;
+    color: var(--primary);
+  }
+
+  .feature-desc {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+  }
+}
+
+/* --- 2. GAME DETAILS: HIGHLIGHTS & VIDEO REPLAY RESPONSIVE REFINEMENTS --- */
+.highlights-placeholder {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .highlights-placeholder {
+    padding: 2.25rem 1.5rem;
+    min-height: 200px;
+    gap: 1rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .highlights-placeholder {
+    padding: 1.75rem 1rem;
+    border-radius: var(--radius-lg);
+    gap: 0.85rem;
+  }
+
+  .highlights-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .highlights-icon svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .highlights-placeholder h3 {
+    font-size: 1.15rem !important;
+    margin-bottom: 0.35rem !important;
+  }
+
+  .highlights-placeholder p {
+    font-size: 0.84rem !important;
+    line-height: 1.45 !important;
+  }
+
+  .highlights-placeholder div:last-child {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+  }
+
+  .highlights-placeholder div:last-child .btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.84rem;
+    padding: 0.65rem 1rem;
+  }
+}
+
+/* --- 3. GAME DETAILS: STATISTICAL LEADERS COHESIVE MOBILE LAYOUT --- */
+.team-leaders-grid {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .team-leaders-grid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+    min-width: 0 !important;
+  }
+
+  .team-leader-col {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.15rem;
+    box-sizing: border-box;
+  }
+
+  .team-leader-col h3 {
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .leader-stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem;
+    padding: 0.75rem 0.9rem;
+    margin-bottom: 0.55rem;
+    background: rgba(17, 22, 34, 0.65);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    box-sizing: border-box;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .leader-stat-row:last-child {
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .leader-stat-row:hover {
+    border-color: var(--border-orange);
+    background: rgba(249, 115, 22, 0.04);
+  }
+
+  .leader-player-col {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .leader-player-col .team-logo-pill {
+    width: 36px;
+    height: 36px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .leader-player-col > div:last-child {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .leader-player-col > div:last-child > div:first-child {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.25;
+  }
+
+  .leader-player-col > div:last-child > div:last-child {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    line-height: 1.2;
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .leader-stat-row > div:last-child {
+    text-align: right;
+    flex-shrink: 0;
+    min-width: 70px;
+    padding-left: 0.4rem;
+  }
+
+  .leader-stat-category {
+    font-size: 0.68rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
+  }
+
+  .leader-stat-row > div:last-child > div:last-child {
+    font-family: var(--font-display);
+    font-size: 1.2rem !important;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1;
+  }
+}
+
+@media (max-width: 400px) {
+  .team-leader-col {
+    padding: 1rem 0.85rem;
+  }
+
+  .leader-stat-row {
+    padding: 0.65rem 0.75rem;
+    gap: 0.6rem;
+  }
+
+  .leader-player-col .team-logo-pill {
+    width: 32px;
+    height: 32px;
+    font-size: 0.72rem;
+  }
+
+  .leader-player-col > div:last-child > div:first-child {
+    font-size: 0.84rem;
+  }
+
+  .leader-stat-row > div:last-child > div:last-child {
+    font-size: 1.1rem !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   LEAGUE DETAILS — Participating Teams section (dynamically injected)
+   Inherits horizontal alignment from parent main.container.
+   Only controls vertical spacing so heading + cards sit compactly.
+   -------------------------------------------------------------------------- */
+.league-participating-teams {
+  padding-top: 1.5rem;
+  padding-bottom: 0;
+}
+
+.league-participating-teams .section-title {
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  margin-bottom: 1rem;
+}
+
+.league-participating-teams .teams-grid {
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .league-participating-teams {
+    padding-top: 1.25rem;
+  }
+
+  .league-participating-teams .section-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .league-participating-teams .teams-grid {
+    gap: 1rem;
+  }
 }

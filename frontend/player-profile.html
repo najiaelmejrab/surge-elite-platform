@@ -615,7 +615,20 @@
         }
       };
 
-      const data = players[id];
+      // ID aliases mapping
+      const idAliases = {
+        'p001': 'marcus',
+        'p002': 'jamal',
+        'p003': 'cameron',
+        'p004': 'elena',
+        'p005': 'tyson',
+        'p006': 'kai',
+        'p007': 'darius',
+        'p008': 'tyler'
+      };
+
+      const resolvedId = idAliases[id] || id;
+      const data = players[resolvedId];
       if (!data) return; // defaults to Marcus Vance (initial HTML)
 
       const set = (elId, val) => { const el = document.getElementById(elId); if (el) el.textContent = val; };
