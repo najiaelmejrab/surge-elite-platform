@@ -242,7 +242,7 @@
     /* Info Grid */
     .ge-info-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
       gap: 0.75rem 1.5rem;
       margin-bottom: 1rem;
     }
@@ -279,10 +279,25 @@
       cursor: pointer;
     }
 
+    /* Scroll Wrapper for complex tables */
+    .ge-scroll-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 1rem;
+    }
+
     @media (max-width: 640px) {
       .ge-score-hero { flex-direction: column; gap: 1rem; }
       #geQuarterGrid { grid-template-columns: 70px 1fr 1fr; }
       .ge-stat-input { width: 40px; }
+      
+      .ge-actions-bar {
+        flex-direction: column;
+      }
+      .ge-actions-bar .btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -308,12 +323,10 @@
           </div>
           SURGE <span>ELITE</span>
         </a>
-        <span class="admin-portal-badge">ADMIN</span>
       </div>
 
       <nav class="admin-nav">
         <div class="admin-nav-section">
-          <span class="admin-nav-label">Core Management</span>
           <a href="index.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
             Dashboard
@@ -433,8 +446,10 @@
         <!-- Quarter Scoring -->
         <div class="ge-quarter-card">
           <h2>Period Scoring</h2>
-          <div id="geQuarterGrid">
-            <!-- Rendered by JS -->
+          <div class="ge-scroll-wrapper">
+            <div id="geQuarterGrid">
+              <!-- Rendered by JS -->
+            </div>
           </div>
           <div class="ge-ot-actions">
             <button class="ge-add-player-btn" onclick="geAddOT()">+ Add Overtime Period</button>
@@ -451,14 +466,16 @@
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
             <h2 id="geHomePlayerPeriodTitle">Home — Player Scoring By Period</h2>
           </div>
-          <table class="ge-box-table" style="margin-top: 0.5rem;">
-            <thead id="geHomePlayerPeriodHead">
-              <!-- Rendered by JS -->
-            </thead>
-            <tbody id="geHomePlayerPeriodBody">
-              <!-- Rendered by JS -->
-            </tbody>
-          </table>
+          <div class="ge-scroll-wrapper">
+            <table class="ge-box-table" style="margin-top: 0.5rem;">
+              <thead id="geHomePlayerPeriodHead">
+                <!-- Rendered by JS -->
+              </thead>
+              <tbody id="geHomePlayerPeriodBody">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <!-- Player Scoring By Period (Away) -->
@@ -466,14 +483,16 @@
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
             <h2 id="geAwayPlayerPeriodTitle">Away — Player Scoring By Period</h2>
           </div>
-          <table class="ge-box-table" style="margin-top: 0.5rem;">
-            <thead id="geAwayPlayerPeriodHead">
-              <!-- Rendered by JS -->
-            </thead>
-            <tbody id="geAwayPlayerPeriodBody">
-              <!-- Rendered by JS -->
-            </tbody>
-          </table>
+          <div class="ge-scroll-wrapper">
+            <table class="ge-box-table" style="margin-top: 0.5rem;">
+              <thead id="geAwayPlayerPeriodHead">
+                <!-- Rendered by JS -->
+              </thead>
+              <tbody id="geAwayPlayerPeriodBody">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <!-- Home Team Box Score -->
@@ -482,20 +501,22 @@
             <h2 id="geHomeBoxTitle">Home — Box Score</h2>
             <button class="ge-add-player-btn" onclick="geOpenAddPlayer('home')">+ Add Home Player</button>
           </div>
-          <table class="ge-box-table">
-            <thead>
-              <tr>
-                <th>Player</th>
-                <th>MIN</th><th>PTS</th><th>FGM</th><th>FGA</th>
-                <th>3PM</th><th>3PA</th><th>FTM</th><th>FTA</th>
-                <th>REB</th><th>AST</th><th>STL</th><th>BLK</th>
-                <th>TO</th><th>PF</th>
-              </tr>
-            </thead>
-            <tbody id="geHomeBoxBody">
-              <!-- Rendered by JS -->
-            </tbody>
-          </table>
+          <div class="ge-scroll-wrapper">
+            <table class="ge-box-table">
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th>MIN</th><th>PTS</th><th>FGM</th><th>FGA</th>
+                  <th>3PM</th><th>3PA</th><th>FTM</th><th>FTA</th>
+                  <th>REB</th><th>AST</th><th>STL</th><th>BLK</th>
+                  <th>TO</th><th>PF</th>
+                </tr>
+              </thead>
+              <tbody id="geHomeBoxBody">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <!-- Away Team Box Score -->
@@ -504,20 +525,22 @@
             <h2 id="geAwayBoxTitle">Away — Box Score</h2>
             <button class="ge-add-player-btn" onclick="geOpenAddPlayer('away')">+ Add Away Player</button>
           </div>
-          <table class="ge-box-table">
-            <thead>
-              <tr>
-                <th>Player</th>
-                <th>MIN</th><th>PTS</th><th>FGM</th><th>FGA</th>
-                <th>3PM</th><th>3PA</th><th>FTM</th><th>FTA</th>
-                <th>REB</th><th>AST</th><th>STL</th><th>BLK</th>
-                <th>TO</th><th>PF</th>
-              </tr>
-            </thead>
-            <tbody id="geAwayBoxBody">
-              <!-- Rendered by JS -->
-            </tbody>
-          </table>
+          <div class="ge-scroll-wrapper">
+            <table class="ge-box-table">
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th>MIN</th><th>PTS</th><th>FGM</th><th>FGA</th>
+                  <th>3PM</th><th>3PA</th><th>FTM</th><th>FTA</th>
+                  <th>REB</th><th>AST</th><th>STL</th><th>BLK</th>
+                  <th>TO</th><th>PF</th>
+                </tr>
+              </thead>
+              <tbody id="geAwayBoxBody">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <!-- Save Actions -->

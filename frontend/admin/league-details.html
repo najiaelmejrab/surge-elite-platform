@@ -109,12 +109,10 @@
           </div>
           SURGE <span>ELITE</span>
         </a>
-        <span class="admin-portal-badge">ADMIN</span>
       </div>
 
       <nav class="admin-nav">
         <div class="admin-nav-section">
-          <span class="admin-nav-label">Core Management</span>
           <a href="index.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
             Dashboard
@@ -234,7 +232,7 @@
           <div class="teams-card">
             <div class="teams-card-header">
               <div>
-                <h2 style="font-family:var(--font-display); font-size:1.1rem; font-weight:700; color:var(--text-main); letter-spacing:0.04em;" id="teamsCardTitle">PARTICIPATING TEAMS (—)</h2>
+                <h2 style="font-family:var(--font-display); font-size:1.1rem; font-weight:700; color:var(--text-main); letter-spacing:0.04em;" id="teamsCardTitle">PARTICIPATING TEAMS</h2>
                 <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.2rem;">Teams assigned to this league &amp; season. Click a team to manage its coach and roster.</p>
               </div>
               <a href="teams.html" class="btn btn-outline btn-sm" style="font-size:0.8rem;">
@@ -380,7 +378,7 @@
       // Count enrolled teams by matching league ID
       const enrolledTeams = Object.values(allTeams).filter(t => t.leagueId === league.id);
       document.getElementById('lgEnrolled').textContent = enrolledTeams.length;
-      document.getElementById('teamsCardTitle').textContent = `PARTICIPATING TEAMS (${enrolledTeams.length})`;
+      document.getElementById('teamsCardTitle').textContent = `PARTICIPATING TEAMS`;
       document.getElementById('teamsFooterText').textContent =
         `${enrolledTeams.length} team(s) assigned to ${league.name}`;
 

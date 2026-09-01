@@ -39,12 +39,10 @@
           </div>
           SURGE <span>ELITE</span>
         </a>
-        <span class="admin-portal-badge">ADMIN</span>
       </div>
 
       <nav class="admin-nav">
         <div class="admin-nav-section">
-          <span class="admin-nav-label">Core Management</span>
           <a href="index.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
             Dashboard
@@ -121,7 +119,7 @@
         <!-- Games Table Card -->
         <div class="admin-table-card">
           <div class="admin-table-header">
-            <h3 class="admin-table-title">Scheduled &amp; Completed Fixtures (24)</h3>
+            <h3 class="admin-table-title">Scheduled &amp; Completed Fixtures</h3>
             <div class="admin-table-controls">
               <!-- Search Input -->
               <div class="admin-search">
@@ -355,7 +353,7 @@
       if (navGamesCount) navGamesCount.textContent = gamesList.length;
 
       const tableTitle = document.querySelector('.admin-table-card .admin-table-title');
-      if (tableTitle) tableTitle.textContent = `Scheduled & Completed Fixtures (${gamesList.length})`;
+      if (tableTitle) tableTitle.textContent = `Scheduled & Completed Fixtures`;
 
       if (gamesList.length === 0) {
         tbody.innerHTML = `

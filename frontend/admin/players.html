@@ -39,12 +39,10 @@
           </div>
           SURGE <span>ELITE</span>
         </a>
-        <span class="admin-portal-badge">ADMIN</span>
       </div>
 
       <nav class="admin-nav">
         <div class="admin-nav-section">
-          <span class="admin-nav-label">Core Management</span>
           <a href="index.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
             Dashboard
@@ -117,7 +115,7 @@
         <!-- Players Table Card -->
         <div class="admin-table-card">
           <div class="admin-table-header">
-            <h3 class="admin-table-title" id="playersCountTitle">Registered Athletes (0)</h3>
+            <h3 class="admin-table-title" id="playersCountTitle">Registered Athletes</h3>
             <div class="admin-table-controls">
               <!-- Search Input -->
               <div class="admin-search">
@@ -307,7 +305,7 @@
       const tbody = document.getElementById('playersTableBody');
 
       document.getElementById('navPlayersCount').textContent = players.length;
-      document.getElementById('playersCountTitle').textContent = `Registered Athletes (${players.length})`;
+      document.getElementById('playersCountTitle').textContent = `Registered Athletes`;
       document.getElementById('playersFooterText').textContent = `Showing ${players.length} of ${players.length} entries`;
 
       if (players.length === 0) {

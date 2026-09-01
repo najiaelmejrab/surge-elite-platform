@@ -13,7 +13,8 @@
    HERO SECTION — taller, better hierarchy
    -------------------------------------------------------------------------- */
 .hero {
-  padding-top: 96px; /* matches new 72px navbar */
+  padding-top: 96px;
+  /* matches new 72px navbar */
   padding-bottom: 80px;
 }
 
@@ -34,10 +35,7 @@
 /* --------------------------------------------------------------------------
    PAGE-LEVEL HERO SPACING  (leagues, teams, games, player pages)
    -------------------------------------------------------------------------- */
-/* Keep header offset aligned with the navbar height used in style.css */
-body > header + * {
-  /* hero sections on interior pages */
-}
+
 /* Fallback inline-padding-top used on most pages — increase via class */
 .page-hero-pad {
   padding-top: var(--header-height);
@@ -234,6 +232,7 @@ body > header + * {
   .nav-links {
     display: none;
   }
+
   .mobile-toggle {
     display: flex;
   }
@@ -300,7 +299,7 @@ body > header + * {
 }
 
 /* Step indicator pill */
-.admin-card-header > span:last-child {
+.admin-card-header>span:last-child {
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--text-muted);
@@ -330,13 +329,18 @@ body > header + * {
 }
 
 @media (max-width: 960px) {
-  .admin-grid-3 { grid-template-columns: 1fr 1fr; }
+  .admin-grid-3 {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 640px) {
+
   .admin-grid-2,
   .admin-grid-3,
-  .admin-grid-4 { grid-template-columns: 1fr; }
+  .admin-grid-4 {
+    grid-template-columns: 1fr;
+  }
 }
 
 .form-group {
@@ -520,8 +524,13 @@ body > header + * {
 }
 
 /* Scoreboard team label */
-#labelHomeTeamName { color: var(--cyan-highlight); }
-#labelAwayTeamName { color: #f43f5e; }
+#labelHomeTeamName {
+  color: var(--cyan-highlight);
+}
+
+#labelAwayTeamName {
+  color: #f43f5e;
+}
 
 /* Tab buttons on box score section */
 .tab-btn {
@@ -546,11 +555,15 @@ body > header + * {
 }
 
 @media (max-width: 900px) {
-  .roster-summary-grid { grid-template-columns: repeat(2, 1fr); }
+  .roster-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 480px) {
-  .roster-summary-grid { grid-template-columns: 1fr; }
+  .roster-summary-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .roster-metric-card {
@@ -614,11 +627,15 @@ body > header + * {
 }
 
 @media (max-width: 1100px) {
-  .athlete-grid { grid-template-columns: repeat(2, 1fr); }
+  .athlete-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 640px) {
-  .athlete-grid { grid-template-columns: 1fr; }
+  .athlete-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Athlete card — taller, more padded */
@@ -676,7 +693,10 @@ body > header + * {
   object-fit: cover;
 }
 
-.athlete-meta { flex: 1; min-width: 0; }
+.athlete-meta {
+  flex: 1;
+  min-width: 0;
+}
 
 /* Jersey number — big & bold */
 .athlete-jersey-num {
@@ -825,14 +845,22 @@ body > header + * {
 }
 
 @keyframes modalScaleIn {
-  from { transform: scale(0.96) translateY(8px); opacity: 0; }
-  to { transform: scale(1) translateY(0); opacity: 1; }
+  from {
+    transform: scale(0.96) translateY(8px);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Toast notifications */
 .toast-container {
   position: fixed;
-  top: 88px; /* below navbar */
+  top: 88px;
+  /* below navbar */
   right: 20px;
   z-index: 9999;
   display: flex;
@@ -857,14 +885,32 @@ body > header + * {
   animation: toastSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.toast.success { border-left-color: #10b981; }
-.toast.error   { border-left-color: #ef4444; }
-.toast.warning { border-left-color: #f59e0b; }
-.toast.info    { border-left-color: var(--cyan-highlight); }
+.toast.success {
+  border-left-color: #10b981;
+}
+
+.toast.error {
+  border-left-color: #ef4444;
+}
+
+.toast.warning {
+  border-left-color: #f59e0b;
+}
+
+.toast.info {
+  border-left-color: var(--cyan-highlight);
+}
 
 @keyframes toastSlideIn {
-  from { transform: translateX(120%); opacity: 0; }
-  to   { transform: translateX(0);   opacity: 1; }
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 /* ==========================================================================
@@ -983,12 +1029,20 @@ body > header + * {
 /* ==========================================================================
    SCROLLBAR — dark themed
    ========================================================================== */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 6px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(249, 115, 22, 0.5);
 }
@@ -1244,12 +1298,12 @@ body > header + * {
     flex-shrink: 0;
   }
 
-  .leader-player-col > div:last-child {
+  .leader-player-col>div:last-child {
     min-width: 0;
     flex: 1 1 auto;
   }
 
-  .leader-player-col > div:last-child > div:first-child {
+  .leader-player-col>div:last-child>div:first-child {
     font-size: 0.88rem;
     font-weight: 700;
     color: var(--text-main);
@@ -1259,7 +1313,7 @@ body > header + * {
     line-height: 1.25;
   }
 
-  .leader-player-col > div:last-child > div:last-child {
+  .leader-player-col>div:last-child>div:last-child {
     font-size: 0.72rem;
     color: var(--text-muted);
     line-height: 1.2;
@@ -1269,7 +1323,7 @@ body > header + * {
     text-overflow: ellipsis;
   }
 
-  .leader-stat-row > div:last-child {
+  .leader-stat-row>div:last-child {
     text-align: right;
     flex-shrink: 0;
     min-width: 70px;
@@ -1285,7 +1339,7 @@ body > header + * {
     margin-bottom: 2px;
   }
 
-  .leader-stat-row > div:last-child > div:last-child {
+  .leader-stat-row>div:last-child>div:last-child {
     font-family: var(--font-display);
     font-size: 1.2rem !important;
     font-weight: 700;
@@ -1310,11 +1364,11 @@ body > header + * {
     font-size: 0.72rem;
   }
 
-  .leader-player-col > div:last-child > div:first-child {
+  .leader-player-col>div:last-child>div:first-child {
     font-size: 0.84rem;
   }
 
-  .leader-stat-row > div:last-child > div:last-child {
+  .leader-stat-row>div:last-child>div:last-child {
     font-size: 1.1rem !important;
   }
 }
