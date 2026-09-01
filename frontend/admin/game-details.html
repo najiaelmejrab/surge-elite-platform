@@ -10,7 +10,9 @@
   <!-- Google Fonts: Plus Jakarta Sans & Oswald -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="../css/style.css">
@@ -97,9 +99,20 @@
     }
 
     @keyframes pulseLive {
-      0% { transform: scale(0.95); opacity: 1; }
-      50% { transform: scale(1.3); opacity: 0.5; }
-      100% { transform: scale(0.95); opacity: 1; }
+      0% {
+        transform: scale(0.95);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.3);
+        opacity: 0.5;
+      }
+
+      100% {
+        transform: scale(0.95);
+        opacity: 1;
+      }
     }
 
     .broadcast-grid {
@@ -110,7 +123,9 @@
     }
 
     @media (max-width: 860px) {
-      .broadcast-grid { grid-template-columns: 1fr; }
+      .broadcast-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .broadcast-thumb-box {
@@ -152,7 +167,8 @@
 
     .video-preview-wrapper {
       position: relative;
-      padding-bottom: 56.25%; /* 16:9 ratio */
+      padding-bottom: 56.25%;
+      /* 16:9 ratio */
       height: 0;
       overflow: hidden;
       border-radius: var(--radius-lg);
@@ -197,28 +213,59 @@
       <nav class="admin-nav">
         <div class="admin-nav-section">
           <a href="index.html" class="admin-nav-link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            </svg>
             Dashboard
           </a>
           <a href="leagues.html" class="admin-nav-link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+              <path d="M4 22h16"></path>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path>
+            </svg>
             Leagues
             <span class="nav-count">3</span>
           </a>
           <a href="teams.html" class="admin-nav-link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
             Teams
             <span class="nav-count">8</span>
           </a>
           <a href="players.html" class="admin-nav-link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
             Players
             <span class="nav-count">96</span>
           </a>
           <a href="games.html" class="admin-nav-link active">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
             Games
             <span class="nav-count">24</span>
+          </a>
+          <a href="admin-accounts.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            Accounts
           </a>
         </div>
       </nav>
@@ -240,7 +287,11 @@
       <header class="admin-topbar">
         <div class="admin-topbar-left">
           <button class="admin-mobile-toggle" id="adminMobileToggle" aria-label="Toggle Menu">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
           </button>
           <div class="admin-breadcrumb">
             <a href="index.html">Admin</a>
@@ -260,20 +311,26 @@
 
         <!-- Back Link & Game Info Card -->
         <div style="margin-bottom: 1.5rem;">
-          <a href="games.html" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; margin-bottom: 0.75rem;">
+          <a href="games.html"
+            style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; margin-bottom: 0.75rem;">
             &larr; Back to Games List
           </a>
 
           <!-- Game Overview Card -->
           <div class="admin-table-card" style="padding: 1.75rem 2rem; margin-bottom: 2rem;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+            <div
+              style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
               <div>
                 <span class="admin-status scheduled" id="adminGameStatusBadge">Scheduled Match</span>
-                <h1 class="admin-topbar-title" id="adminGameMatchupTitle" style="font-size: 2.2rem; margin-top: 0.5rem; letter-spacing: 0.03em;">SURGE WOLVES VS APEX TITANS</h1>
-                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.25rem;" id="adminGameSubMeta">U19 Elite League • October 24, 2026 at 6:00 PM EST • Surge Arena (Main Court)</p>
+                <h1 class="admin-topbar-title" id="adminGameMatchupTitle"
+                  style="font-size: 2.2rem; margin-top: 0.5rem; letter-spacing: 0.03em;">SURGE WOLVES VS APEX TITANS
+                </h1>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.25rem;" id="adminGameSubMeta">U19
+                  Elite League • October 24, 2026 at 6:00 PM EST • Surge Arena (Main Court)</p>
               </div>
               <div style="display: flex; gap: 0.65rem; align-items: center;">
-                <a class="btn btn-outline btn-sm" id="geOpenEntryBtn" href="admin-game-entry.html?id=g001">Open Game Entry / Scorer</a>
+                <a class="btn btn-outline btn-sm" id="geOpenEntryBtn" href="admin-game-entry.html?id=g001">Open Game
+                  Entry / Scorer</a>
               </div>
             </div>
           </div>
@@ -299,12 +356,15 @@
           <div class="broadcast-status-hero">
             <div>
               <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.35rem;">
-                <h2 style="font-family: var(--font-display); font-size: 1.5rem; text-transform: uppercase; letter-spacing: 0.04em; margin: 0;">LIVE BROADCAST</h2>
+                <h2
+                  style="font-family: var(--font-display); font-size: 1.5rem; text-transform: uppercase; letter-spacing: 0.04em; margin: 0;">
+                  LIVE BROADCAST</h2>
                 <div id="broadcastStatusPill">
                   <!-- Injected via JavaScript -->
                 </div>
               </div>
-              <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">Manage external stream URL, scheduled start time, live status, and stream metadata for public view.</p>
+              <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">Manage external stream URL, scheduled
+                start time, live status, and stream metadata for public view.</p>
             </div>
 
             <!-- Header Action Buttons -->
@@ -335,25 +395,31 @@
 
       <form id="broadcastForm">
         <!-- Enabled Toggle -->
-        <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-sm); margin-bottom: 1.25rem;">
+        <div
+          style="display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-sm); margin-bottom: 1.25rem;">
           <div>
             <div style="font-weight: 700; font-size: 0.9rem;">Enable Live Broadcast</div>
-            <div style="font-size: 0.78rem; color: var(--text-muted);">Enable public stream player and broadcast status indicator</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted);">Enable public stream player and broadcast status
+              indicator</div>
           </div>
-          <input type="checkbox" id="broadcastEnableToggle" style="width: 20px; height: 20px; accent-color: var(--primary);" checked>
+          <input type="checkbox" id="broadcastEnableToggle"
+            style="width: 20px; height: 20px; accent-color: var(--primary);" checked>
         </div>
 
         <!-- Stream Title -->
         <div class="admin-form-group" style="margin-bottom: 1rem;">
           <label class="admin-form-label" for="broadcastTitleInput">Stream Title *</label>
-          <input type="text" id="broadcastTitleInput" class="admin-form-input" placeholder="e.g. Venice Wave vs Gotham Knights" required>
+          <input type="text" id="broadcastTitleInput" class="admin-form-input"
+            placeholder="e.g. Venice Wave vs Gotham Knights" required>
         </div>
 
         <!-- Live Stream URL / Embed URL -->
         <div class="admin-form-group" style="margin-bottom: 1rem;">
           <label class="admin-form-label" for="broadcastUrlInput">Live Stream URL / Embed URL *</label>
-          <input type="url" id="broadcastUrlInput" class="admin-form-input" placeholder="e.g. https://www.youtube.com/embed/dQw4w9WgXcQ" required>
-          <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Supports YouTube Live, Twitch, Vimeo, or external embed links</span>
+          <input type="url" id="broadcastUrlInput" class="admin-form-input"
+            placeholder="e.g. https://www.youtube.com/embed/dQw4w9WgXcQ" required>
+          <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Supports YouTube Live, Twitch,
+            Vimeo, or external embed links</span>
         </div>
 
         <!-- Scheduled Date & Time -->
@@ -372,7 +438,8 @@
         <div class="admin-form-row cols-2">
           <div class="admin-form-group">
             <label class="admin-form-label" for="broadcastThumbInput">Thumbnail / Cover Image URL</label>
-            <input type="url" id="broadcastThumbInput" class="admin-form-input" placeholder="https://images.unsplash.com/...">
+            <input type="url" id="broadcastThumbInput" class="admin-form-input"
+              placeholder="https://images.unsplash.com/...">
           </div>
 
           <div class="admin-form-group">
@@ -388,7 +455,8 @@
         <!-- Description -->
         <div class="admin-form-group" style="margin-bottom: 1.25rem;">
           <label class="admin-form-label" for="broadcastDescInput">Description</label>
-          <textarea id="broadcastDescInput" class="admin-form-textarea" rows="3" placeholder="Enter stream summary, commentary notes, or sponsor info..."></textarea>
+          <textarea id="broadcastDescInput" class="admin-form-textarea" rows="3"
+            placeholder="Enter stream summary, commentary notes, or sponsor info..."></textarea>
         </div>
 
         <!-- Modal Actions -->
@@ -414,8 +482,10 @@
       </div>
 
       <div style="margin-bottom: 1.25rem;">
-        <h4 id="previewStreamTitle" style="font-family: var(--font-display); font-size: 1.3rem; text-transform: uppercase;">Stream Title</h4>
-        <p id="previewStreamMeta" style="font-size: 0.85rem; color: var(--text-muted);">Scheduled Start: August 24, 2026 · 7:00 PM</p>
+        <h4 id="previewStreamTitle"
+          style="font-family: var(--font-display); font-size: 1.3rem; text-transform: uppercase;">Stream Title</h4>
+        <p id="previewStreamMeta" style="font-size: 0.85rem; color: var(--text-muted);">Scheduled Start: August 24, 2026
+          · 7:00 PM</p>
       </div>
 
       <!-- Video Player Container -->
@@ -423,7 +493,8 @@
         <iframe id="previewIframe" src="about:blank" allowfullscreen allow="autoplay; encrypted-media"></iframe>
       </div>
 
-      <p id="previewStreamDesc" style="margin-top: 1rem; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;"></p>
+      <p id="previewStreamDesc"
+        style="margin-top: 1rem; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;"></p>
 
       <div class="admin-modal-actions" style="margin-top: 1.25rem;">
         <button type="button" class="btn btn-outline" data-dismiss="modal">Close Preview</button>
@@ -449,111 +520,111 @@
       `;
     } else {
 
-    const leagues = getAdminLeagues();
-    const teams = getAdminTeams();
+      const leagues = getAdminLeagues();
+      const teams = getAdminTeams();
 
-    const homeObj = teams[game.homeTeamId];
-    const homeName = homeObj ? homeObj.name : (game.homeTeam || 'Home Team');
-    const awayObj = teams[game.awayTeamId];
-    const awayName = awayObj ? awayObj.name : (game.awayTeam || 'Away Team');
-    const leagueObj = leagues[game.leagueId];
-    const leagueName = leagueObj ? leagueObj.name : (game.league || 'Unassigned');
+      const homeObj = teams[game.homeTeamId];
+      const homeName = homeObj ? homeObj.name : (game.homeTeam || 'Home Team');
+      const awayObj = teams[game.awayTeamId];
+      const awayName = awayObj ? awayObj.name : (game.awayTeam || 'Away Team');
+      const leagueObj = leagues[game.leagueId];
+      const leagueName = leagueObj ? leagueObj.name : (game.league || 'Unassigned');
 
-    const homeScoreText = game.homeScore !== null && game.homeScore !== undefined ? ` (${game.homeScore})` : '';
-    const awayScoreText = game.awayScore !== null && game.awayScore !== undefined ? ` (${game.awayScore})` : '';
+      const homeScoreText = game.homeScore !== null && game.homeScore !== undefined ? ` (${game.homeScore})` : '';
+      const awayScoreText = game.awayScore !== null && game.awayScore !== undefined ? ` (${game.awayScore})` : '';
 
-    let dateFormatted = game.date || '';
-    try {
-      const dObj = new Date(game.date + 'T' + (game.time || '00:00'));
-      dateFormatted = dObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    } catch(e) {}
+      let dateFormatted = game.date || '';
+      try {
+        const dObj = new Date(game.date + 'T' + (game.time || '00:00'));
+        dateFormatted = dObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      } catch (e) { }
 
-    const currentGame = {
-      id: game.id,
-      title: `${homeName} vs ${awayName}`,
-      league: leagueName,
-      date: dateFormatted,
-      time: game.time,
-      venue: game.venue || 'TBD Venue',
-      status: game.status === 'completed' ? `Completed (${game.homeScore} - ${game.awayScore})` : (game.status === 'in-progress' ? 'Live' : 'Scheduled')
-    };
-
-    // Update Header Text
-    document.getElementById('adminBreadcrumbGameTitle').textContent = currentGame.title;
-    document.getElementById('adminGameMatchupTitle').textContent = `${homeName}${homeScoreText} VS ${awayName}${awayScoreText}`;
-    document.getElementById('adminGameSubMeta').textContent = `${currentGame.league} • ${currentGame.date} at ${currentGame.time} • ${currentGame.venue}`;
-
-    // Wire the Game Entry link to current game
-    const entryBtn = document.getElementById('geOpenEntryBtn');
-    if (entryBtn) entryBtn.href = `admin-game-entry.html?id=${currentGameId}`;
-    
-    // Status Badge
-    const badgeEl = document.getElementById('adminGameStatusBadge');
-    if (game.status === 'completed') {
-      badgeEl.className = 'admin-status completed';
-      badgeEl.textContent = 'Completed';
-    } else if (game.status === 'in-progress') {
-      badgeEl.className = 'admin-status live';
-      badgeEl.textContent = 'Live / In Progress';
-    } else {
-      badgeEl.className = 'admin-status scheduled';
-      badgeEl.textContent = 'Scheduled Match';
-    }
-
-    function escapeHtml(value) {
-      return String(value ?? '').replace(/[&<>'"]/g, char => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-      }[char]));
-    }
-
-    function renderGameSummary() {
-      const container = document.getElementById('gameSummaryContent');
-      if (!container) return;
-
-      const quarterScores = game.quarterScores || { home: [], away: [] };
-      const otScores = game.otScores || { home: [], away: [] };
-      const homePeriods = Array.isArray(quarterScores.home) ? quarterScores.home : [];
-      const awayPeriods = Array.isArray(quarterScores.away) ? quarterScores.away : [];
-      const homeOt = Array.isArray(otScores.home) ? otScores.home : [];
-      const awayOt = Array.isArray(otScores.away) ? otScores.away : [];
-      const periodCount = Math.max(homePeriods.length, awayPeriods.length, 4);
-      const periods = Array.from({ length: periodCount }, (_, index) => `
-        <tr><td>Q${index + 1}</td><td>${homePeriods[index] ?? '—'}</td><td>${awayPeriods[index] ?? '—'}</td></tr>
-      `).join('');
-      const overtime = homeOt.length || awayOt.length ? `
-        <tr class="game-summary-ot"><td>OT</td><td>${homeOt.join(' + ') || '—'}</td><td>${awayOt.join(' + ') || '—'}</td></tr>
-      ` : '';
-      const boxScore = (entries, label) => {
-        const rows = Array.isArray(entries) && entries.length ? entries.map(entry => {
-          const stats = entry.stats || {};
-          return `<tr><td>${escapeHtml(entry.name || 'Unknown Player')} <span class="admin-cell-sub">#${escapeHtml(entry.jersey || '—')}</span></td><td>${escapeHtml(entry.position || '—')}</td><td>${stats.min ?? 0}</td><td>${stats.pts ?? 0}</td><td>${stats.reb ?? 0}</td><td>${stats.ast ?? 0}</td><td>${stats.stl ?? 0}</td><td>${stats.blk ?? 0}</td></tr>`;
-        }).join('') : '<tr><td colspan="8" class="game-summary-empty">No player box score recorded.</td></tr>';
-        return `<div class="game-summary-box"><h3>${label}</h3><div class="admin-table-scroll"><table class="admin-table"><thead><tr><th>Player</th><th>POS</th><th>MIN</th><th>PTS</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+      const currentGame = {
+        id: game.id,
+        title: `${homeName} vs ${awayName}`,
+        league: leagueName,
+        date: dateFormatted,
+        time: game.time,
+        venue: game.venue || 'TBD Venue',
+        status: game.status === 'completed' ? `Completed (${game.homeScore} - ${game.awayScore})` : (game.status === 'in-progress' ? 'Live' : 'Scheduled')
       };
 
-      container.innerHTML = `
+      // Update Header Text
+      document.getElementById('adminBreadcrumbGameTitle').textContent = currentGame.title;
+      document.getElementById('adminGameMatchupTitle').textContent = `${homeName}${homeScoreText} VS ${awayName}${awayScoreText}`;
+      document.getElementById('adminGameSubMeta').textContent = `${currentGame.league} • ${currentGame.date} at ${currentGame.time} • ${currentGame.venue}`;
+
+      // Wire the Game Entry link to current game
+      const entryBtn = document.getElementById('geOpenEntryBtn');
+      if (entryBtn) entryBtn.href = `admin-game-entry.html?id=${currentGameId}`;
+
+      // Status Badge
+      const badgeEl = document.getElementById('adminGameStatusBadge');
+      if (game.status === 'completed') {
+        badgeEl.className = 'admin-status completed';
+        badgeEl.textContent = 'Completed';
+      } else if (game.status === 'in-progress') {
+        badgeEl.className = 'admin-status live';
+        badgeEl.textContent = 'Live / In Progress';
+      } else {
+        badgeEl.className = 'admin-status scheduled';
+        badgeEl.textContent = 'Scheduled Match';
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? '').replace(/[&<>'"]/g, char => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+        }[char]));
+      }
+
+      function renderGameSummary() {
+        const container = document.getElementById('gameSummaryContent');
+        if (!container) return;
+
+        const quarterScores = game.quarterScores || { home: [], away: [] };
+        const otScores = game.otScores || { home: [], away: [] };
+        const homePeriods = Array.isArray(quarterScores.home) ? quarterScores.home : [];
+        const awayPeriods = Array.isArray(quarterScores.away) ? quarterScores.away : [];
+        const homeOt = Array.isArray(otScores.home) ? otScores.home : [];
+        const awayOt = Array.isArray(otScores.away) ? otScores.away : [];
+        const periodCount = Math.max(homePeriods.length, awayPeriods.length, 4);
+        const periods = Array.from({ length: periodCount }, (_, index) => `
+        <tr><td>Q${index + 1}</td><td>${homePeriods[index] ?? '—'}</td><td>${awayPeriods[index] ?? '—'}</td></tr>
+      `).join('');
+        const overtime = homeOt.length || awayOt.length ? `
+        <tr class="game-summary-ot"><td>OT</td><td>${homeOt.join(' + ') || '—'}</td><td>${awayOt.join(' + ') || '—'}</td></tr>
+      ` : '';
+        const boxScore = (entries, label) => {
+          const rows = Array.isArray(entries) && entries.length ? entries.map(entry => {
+            const stats = entry.stats || {};
+            return `<tr><td>${escapeHtml(entry.name || 'Unknown Player')} <span class="admin-cell-sub">#${escapeHtml(entry.jersey || '—')}</span></td><td>${escapeHtml(entry.position || '—')}</td><td>${stats.min ?? 0}</td><td>${stats.pts ?? 0}</td><td>${stats.reb ?? 0}</td><td>${stats.ast ?? 0}</td><td>${stats.stl ?? 0}</td><td>${stats.blk ?? 0}</td></tr>`;
+          }).join('') : '<tr><td colspan="8" class="game-summary-empty">No player box score recorded.</td></tr>';
+          return `<div class="game-summary-box"><h3>${label}</h3><div class="admin-table-scroll"><table class="admin-table"><thead><tr><th>Player</th><th>POS</th><th>MIN</th><th>PTS</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+        };
+
+        container.innerHTML = `
         <div class="game-summary-scoreline"><span>${escapeHtml(homeName)}</span><strong>${game.homeScore ?? 0} — ${game.awayScore ?? 0}</strong><span>${escapeHtml(awayName)}</span></div>
         <div class="admin-table-scroll"><table class="admin-table game-summary-periods"><thead><tr><th>Period</th><th>${escapeHtml(homeName)}</th><th>${escapeHtml(awayName)}</th></tr></thead><tbody>${periods}${overtime}<tr class="game-summary-total"><td>Total</td><td>${game.homeScore ?? 0}</td><td>${game.awayScore ?? 0}</td></tr></tbody></table></div>
         <div class="game-summary-boxes">${boxScore(game.homeBoxScore, homeName)}${boxScore(game.awayBoxScore, awayName)}</div>
       `;
-    }
+      }
 
-    // Render Live Broadcast UI section
-    function renderBroadcastSection() {
-      const bc = getBroadcastForGame(currentGameId);
-      const pillContainer = document.getElementById('broadcastStatusPill');
-      const actionsContainer = document.getElementById('broadcastHeaderActions');
-      const bodyContainer = document.getElementById('broadcastBodyContent');
+      // Render Live Broadcast UI section
+      function renderBroadcastSection() {
+        const bc = getBroadcastForGame(currentGameId);
+        const pillContainer = document.getElementById('broadcastStatusPill');
+        const actionsContainer = document.getElementById('broadcastHeaderActions');
+        const bodyContainer = document.getElementById('broadcastBodyContent');
 
-      // Unconfigured or disabled state
-      if (!bc || !bc.enabled) {
-        pillContainer.innerHTML = `<span class="broadcast-pill none">⚪ No broadcast configured</span>`;
-        actionsContainer.innerHTML = `
+        // Unconfigured or disabled state
+        if (!bc || !bc.enabled) {
+          pillContainer.innerHTML = `<span class="broadcast-pill none">⚪ No broadcast configured</span>`;
+          actionsContainer.innerHTML = `
           <button class="btn btn-primary btn-sm" onclick="openBroadcastModal('setup')">
             + Set Up Live Stream
           </button>
         `;
-        bodyContainer.innerHTML = `
+          bodyContainer.innerHTML = `
           <div class="admin-empty-state" style="padding: 2.5rem 1rem;">
             <div class="admin-empty-icon" style="background: rgba(255,255,255,0.04);">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
@@ -563,26 +634,26 @@
             <button class="btn btn-primary" onclick="openBroadcastModal('setup')">+ Set Up Live Stream</button>
           </div>
         `;
-        return;
-      }
+          return;
+        }
 
-      // Configured broadcast state
-      let statusPillHtml = '';
-      let actionButtonsHtml = '';
+        // Configured broadcast state
+        let statusPillHtml = '';
+        let actionButtonsHtml = '';
 
-      const formattedDateStr = `${bc.scheduledDate || 'August 24, 2026'} · ${bc.scheduledTimeVal || '7:00 PM'}`;
+        const formattedDateStr = `${bc.scheduledDate || 'August 24, 2026'} · ${bc.scheduledTimeVal || '7:00 PM'}`;
 
-      if (bc.status === 'live') {
-        statusPillHtml = `<span class="broadcast-pill live"><span class="broadcast-pulse-dot"></span> 🔴 LIVE NOW</span>`;
-        actionButtonsHtml = `
+        if (bc.status === 'live') {
+          statusPillHtml = `<span class="broadcast-pill live"><span class="broadcast-pulse-dot"></span> 🔴 LIVE NOW</span>`;
+          actionButtonsHtml = `
           <button class="btn btn-primary btn-sm" onclick="openPreviewModal()">Preview</button>
           <button class="btn btn-outline btn-sm" onclick="updateBroadcastStatus('ended')">End Broadcast</button>
           <button class="btn btn-outline btn-sm" onclick="openBroadcastModal('edit')">Edit</button>
           <button class="btn btn-outline btn-sm" style="color:#ef4444; border-color:rgba(239,68,68,0.3);" onclick="confirmRemoveBroadcast()">Remove</button>
         `;
-      } else if (bc.status === 'scheduled') {
-        statusPillHtml = `<span class="broadcast-pill scheduled">🟠 SCHEDULED</span>`;
-        actionButtonsHtml = `
+        } else if (bc.status === 'scheduled') {
+          statusPillHtml = `<span class="broadcast-pill scheduled">🟠 SCHEDULED</span>`;
+          actionButtonsHtml = `
           <button class="btn btn-outline btn-sm" onclick="openPreviewModal()">Preview</button>
           <button class="btn btn-outline btn-sm" onclick="openBroadcastModal('edit')">Edit</button>
           <button class="btn btn-primary btn-sm" style="background: var(--primary-gradient);" onclick="updateBroadcastStatus('live')">
@@ -590,21 +661,21 @@
           </button>
           <button class="btn btn-outline btn-sm" style="color:#ef4444; border-color:rgba(239,68,68,0.3);" onclick="confirmRemoveBroadcast()">Remove</button>
         `;
-      } else if (bc.status === 'ended') {
-        statusPillHtml = `<span class="broadcast-pill ended">✓ BROADCAST ENDED</span>`;
-        actionButtonsHtml = `
+        } else if (bc.status === 'ended') {
+          statusPillHtml = `<span class="broadcast-pill ended">✓ BROADCAST ENDED</span>`;
+          actionButtonsHtml = `
           <button class="btn btn-outline btn-sm" onclick="openPreviewModal()">Preview Replay</button>
           <button class="btn btn-outline btn-sm" onclick="openBroadcastModal('edit')">Edit</button>
           <button class="btn btn-outline btn-sm" style="color:#ef4444; border-color:rgba(239,68,68,0.3);" onclick="confirmRemoveBroadcast()">Remove</button>
         `;
-      }
+        }
 
-      pillContainer.innerHTML = statusPillHtml;
-      actionsContainer.innerHTML = actionButtonsHtml;
+        pillContainer.innerHTML = statusPillHtml;
+        actionsContainer.innerHTML = actionButtonsHtml;
 
-      const thumbUrl = bc.thumbnail || 'https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80';
+        const thumbUrl = bc.thumbnail || 'https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80';
 
-      bodyContainer.innerHTML = `
+        bodyContainer.innerHTML = `
         <div class="broadcast-grid">
           <div class="broadcast-thumb-box">
             <img src="${thumbUrl}" alt="Broadcast Thumbnail">
@@ -632,126 +703,126 @@
           </div>
         </div>
       `;
-    }
-
-    // Modal Form Helper
-    function openBroadcastModal(mode) {
-      const bc = getBroadcastForGame(currentGameId);
-      const titleEl = document.getElementById('broadcastModalTitle');
-      const toggleEl = document.getElementById('broadcastEnableToggle');
-      const titleInp = document.getElementById('broadcastTitleInput');
-      const urlInp = document.getElementById('broadcastUrlInput');
-      const dateInp = document.getElementById('broadcastDateInput');
-      const timeInp = document.getElementById('broadcastTimeInput');
-      const statusSelect = document.getElementById('broadcastStatusSelect');
-      const thumbInp = document.getElementById('broadcastThumbInput');
-      const descInp = document.getElementById('broadcastDescInput');
-
-      if (bc && mode === 'edit') {
-        titleEl.textContent = 'Edit Live Stream Settings';
-        toggleEl.checked = bc.enabled;
-        titleInp.value = bc.title || '';
-        urlInp.value = bc.url || '';
-        dateInp.value = bc.scheduledDateIso || '2026-08-24';
-        timeInp.value = bc.scheduledTimeVal || '19:00';
-        statusSelect.value = bc.status || 'scheduled';
-        thumbInp.value = bc.thumbnail || '';
-        descInp.value = bc.description || '';
-      } else {
-        titleEl.textContent = 'Set Up Live Stream';
-        document.getElementById('broadcastForm').reset();
-        toggleEl.checked = true;
-        titleInp.value = currentGame.title;
-        urlInp.value = 'https://www.youtube.com/embed/dQw4w9WgXcQ';
-        dateInp.value = '2026-08-24';
-        timeInp.value = '19:00';
-        statusSelect.value = 'scheduled';
       }
 
-      adminOpenModal('broadcastConfigModal');
-    }
+      // Modal Form Helper
+      function openBroadcastModal(mode) {
+        const bc = getBroadcastForGame(currentGameId);
+        const titleEl = document.getElementById('broadcastModalTitle');
+        const toggleEl = document.getElementById('broadcastEnableToggle');
+        const titleInp = document.getElementById('broadcastTitleInput');
+        const urlInp = document.getElementById('broadcastUrlInput');
+        const dateInp = document.getElementById('broadcastDateInput');
+        const timeInp = document.getElementById('broadcastTimeInput');
+        const statusSelect = document.getElementById('broadcastStatusSelect');
+        const thumbInp = document.getElementById('broadcastThumbInput');
+        const descInp = document.getElementById('broadcastDescInput');
 
-    // Form Submit Handler
-    document.getElementById('broadcastForm')?.addEventListener('submit', (e) => {
-      e.preventDefault();
+        if (bc && mode === 'edit') {
+          titleEl.textContent = 'Edit Live Stream Settings';
+          toggleEl.checked = bc.enabled;
+          titleInp.value = bc.title || '';
+          urlInp.value = bc.url || '';
+          dateInp.value = bc.scheduledDateIso || '2026-08-24';
+          timeInp.value = bc.scheduledTimeVal || '19:00';
+          statusSelect.value = bc.status || 'scheduled';
+          thumbInp.value = bc.thumbnail || '';
+          descInp.value = bc.description || '';
+        } else {
+          titleEl.textContent = 'Set Up Live Stream';
+          document.getElementById('broadcastForm').reset();
+          toggleEl.checked = true;
+          titleInp.value = currentGame.title;
+          urlInp.value = 'https://www.youtube.com/embed/dQw4w9WgXcQ';
+          dateInp.value = '2026-08-24';
+          timeInp.value = '19:00';
+          statusSelect.value = 'scheduled';
+        }
 
-      const rawDate = document.getElementById('broadcastDateInput').value;
-      const rawTime = document.getElementById('broadcastTimeInput').value;
-
-      let dateFormatted = rawDate;
-      if (rawDate) {
-        const dObj = new Date(rawDate + 'T' + (rawTime || '00:00'));
-        dateFormatted = dObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        adminOpenModal('broadcastConfigModal');
       }
 
-      const updated = {
-        enabled: document.getElementById('broadcastEnableToggle').checked,
-        title: document.getElementById('broadcastTitleInput').value,
-        url: document.getElementById('broadcastUrlInput').value,
-        scheduledDateIso: rawDate,
-        scheduledDate: dateFormatted,
-        scheduledTimeVal: rawTime,
-        scheduledTime: `${rawDate}T${rawTime}`,
-        status: document.getElementById('broadcastStatusSelect').value,
-        thumbnail: document.getElementById('broadcastThumbInput').value,
-        description: document.getElementById('broadcastDescInput').value
-      };
+      // Form Submit Handler
+      document.getElementById('broadcastForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-      saveBroadcastForGame(currentGameId, updated);
-      adminCloseModal('broadcastConfigModal');
-      adminToast('Live Stream configuration saved!', 'success');
-      renderBroadcastSection();
-    });
+        const rawDate = document.getElementById('broadcastDateInput').value;
+        const rawTime = document.getElementById('broadcastTimeInput').value;
 
-    // Stream Preview Modal Helper
-    function openPreviewModal() {
-      const bc = getBroadcastForGame(currentGameId);
-      if (!bc) return;
+        let dateFormatted = rawDate;
+        if (rawDate) {
+          const dObj = new Date(rawDate + 'T' + (rawTime || '00:00'));
+          dateFormatted = dObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        }
 
-      document.getElementById('previewStreamTitle').textContent = bc.title;
-      document.getElementById('previewStreamMeta').textContent = `Scheduled: ${bc.scheduledDate || ''} · ${bc.scheduledTimeVal || ''}`;
-      document.getElementById('previewStreamDesc').textContent = bc.description || '';
+        const updated = {
+          enabled: document.getElementById('broadcastEnableToggle').checked,
+          title: document.getElementById('broadcastTitleInput').value,
+          url: document.getElementById('broadcastUrlInput').value,
+          scheduledDateIso: rawDate,
+          scheduledDate: dateFormatted,
+          scheduledTimeVal: rawTime,
+          scheduledTime: `${rawDate}T${rawTime}`,
+          status: document.getElementById('broadcastStatusSelect').value,
+          thumbnail: document.getElementById('broadcastThumbInput').value,
+          description: document.getElementById('broadcastDescInput').value
+        };
 
-      const pill = document.getElementById('previewStatusPill');
-      if (bc.status === 'live') {
-        pill.className = 'broadcast-pill live';
-        pill.innerHTML = `🔴 LIVE NOW`;
-      } else if (bc.status === 'scheduled') {
-        pill.className = 'broadcast-pill scheduled';
-        pill.innerHTML = `🟠 SCHEDULED`;
-      } else {
-        pill.className = 'broadcast-pill ended';
-        pill.innerHTML = `✓ ENDED`;
-      }
-
-      const iframe = document.getElementById('previewIframe');
-      iframe.src = bc.url || 'about:blank';
-
-      adminOpenModal('broadcastPreviewModal');
-    }
-
-    // Quick Status Switch
-    function updateBroadcastStatus(newStatus) {
-      const bc = getBroadcastForGame(currentGameId);
-      if (bc) {
-        bc.status = newStatus;
-        saveBroadcastForGame(currentGameId, bc);
-        adminToast(`Broadcast status changed to ${newStatus.toUpperCase()}`, 'success');
-        renderBroadcastSection();
-      }
-    }
-
-    // Remove Broadcast
-    function confirmRemoveBroadcast() {
-      adminConfirmDelete('Live Broadcast', () => {
-        removeBroadcastForGame(currentGameId);
+        saveBroadcastForGame(currentGameId, updated);
+        adminCloseModal('broadcastConfigModal');
+        adminToast('Live Stream configuration saved!', 'success');
         renderBroadcastSection();
       });
-    }
 
-    // Initial render
-    renderGameSummary();
-    renderBroadcastSection();
+      // Stream Preview Modal Helper
+      function openPreviewModal() {
+        const bc = getBroadcastForGame(currentGameId);
+        if (!bc) return;
+
+        document.getElementById('previewStreamTitle').textContent = bc.title;
+        document.getElementById('previewStreamMeta').textContent = `Scheduled: ${bc.scheduledDate || ''} · ${bc.scheduledTimeVal || ''}`;
+        document.getElementById('previewStreamDesc').textContent = bc.description || '';
+
+        const pill = document.getElementById('previewStatusPill');
+        if (bc.status === 'live') {
+          pill.className = 'broadcast-pill live';
+          pill.innerHTML = `🔴 LIVE NOW`;
+        } else if (bc.status === 'scheduled') {
+          pill.className = 'broadcast-pill scheduled';
+          pill.innerHTML = `🟠 SCHEDULED`;
+        } else {
+          pill.className = 'broadcast-pill ended';
+          pill.innerHTML = `✓ ENDED`;
+        }
+
+        const iframe = document.getElementById('previewIframe');
+        iframe.src = bc.url || 'about:blank';
+
+        adminOpenModal('broadcastPreviewModal');
+      }
+
+      // Quick Status Switch
+      function updateBroadcastStatus(newStatus) {
+        const bc = getBroadcastForGame(currentGameId);
+        if (bc) {
+          bc.status = newStatus;
+          saveBroadcastForGame(currentGameId, bc);
+          adminToast(`Broadcast status changed to ${newStatus.toUpperCase()}`, 'success');
+          renderBroadcastSection();
+        }
+      }
+
+      // Remove Broadcast
+      function confirmRemoveBroadcast() {
+        adminConfirmDelete('Live Broadcast', () => {
+          removeBroadcastForGame(currentGameId);
+          renderBroadcastSection();
+        });
+      }
+
+      // Initial render
+      renderGameSummary();
+      renderBroadcastSection();
     }
   </script>
 </body>

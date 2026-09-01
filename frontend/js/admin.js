@@ -406,7 +406,7 @@
             'l004': { id: 'l004', name: 'Pro-Am Division' }
           };
         }
-      } catch (err) {}
+      } catch (err) { }
 
       for (const id in teams) {
         const t = teams[id];
@@ -439,7 +439,7 @@
   window.saveAdminTeam = function (teamData) {
     const teams = window.getAdminTeams();
     const id = teamData.id || `t_${Date.now()}`;
-    
+
     // Calculate badge abbreviation from team name if not provided
     const words = (teamData.name || 'Team').trim().split(/\s+/);
     const badge = teamData.badge || (words.length > 1 ? (words[0][0] + words[1][0]).toUpperCase() : words[0].substring(0, 2).toUpperCase());
@@ -700,7 +700,7 @@
       document.querySelectorAll('.admin-nav-link[href="games.html"] .nav-count').forEach(el => {
         el.textContent = gCount;
       });
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function buildDashboardKpis() {

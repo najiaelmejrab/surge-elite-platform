@@ -762,8 +762,15 @@
 }
 
 @keyframes adminModalIn {
-  from { transform: scale(0.96) translateY(8px); opacity: 0; }
-  to { transform: scale(1) translateY(0); opacity: 1; }
+  from {
+    transform: scale(0.96) translateY(8px);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
 }
 
 .admin-modal-header {
@@ -869,7 +876,7 @@
   border-top: 1px solid var(--border-subtle);
 }
 
-.admin-modal-actions > .btn {
+.admin-modal-actions>.btn {
   min-width: 104px;
 }
 
@@ -926,6 +933,7 @@
 }
 
 @media (max-width: 720px) {
+
   .game-summary-scoreline,
   .game-summary-boxes {
     grid-template-columns: 1fr;
@@ -1002,9 +1010,17 @@
   flex-shrink: 0;
 }
 
-.admin-activity-dot.orange { background: var(--primary); }
-.admin-activity-dot.cyan { background: var(--cyan-highlight); }
-.admin-activity-dot.green { background: #10b981; }
+.admin-activity-dot.orange {
+  background: var(--primary);
+}
+
+.admin-activity-dot.cyan {
+  background: var(--cyan-highlight);
+}
+
+.admin-activity-dot.green {
+  background: #10b981;
+}
 
 .admin-activity-text {
   font-size: 0.85rem;
@@ -1092,7 +1108,7 @@
   .admin-dashboard-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .admin-table {
     display: block;
     overflow-x: auto;
@@ -1118,7 +1134,7 @@
     padding: 0 1rem;
     gap: 0.5rem;
   }
-  
+
   .admin-topbar-title {
     font-size: 1.15rem;
   }
@@ -1152,13 +1168,13 @@
     padding: 0.4rem 0.6rem;
     font-size: 0.75rem;
   }
-  
+
   .admin-modal-actions {
     flex-direction: column;
     width: 100%;
   }
-  
-  .admin-modal-actions > .btn {
+
+  .admin-modal-actions>.btn {
     width: 100%;
   }
 }
@@ -1168,16 +1184,16 @@
   .admin-kpi-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .admin-modal {
     padding: 1.25rem 1rem;
   }
-  
+
   .admin-modal-header {
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
   }
-  
+
   .admin-modal-title {
     font-size: 1.15rem;
   }

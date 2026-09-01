@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Management | Surge Elite Basketball Platform</title>
+  <meta name="description" content="Manage administrator and coach accounts, roles, and access status.">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Oswald -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/design-refinements.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+
+<body>
+
+  <div class="admin-layout">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="admin-sidebar-overlay" id="adminSidebarOverlay"></div>
+
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-brand">
+        <a href="../index.html" class="logo">
+          <div class="logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M5.5 5.5A10 10 0 0 1 18.5 18.5"></path>
+              <path d="M18.5 5.5A10 10 0 0 0 5.5 18.5"></path>
+              <line x1="12" y1="2" x2="12" y2="22"></line>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+            </svg>
+          </div>
+          SURGE <span>ELITE</span>
+        </a>
+      </div>
+
+      <nav class="admin-nav">
+        <div class="admin-nav-section">
+          <a href="index.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            </svg>
+            Dashboard
+          </a>
+          <a href="leagues.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+              <path d="M4 22h16"></path>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path>
+            </svg>
+            Leagues
+          </a>
+          <a href="teams.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            Teams
+          </a>
+          <a href="players.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Players
+          </a>
+          <a href="games.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            Games
+          </a>
+          <a href="admin-accounts.html" class="admin-nav-link active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            Accounts
+          </a>
+        </div>
+      </nav>
+
+      <div class="admin-sidebar-footer">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">AD</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">Admin Director</div>
+            <div class="admin-user-role">System Administrator</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      <!-- Top Bar -->
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <button class="admin-mobile-toggle" id="adminMobileToggle" aria-label="Toggle Menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="admin-breadcrumb">
+            <a href="index.html">Admin</a>
+            <span class="sep">/</span>
+            <span class="current">Accounts</span>
+          </div>
+        </div>
+        <div class="admin-topbar-right">
+          <a href="../login.html" class="btn btn-outline btn-sm">Log Out</a>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="admin-content">
+
+        <!-- Page Heading & Create Action -->
+        <div
+          style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <div class="section-tag" style="margin-bottom: 0.5rem;">ACCESS CONTROL</div>
+            <h1 class="admin-topbar-title" style="font-size: 2rem;">ACCOUNT MANAGEMENT</h1>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Manage administrator and coach
+              accounts, roles, and access status.</p>
+          </div>
+          <button class="btn btn-primary" id="createAccountBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Create Account
+          </button>
+        </div>
+
+        <!-- KPI Summary Cards -->
+        <div class="admin-kpi-grid" style="margin-bottom: 2rem;">
+          <div class="admin-kpi-card">
+            <div class="admin-kpi-header">
+              <span class="admin-kpi-label">Total Accounts</span>
+              <div class="admin-kpi-icon orange">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="admin-kpi-value" id="kpiTotal">0</div>
+            <div class="admin-kpi-trend up"><span>All registered accounts</span></div>
+          </div>
+          <div class="admin-kpi-card">
+            <div class="admin-kpi-header">
+              <span class="admin-kpi-label">Active</span>
+              <div class="admin-kpi-icon green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div class="admin-kpi-value" id="kpiActive">0</div>
+            <div class="admin-kpi-trend up"><span>Currently active</span></div>
+          </div>
+          <div class="admin-kpi-card">
+            <div class="admin-kpi-header">
+              <span class="admin-kpi-label">Pending</span>
+              <div class="admin-kpi-icon cyan">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div class="admin-kpi-value" id="kpiPending">0</div>
+            <div class="admin-kpi-trend up"><span>Awaiting activation</span></div>
+          </div>
+          <div class="admin-kpi-card">
+            <div class="admin-kpi-header">
+              <span class="admin-kpi-label">Inactive</span>
+              <div class="admin-kpi-icon" style="background: rgba(239,68,68,0.12); color: #ef4444;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="15" y1="9" x2="9" y2="15"></line>
+                  <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+              </div>
+            </div>
+            <div class="admin-kpi-value" id="kpiInactive">0</div>
+            <div class="admin-kpi-trend up"><span>Deactivated accounts</span></div>
+          </div>
+        </div>
+
+        <!-- Accounts Table Card -->
+        <div class="admin-table-card">
+          <div class="admin-table-header">
+            <h3 class="admin-table-title" id="accountsCountTitle">Accounts</h3>
+            <div class="admin-table-controls">
+              <!-- Search -->
+              <div class="admin-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="accountSearchInput" placeholder="Search by name or email...">
+              </div>
+              <!-- Role Filter -->
+              <select id="accountRoleFilter" class="admin-filter-select">
+                <option value="all">All Roles</option>
+                <option value="administrator">Administrator</option>
+                <option value="coach">Coach</option>
+              </select>
+              <!-- Status Filter -->
+              <select id="accountStatusFilter" class="admin-filter-select">
+                <option value="all">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="pending">Pending</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+            <table class="admin-table" id="accountsTable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="accountsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="admin-table-footer">
+            <span id="accountsFooterText">Showing — entries</span>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ── Create / Edit Account Modal ──────────────────────────────────────── -->
+  <div class="admin-modal-overlay" id="accountModal">
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" id="accountModalTitle">Create New Account</h3>
+        <button class="admin-modal-close" data-dismiss="modal">&times;</button>
+      </div>
+      <form id="accountForm">
+        <input type="hidden" id="accountIdInput">
+
+        <div class="admin-form-group" style="margin-bottom: 1rem;">
+          <label class="admin-form-label" for="accountNameInput">Full Name *</label>
+          <input type="text" id="accountNameInput" class="admin-form-input" placeholder="e.g. John Doe" required>
+        </div>
+
+        <div class="admin-form-group" style="margin-bottom: 1rem;">
+          <label class="admin-form-label" for="accountEmailInput">Email Address *</label>
+          <input type="email" id="accountEmailInput" class="admin-form-input" placeholder="e.g. john@surgeelite.com"
+            required>
+        </div>
+
+        <div class="admin-form-row cols-2">
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="accountRoleInput">Role *</label>
+            <select id="accountRoleInput" class="admin-form-select">
+              <option value="administrator">Administrator</option>
+              <option value="coach">Coach</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="accountStatusInput">Status *</label>
+            <select id="accountStatusInput" class="admin-form-select">
+              <option value="active">Active</option>
+              <option value="pending">Pending</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="admin-modal-actions"
+          style="margin-top: 1.5rem; display: flex; gap: 0.75rem; justify-content: flex-end;">
+          <button type="button" class="btn btn-outline" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="accountSaveBtn">Create Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── View Account Modal ──────────────────────────────────────── -->
+  <div class="admin-modal-overlay" id="viewAccountModal">
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title">Account Details</h3>
+        <button class="admin-modal-close" data-dismiss="viewModal">&times;</button>
+      </div>
+      <div id="viewAccountContent" style="padding: 0.5rem 0;">
+        <!-- Populated by JS -->
+      </div>
+      <div class="admin-modal-actions"
+        style="margin-top: 1.5rem; display: flex; gap: 0.75rem; justify-content: flex-end;">
+        <button type="button" class="btn btn-outline" data-dismiss="viewModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Toast Container -->
+  <div class="admin-toast-container" id="toastContainer"></div>
+
+  <!-- ── JavaScript ──────────────────────────────────────────────────────── -->
+  <script>
+    /* ── Sidebar toggle (standard admin pattern) ─────────────────────────── */
+    const sidebar = document.getElementById('adminSidebar');
+    const overlay = document.getElementById('adminSidebarOverlay');
+    const toggle = document.getElementById('adminMobileToggle');
+
+    function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('open'); }
+    function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('open'); }
+    toggle.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
+    overlay.addEventListener('click', closeSidebar);
+
+    /* ── localStorage helpers ────────────────────────────────────────────── */
+    const STORE_KEY = 'surge_admin_accounts_v1';
+
+    function loadAccounts() {
+      try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
+      catch { return {}; }
+    }
+
+    function saveAccounts(accounts) {
+      localStorage.setItem(STORE_KEY, JSON.stringify(accounts));
+    }
+
+    function generateId() {
+      return 'acct_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+    }
+
+    /* ── Seed demo data if empty ─────────────────────────────────────────── */
+    function seedIfEmpty() {
+      const accounts = loadAccounts();
+      if (Object.keys(accounts).length > 0) return;
+      const seed = {
+        acct_seed_001: { id: 'acct_seed_001', name: 'Admin Director', email: 'admin@surgeelite.com', role: 'administrator', status: 'active', createdAt: '2026-01-15T08:00:00Z' },
+        acct_seed_002: { id: 'acct_seed_002', name: 'Marcus Thompson', email: 'marcus.t@surgeelite.com', role: 'coach', status: 'active', createdAt: '2026-02-20T10:30:00Z' },
+        acct_seed_003: { id: 'acct_seed_003', name: 'Sarah Chen', email: 'sarah.chen@surgeelite.com', role: 'coach', status: 'pending', createdAt: '2026-08-01T14:00:00Z' },
+        acct_seed_004: { id: 'acct_seed_004', name: 'James Rivera', email: 'j.rivera@surgeelite.com', role: 'administrator', status: 'inactive', createdAt: '2026-03-10T09:15:00Z' },
+        acct_seed_005: { id: 'acct_seed_005', name: 'Priya Patel', email: 'priya.p@surgeelite.com', role: 'coach', status: 'active', createdAt: '2026-06-05T11:45:00Z' }
+      };
+      saveAccounts(seed);
+    }
+
+    /* ── Escape HTML ─────────────────────────────────────────────────────── */
+    function esc(str) {
+      const d = document.createElement('div');
+      d.textContent = str || '';
+      return d.innerHTML;
+    }
+
+    /* ── Format date ─────────────────────────────────────────────────────── */
+    function fmtDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    /* ── Status badge class ──────────────────────────────────────────────── */
+    function statusClass(status) {
+      switch (status) {
+        case 'active': return 'admin-status active';
+        case 'pending': return 'admin-status scheduled';
+        case 'inactive': return 'admin-status ended';
+        default: return 'admin-status';
+      }
+    }
+
+    /* ── Role label ──────────────────────────────────────────────────────── */
+    function roleLabel(role) {
+      return role === 'administrator' ? 'Administrator' : 'Coach';
+    }
+
+    /* ── Render table ────────────────────────────────────────────────────── */
+    function renderTable() {
+      const accounts = loadAccounts();
+      const list = Object.values(accounts);
+      const search = document.getElementById('accountSearchInput').value.toLowerCase().trim();
+      const roleFilter = document.getElementById('accountRoleFilter').value;
+      const statusFilter = document.getElementById('accountStatusFilter').value;
+
+      const filtered = list.filter(a => {
+        if (search && !a.name.toLowerCase().includes(search) && !a.email.toLowerCase().includes(search)) return false;
+        if (roleFilter !== 'all' && a.role !== roleFilter) return false;
+        if (statusFilter !== 'all' && a.status !== statusFilter) return false;
+        return true;
+      });
+
+      // Update KPIs
+      document.getElementById('kpiTotal').textContent = list.length;
+      document.getElementById('kpiActive').textContent = list.filter(a => a.status === 'active').length;
+      document.getElementById('kpiPending').textContent = list.filter(a => a.status === 'pending').length;
+      document.getElementById('kpiInactive').textContent = list.filter(a => a.status === 'inactive').length;
+
+      // Table
+      const tbody = document.getElementById('accountsTableBody');
+      document.getElementById('accountsFooterText').textContent = `Showing ${filtered.length} of ${list.length} entries`;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2rem; color:var(--text-muted);">No accounts found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(a => `
+        <tr>
+          <td><strong>${esc(a.name)}</strong></td>
+          <td>${esc(a.email)}</td>
+          <td>${roleLabel(a.role)}</td>
+          <td><span class="${statusClass(a.status)}">${a.status.charAt(0).toUpperCase() + a.status.slice(1)}</span></td>
+          <td>${fmtDate(a.createdAt)}</td>
+          <td style="text-align: right; white-space: nowrap;">
+            <button class="admin-action-btn" onclick="viewAccount('${a.id}')" title="View">👁</button>
+            <button class="admin-action-btn" onclick="editAccount('${a.id}')" title="Edit">✏️</button>
+            <button class="admin-action-btn" onclick="toggleStatus('${a.id}')" title="${a.status === 'active' ? 'Deactivate' : 'Activate'}">${a.status === 'active' ? '⏸' : '▶'}</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    /* ── Modal helpers ────────────────────────────────────────────────────── */
+    const accountModal = document.getElementById('accountModal');
+    const viewModal = document.getElementById('viewAccountModal');
+
+    function openModal() { accountModal.classList.add('open'); }
+    function closeModal() { accountModal.classList.remove('open'); }
+    function openViewModal() { viewModal.classList.add('open'); }
+    function closeViewModal() { viewModal.classList.remove('open'); }
+
+    // Close buttons
+    document.querySelectorAll('[data-dismiss="modal"]').forEach(btn => btn.addEventListener('click', closeModal));
+    document.querySelectorAll('[data-dismiss="viewModal"]').forEach(btn => btn.addEventListener('click', closeViewModal));
+    accountModal.addEventListener('click', e => { if (e.target === accountModal) closeModal(); });
+    viewModal.addEventListener('click', e => { if (e.target === viewModal) closeViewModal(); });
+
+    /* ── Create Account ──────────────────────────────────────────────────── */
+    document.getElementById('createAccountBtn').addEventListener('click', () => {
+      document.getElementById('accountModalTitle').textContent = 'Create New Account';
+      document.getElementById('accountSaveBtn').textContent = 'Create Account';
+      document.getElementById('accountForm').reset();
+      document.getElementById('accountIdInput').value = '';
+      openModal();
+    });
+
+    /* ── Edit Account ────────────────────────────────────────────────────── */
+    function editAccount(id) {
+      const accounts = loadAccounts();
+      const a = accounts[id];
+      if (!a) return;
+
+      document.getElementById('accountModalTitle').textContent = 'Edit Account';
+      document.getElementById('accountSaveBtn').textContent = 'Save Changes';
+      document.getElementById('accountIdInput').value = a.id;
+      document.getElementById('accountNameInput').value = a.name;
+      document.getElementById('accountEmailInput').value = a.email;
+      document.getElementById('accountRoleInput').value = a.role;
+      document.getElementById('accountStatusInput').value = a.status;
+      openModal();
+    }
+
+    /* ── View Account ────────────────────────────────────────────────────── */
+    function viewAccount(id) {
+      const accounts = loadAccounts();
+      const a = accounts[id];
+      if (!a) return;
+
+      document.getElementById('viewAccountContent').innerHTML = `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.5rem;">
+          <div>
+            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Full Name</div>
+            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${esc(a.name)}</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Email</div>
+            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${esc(a.email)}</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Role</div>
+            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${roleLabel(a.role)}</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Status</div>
+            <div><span class="${statusClass(a.status)}">${a.status.charAt(0).toUpperCase() + a.status.slice(1)}</span></div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Created</div>
+            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${fmtDate(a.createdAt)}</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Account ID</div>
+            <div style="font-size: 0.78rem; font-weight: 500; color: var(--text-muted); word-break: break-all;">${esc(a.id)}</div>
+          </div>
+        </div>
+      `;
+      openViewModal();
+    }
+
+    /* ── Toggle Activate/Deactivate ──────────────────────────────────────── */
+    function toggleStatus(id) {
+      const accounts = loadAccounts();
+      const a = accounts[id];
+      if (!a) return;
+      a.status = a.status === 'active' ? 'inactive' : 'active';
+      accounts[id] = a;
+      saveAccounts(accounts);
+      renderTable();
+      showToast(a.status === 'active' ? `${a.name} activated` : `${a.name} deactivated`);
+    }
+
+    /* ── Save (Create / Update) ──────────────────────────────────────────── */
+    document.getElementById('accountForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const accounts = loadAccounts();
+      const id = document.getElementById('accountIdInput').value;
+      const name = document.getElementById('accountNameInput').value.trim();
+      const email = document.getElementById('accountEmailInput').value.trim();
+      const role = document.getElementById('accountRoleInput').value;
+      const status = document.getElementById('accountStatusInput').value;
+
+      if (!name || !email) return;
+
+      if (id && accounts[id]) {
+        // Update
+        accounts[id].name = name;
+        accounts[id].email = email;
+        accounts[id].role = role;
+        accounts[id].status = status;
+        saveAccounts(accounts);
+        showToast('Account updated successfully');
+      } else {
+        // Create
+        const newId = generateId();
+        accounts[newId] = { id: newId, name, email, role, status, createdAt: new Date().toISOString() };
+        saveAccounts(accounts);
+        showToast('Account created successfully');
+      }
+
+      closeModal();
+      renderTable();
+    });
+
+    /* ── Toast ────────────────────────────────────────────────────────────── */
+    function showToast(message) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.style.cssText = 'background: var(--bg-card); border: 1px solid var(--primary); color: var(--text-main); padding: 0.75rem 1.25rem; border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.3); animation: slideIn 0.3s ease;';
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 2500);
+    }
+
+    /* ── Filter event listeners ───────────────────────────────────────────── */
+    document.getElementById('accountSearchInput').addEventListener('input', renderTable);
+    document.getElementById('accountRoleFilter').addEventListener('change', renderTable);
+    document.getElementById('accountStatusFilter').addEventListener('change', renderTable);
+
+    /* ── Init ─────────────────────────────────────────────────────────────── */
+    seedIfEmpty();
+    renderTable();
+  </script>
+
+</body>
+
+</html>
