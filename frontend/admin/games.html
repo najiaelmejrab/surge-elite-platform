@@ -190,22 +190,25 @@
             </div>
           </div>
 
-          <table class="admin-table" id="gamesTable">
-            <thead>
-              <tr>
-                <th>Date &amp; Time</th>
-                <th>League</th>
-                <th>Home Team</th>
-                <th>Away Team</th>
-                <th>Game Status</th>
-                <th>Broadcast Status</th>
-                <th style="text-align: center;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="gamesTableBody">
-              <!-- Rendered via JavaScript -->
-            </tbody>
-          </table>
+          <div class="admin-table-scroll">
+            <table class="admin-table" id="gamesTable">
+              <thead>
+                <tr>
+                  <th>Date &amp; Time</th>
+                  <th>League</th>
+                  <th>Home Team</th>
+                  <th>Away Team</th>
+                  <th>Game Status</th>
+                  <th>Broadcast Status</th>
+                  <th>Created By</th>
+                  <th style="text-align: center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="gamesTableBody">
+                <!-- Rendered via JavaScript -->
+              </tbody>
+            </table>
+          </div>
 
           <div class="admin-table-footer">
             <span id="tableEntriesText">Showing 0 of 0 entries</span>
@@ -402,7 +405,7 @@
       if (gamesList.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="7" style="text-align:center; padding: 2.5rem; color: var(--text-muted);">
+            <td colspan="8" style="text-align:center; padding: 2.5rem; color: var(--text-muted);">
               No games scheduled yet. Click <strong>Schedule Game</strong> to add one.
             </td>
           </tr>`;
@@ -420,6 +423,7 @@
 
         const awayObj = teams[g.awayTeamId];
         const awayName = awayObj ? awayObj.name : (g.awayTeam || 'Away Team');
+        const createdBy = resolveAuditActorName(g.createdBy);
 
         // Formatted date string
         let dateFormatted = g.date || '';
@@ -456,6 +460,7 @@
             <td class="broadcast-cell">
               <!-- Injected via syncBroadcastBadges -->
             </td>
+            <td>${createdBy}</td>
             <td>
               <div class="admin-row-actions" style="justify-content: flex-end; gap: 0.4rem;">
                 <a href="game-details.html?id=${g.id}" class="btn btn-outline btn-sm" style="padding: 0.35rem 0.65rem; font-size: 0.75rem;">Manage Game</a>

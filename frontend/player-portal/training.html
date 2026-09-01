@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player Portal | Training | Surge Elite</title>
+  <meta name="description" content="Player training program and weekly development plan in Surge Elite.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/design-refinements.css">
+  <link rel="stylesheet" href="player-portal.css">
+</head>
+
+<body class="portal-page">
+  <header class="navbar portal-header" id="navbar">
+    <div class="container nav-container portal-nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M5.5 5.5A10 10 0 0 1 18.5 18.5"></path>
+            <path d="M18.5 5.5A10 10 0 0 0 5.5 18.5"></path>
+            <line x1="12" y1="2" x2="12" y2="22"></line>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+          </svg>
+        </div>
+        SURGE <span>ELITE</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="performance.html" class="nav-link">Performance</a></li>
+          <li><a href="training.html" class="nav-link active">Training</a></li>
+          <li><a href="schedule.html" class="nav-link">Schedule</a></li>
+          <li><a href="goals.html" class="nav-link">Goals</a></li>
+          <li><a href="profile.html" class="nav-link">Profile</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="portal-profile-pill">
+          <span class="portal-profile-pill__avatar">MV</span>
+          <span class="portal-profile-pill__meta">
+            <strong>Marcus Vance</strong>
+            <small>Guard</small>
+          </span>
+        </div>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <aside class="mobile-menu" id="mobileMenu">
+    <div>
+      <div class="mobile-menu-header">
+        <a href="index.html" class="logo">SURGE <span>ELITE</span></a>
+        <button class="mobile-close" id="mobileClose" aria-label="Close Navigation Menu">&times;</button>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+        <li><a href="performance.html" class="mobile-nav-link">Performance</a></li>
+        <li><a href="training.html" class="mobile-nav-link active">Training</a></li>
+        <li><a href="schedule.html" class="mobile-nav-link">Schedule</a></li>
+        <li><a href="goals.html" class="mobile-nav-link">Goals</a></li>
+        <li><a href="profile.html" class="mobile-nav-link">Profile</a></li>
+      </ul>
+    </div>
+    <div>
+      <a href="profile.html" class="btn btn-primary" style="width: 100%; text-align: center; display: block;">View Profile</a>
+    </div>
+  </aside>
+
+  <main class="portal-shell">
+    <section class="portal-hero">
+      <div class="container">
+        <div class="portal-hero-inner">
+          <div class="portal-hero-copy">
+            <span class="portal-eyebrow">Training</span>
+            <h1>Weekly plan</h1>
+            <p>Prioritize the drills, recovery blocks, and movement work that support your next stretch of games.</p>
+            <div class="portal-hero-actions">
+              <a href="schedule.html" class="portal-cta portal-cta--primary">Check Schedule</a>
+              <a href="performance.html" class="portal-cta">View Stats</a>
+            </div>
+          </div>
+
+          <div class="portal-summary-panel">
+            <div class="portal-summary-header">
+              <h2>Adaptation</h2>
+              <span class="portal-badge portal-badge--success">Improving</span>
+            </div>
+
+            <div class="portal-summary-metrics">
+              <div class="portal-metric">
+                <strong>4x</strong>
+                <span>Workouts</span>
+              </div>
+              <div class="portal-metric">
+                <strong>92%</strong>
+                <span>Compliance</span>
+              </div>
+              <div class="portal-metric">
+                <strong>18</strong>
+                <span>Drills</span>
+              </div>
+              <div class="portal-metric">
+                <strong>6.5h</strong>
+                <span>Training</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="portal-section">
+      <div class="container">
+        <div class="portal-card">
+          <div class="portal-card-header">
+            <h2>Focus block</h2>
+            <span class="portal-chip">This week</span>
+          </div>
+
+          <div class="portal-grid">
+            <div class="portal-stat-card">
+              <span class="portal-stat-card__label">Ball handling</span>
+              <div class="portal-stat-card__value">88%</div>
+              <div class="portal-stat-card__trend">+6% this week</div>
+            </div>
+            <div class="portal-stat-card">
+              <span class="portal-stat-card__label">Footwork</span>
+              <div class="portal-stat-card__value">81%</div>
+              <div class="portal-stat-card__trend">Progressing</div>
+            </div>
+            <div class="portal-stat-card">
+              <span class="portal-stat-card__label">Shot prep</span>
+              <div class="portal-stat-card__value">90%</div>
+              <div class="portal-stat-card__trend">Strong rhythm</div>
+            </div>
+            <div class="portal-stat-card">
+              <span class="portal-stat-card__label">Recovery</span>
+              <div class="portal-stat-card__value">95%</div>
+              <div class="portal-stat-card__trend">High readiness</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="portal-section">
+      <div class="container">
+        <div class="portal-grid">
+          <div class="portal-panel" style="grid-column: span 7;">
+            <div class="portal-card-header">
+              <h2>Planned sessions</h2>
+              <span class="portal-chip">Mon–Fri</span>
+            </div>
+            <div class="portal-list">
+              <div class="portal-list-item">
+                <div>
+                  <div class="portal-list-item__title">Skill development</div>
+                  <div class="portal-list-item__meta">Mon • 9:00 AM • 60 min</div>
+                </div>
+                <span class="portal-status portal-status--success">Completed</span>
+              </div>
+              <div class="portal-list-item">
+                <div>
+                  <div class="portal-list-item__title">Strength and explosiveness</div>
+                  <div class="portal-list-item__meta">Wed • 7:30 AM • 75 min</div>
+                </div>
+                <span class="portal-status portal-status--neutral">Planned</span>
+              </div>
+              <div class="portal-list-item">
+                <div>
+                  <div class="portal-list-item__title">Film + decision drills</div>
+                  <div class="portal-list-item__meta">Fri • 2:00 PM • 45 min</div>
+                </div>
+                <span class="portal-status portal-status--warning">Priority</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="portal-panel" style="grid-column: span 5;">
+            <div class="portal-card-header">
+              <h2>Coach notes</h2>
+              <span class="portal-chip">Summary</span>
+            </div>
+            <div class="portal-progress">
+              <div class="portal-progress-item">
+                <div class="portal-progress-item__header"><span>Decision making</span><span>89%</span></div>
+                <div class="portal-progress-bar"><span style="width: 89%;"></span></div>
+              </div>
+              <div class="portal-progress-item">
+                <div class="portal-progress-item__header"><span>Explosive first step</span><span>82%</span></div>
+                <div class="portal-progress-bar"><span style="width: 82%;"></span></div>
+              </div>
+              <div class="portal-progress-item">
+                <div class="portal-progress-item__header"><span>Shot confidence</span><span>94%</span></div>
+                <div class="portal-progress-bar"><span style="width: 94%;"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../js/app.js"></script>
+  <script src="player-portal.js"></script>
+</body>
+
+</html>

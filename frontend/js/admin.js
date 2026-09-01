@@ -196,6 +196,69 @@
     });
   };
 
+  // ─── AUDIT TRAIL HELPERS ───────────────────────────────────────────────
+  function getCurrentAuditAccount() {
+    try {
+      const raw = localStorage.getItem('surge_admin_accounts_v1');
+      if (!raw) return 'Admin Director';
+      const accounts = JSON.parse(raw) || {};
+      const values = Object.values(accounts);
+      if (!values.length) return 'Admin Director';
+      const activeMatch = values.find(account => String(account.status || '').toLowerCase() === 'active');
+      const selected = activeMatch || values[0];
+      return selected && selected.name ? selected.name : 'Admin Director';
+    } catch (e) {
+      return 'Admin Director';
+    }
+  }
+
+  function resolveAuditActorName(value, fallback = getCurrentAuditAccount()) {
+    if (value === null || value === undefined || value === '') {
+      return fallback || 'Admin Director';
+    }
+    if (typeof value === 'string') {
+      return value.trim() || (fallback || 'Admin Director');
+    }
+    if (typeof value === 'object') {
+      return value.name || value.email || fallback || 'Admin Director';
+    }
+    return String(value) || (fallback || 'Admin Director');
+  }
+
+  window.getCurrentAuditAccount = function () {
+    return getCurrentAuditAccount();
+  };
+
+  window.resolveAuditActorName = function (value, fallback) {
+    return resolveAuditActorName(value, fallback);
+  };
+
+  function applyAuditMetadata(record, options = {}) {
+    const actorName = options.actorName || getCurrentAuditAccount() || 'Admin Director';
+    const now = new Date().toISOString();
+    const current = { ...(record || {}) };
+
+    if (!current.createdAt && !current.createdDate) {
+      current.createdAt = now;
+      current.createdDate = now;
+      current.createdBy = actorName;
+    } else {
+      current.createdAt = current.createdAt || current.createdDate || now;
+      current.createdDate = current.createdDate || current.createdAt || now;
+      current.createdBy = current.createdBy || actorName;
+    }
+
+    current.updatedAt = now;
+    current.lastModifiedAt = now;
+    current.lastModifiedDate = now;
+    current.lastModifiedBy = actorName;
+    return current;
+  }
+
+  window.applyAuditMetadata = function (record, options) {
+    return applyAuditMetadata(record, options || {});
+  };
+
   // ─── LIVE BROADCAST DATA STORE ─────────────────────────────────────────
   const BROADCAST_STORAGE_KEY = 'surge_live_broadcasts';
 
@@ -300,7 +363,14 @@
         { id: 'p002', name: 'Jamal Brooks', jersey: '55', position: 'Center (C)', height: "6'11\"", weight: '245 lbs', status: 'injured' },
         { id: 'p003', name: 'Cameron Cole', jersey: '04', position: 'Shooting Guard (SG)', height: "6'2\"", weight: '185 lbs', status: 'active' },
         { id: 'p004', name: 'Daniel Garcia', jersey: '12', position: 'Point Guard (PG)', height: "6'0\"", weight: '175 lbs', status: 'active' }
-      ]
+      ],
+      createdAt: '2026-01-15T08:00:00Z',
+      createdDate: '2026-01-15T08:00:00Z',
+      createdBy: 'Admin Director',
+      lastModifiedAt: '2026-02-12T11:00:00Z',
+      lastModifiedDate: '2026-02-12T11:00:00Z',
+      lastModifiedBy: 'Marcus Thompson',
+      updatedAt: '2026-02-12T11:00:00Z'
     },
     't002': {
       id: 't002',
@@ -319,7 +389,14 @@
         { id: 'p005', name: 'Elena Rostova', jersey: '03', position: 'Shooting Guard (SG)', height: "5'11\"", weight: '165 lbs', status: 'active' },
         { id: 'p006', name: 'David Okafor', jersey: '44', position: 'Center (C)', height: "6'10\"", weight: '235 lbs', status: 'active' },
         { id: 'p007', name: 'Mateo Silva', jersey: '10', position: 'Point Guard (PG)', height: "6'1\"", weight: '180 lbs', status: 'active' }
-      ]
+      ],
+      createdAt: '2026-01-18T09:00:00Z',
+      createdDate: '2026-01-18T09:00:00Z',
+      createdBy: 'Admin Director',
+      lastModifiedAt: '2026-02-20T13:20:00Z',
+      lastModifiedDate: '2026-02-20T13:20:00Z',
+      lastModifiedBy: 'Sarah Chen',
+      updatedAt: '2026-02-20T13:20:00Z'
     },
     't003': {
       id: 't003',
@@ -337,7 +414,14 @@
       players: [
         { id: 'p008', name: 'Paolo Reyes', jersey: '07', position: 'Power Forward (PF)', height: "6'8\"", weight: '220 lbs', status: 'active' },
         { id: 'p009', name: 'Alex Cruz', jersey: '10', position: 'Center (C)', height: "6'9\"", weight: '230 lbs', status: 'active' }
-      ]
+      ],
+      createdAt: '2026-01-25T08:00:00Z',
+      createdDate: '2026-01-25T08:00:00Z',
+      createdBy: 'Admin Director',
+      lastModifiedAt: '2026-02-25T09:45:00Z',
+      lastModifiedDate: '2026-02-25T09:45:00Z',
+      lastModifiedBy: 'Priya Patel',
+      updatedAt: '2026-02-25T09:45:00Z'
     },
     't004': {
       id: 't004',
@@ -354,7 +438,14 @@
       },
       players: [
         { id: 'p010', name: 'Miguel Santos', jersey: '04', position: 'Point Guard (PG)', height: "6'1\"", weight: '175 lbs', status: 'active' }
-      ]
+      ],
+      createdAt: '2026-02-03T08:00:00Z',
+      createdDate: '2026-02-03T08:00:00Z',
+      createdBy: 'Admin Director',
+      lastModifiedAt: '2026-03-08T11:05:00Z',
+      lastModifiedDate: '2026-03-08T11:05:00Z',
+      lastModifiedBy: 'James Rivera',
+      updatedAt: '2026-03-08T11:05:00Z'
     },
     't005': {
       id: 't005',
@@ -365,7 +456,14 @@
       season: 'Spring 2026',
       status: 'active',
       coach: null,
-      players: []
+      players: [],
+      createdAt: '2026-02-10T08:00:00Z',
+      createdDate: '2026-02-10T08:00:00Z',
+      createdBy: 'Admin Director',
+      lastModifiedAt: '2026-02-28T08:55:00Z',
+      lastModifiedDate: '2026-02-28T08:55:00Z',
+      lastModifiedBy: 'Priya Patel',
+      updatedAt: '2026-02-28T08:55:00Z'
     },
     't006': {
       id: 't006',
@@ -376,7 +474,14 @@
       season: 'Spring 2026',
       status: 'active',
       coach: null,
-      players: []
+      players: [],
+      createdAt: '2026-02-12T08:00:00Z',
+      createdDate: '2026-02-12T08:00:00Z',
+      createdBy: 'Admin Director',
+      lastModifiedAt: '2026-03-04T10:00:00Z',
+      lastModifiedDate: '2026-03-04T10:00:00Z',
+      lastModifiedBy: 'Sarah Chen',
+      updatedAt: '2026-03-04T10:00:00Z'
     }
   };
 
@@ -440,20 +545,23 @@
     const teams = window.getAdminTeams();
     const id = teamData.id || `t_${Date.now()}`;
 
-    // Calculate badge abbreviation from team name if not provided
     const words = (teamData.name || 'Team').trim().split(/\s+/);
     const badge = teamData.badge || (words.length > 1 ? (words[0][0] + words[1][0]).toUpperCase() : words[0].substring(0, 2).toUpperCase());
 
     const existing = teams[id] || {};
-    teams[id] = {
+    const savedTeam = applyAuditMetadata({
       ...existing,
       ...teamData,
       id: id,
       badge: badge,
       coach: teamData.coach !== undefined ? teamData.coach : (existing.coach || null),
-      players: teamData.players !== undefined ? teamData.players : (existing.players || []),
-      updatedAt: new Date().toISOString()
-    };
+      players: teamData.players !== undefined ? teamData.players : (existing.players || [])
+    }, {
+      actorName: existing.createdBy || getCurrentAuditAccount(),
+      isUpdate: !!existing.id
+    });
+
+    teams[id] = savedTeam;
     localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
     return teams[id];
   };
@@ -476,7 +584,13 @@
   window.saveTeamCoach = function (teamId, coachData) {
     const teams = window.getAdminTeams();
     if (!teams[teamId]) return null;
-    teams[teamId].coach = coachData;
+    teams[teamId] = applyAuditMetadata({
+      ...teams[teamId],
+      coach: coachData
+    }, {
+      actorName: teams[teamId].createdBy || getCurrentAuditAccount(),
+      isUpdate: true
+    });
     localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
     return teams[teamId];
   };
@@ -484,7 +598,13 @@
   window.removeTeamCoach = function (teamId) {
     const teams = window.getAdminTeams();
     if (!teams[teamId]) return null;
-    teams[teamId].coach = null;
+    teams[teamId] = applyAuditMetadata({
+      ...teams[teamId],
+      coach: null
+    }, {
+      actorName: teams[teamId].createdBy || getCurrentAuditAccount(),
+      isUpdate: true
+    });
     localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
     return teams[teamId];
   };
@@ -498,16 +618,26 @@
     const pid = playerData.id || `p_${Date.now()}`;
     const pidx = teams[teamId].players.findIndex(p => p.id === pid);
 
-    const updatedPlayer = {
+    const updatedPlayer = applyAuditMetadata({
       ...playerData,
       id: pid
-    };
+    }, {
+      actorName: getCurrentAuditAccount(),
+      isUpdate: pidx >= 0
+    });
 
     if (pidx >= 0) {
       teams[teamId].players[pidx] = updatedPlayer;
     } else {
       teams[teamId].players.push(updatedPlayer);
     }
+
+    teams[teamId] = applyAuditMetadata({
+      ...teams[teamId]
+    }, {
+      actorName: teams[teamId].createdBy || getCurrentAuditAccount(),
+      isUpdate: true
+    });
 
     localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
     return teams[teamId];
@@ -517,6 +647,10 @@
     const teams = window.getAdminTeams();
     if (!teams[teamId] || !teams[teamId].players) return null;
     teams[teamId].players = teams[teamId].players.filter(p => p.id !== playerId);
+    teams[teamId] = applyAuditMetadata({ ...teams[teamId] }, {
+      actorName: teams[teamId].createdBy || getCurrentAuditAccount(),
+      isUpdate: true
+    });
     localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
     return teams[teamId];
   };
@@ -535,7 +669,14 @@
       status: 'active',
       format: '16 Games + Finals',
       maxTeams: 12,
-      description: 'Premier Showcase Division for U19-and-under athletes. Competitive round-robin format followed by a single-elimination finals bracket.'
+      description: 'Premier Showcase Division for U19-and-under athletes. Competitive round-robin format followed by a single-elimination finals bracket.',
+      createdAt: '2026-01-10T08:00:00Z',
+      createdDate: '2026-01-10T08:00:00Z',
+      createdBy: 'Admin Director',
+      lastModifiedAt: '2026-02-05T12:30:00Z',
+      lastModifiedDate: '2026-02-05T12:30:00Z',
+      lastModifiedBy: 'Admin Director',
+      updatedAt: '2026-02-05T12:30:00Z'
     },
     'l002': {
       id: 'l002',
@@ -547,7 +688,14 @@
       status: 'active',
       format: '14 Games + Tournament',
       maxTeams: 20,
-      description: 'Junior Championship Tier for U17 athletes. Full season play with tournament-style playoffs.'
+      description: 'Junior Championship Tier for U17 athletes. Full season play with tournament-style playoffs.',
+      createdAt: '2026-01-18T08:00:00Z',
+      createdDate: '2026-01-18T08:00:00Z',
+      createdBy: 'Admin Director',
+      lastModifiedAt: '2026-02-18T09:15:00Z',
+      lastModifiedDate: '2026-02-18T09:15:00Z',
+      lastModifiedBy: 'Marcus Thompson',
+      updatedAt: '2026-02-18T09:15:00Z'
     },
     'l003': {
       id: 'l003',
@@ -559,7 +707,14 @@
       status: 'upcoming',
       format: '12 Games + Playoffs',
       maxTeams: 16,
-      description: 'Developmental Youth Division focusing on fundamentals, teamwork, and competitive experience for U15 athletes.'
+      description: 'Developmental Youth Division focusing on fundamentals, teamwork, and competitive experience for U15 athletes.',
+      createdAt: '2026-02-02T08:00:00Z',
+      createdDate: '2026-02-02T08:00:00Z',
+      createdBy: 'Admin Director',
+      lastModifiedAt: '2026-03-02T10:00:00Z',
+      lastModifiedDate: '2026-03-02T10:00:00Z',
+      lastModifiedBy: 'Priya Patel',
+      updatedAt: '2026-03-02T10:00:00Z'
     },
     'l004': {
       id: 'l004',
@@ -571,7 +726,14 @@
       status: 'active',
       format: '18 Games + Championship',
       maxTeams: 8,
-      description: 'Premier adult Pro-Am showcase league for post-collegiate and professional-level athletes.'
+      description: 'Premier adult Pro-Am showcase league for post-collegiate and professional-level athletes.',
+      createdAt: '2026-01-20T08:00:00Z',
+      createdDate: '2026-01-20T08:00:00Z',
+      createdBy: 'Admin Director',
+      lastModifiedAt: '2026-02-11T07:20:00Z',
+      lastModifiedDate: '2026-02-11T07:20:00Z',
+      lastModifiedBy: 'Marcus Thompson',
+      updatedAt: '2026-02-11T07:20:00Z'
     }
   };
 
@@ -597,22 +759,23 @@
     const leagues = window.getAdminLeagues();
     const id = leagueData.id || `l_${Date.now()}`;
 
-    // Auto-generate badge from name if not provided
     const words = (leagueData.name || 'League').trim().split(/\s+/);
     const badge = leagueData.badge || (words.length > 1
       ? words[0].toUpperCase().substring(0, 3)
       : words[0].toUpperCase().substring(0, 3));
 
     const existing = leagues[id] || {};
-    leagues[id] = {
+    leagues[id] = applyAuditMetadata({
       ...existing,
       ...leagueData,
       id,
       badge,
       badgeColor: leagueData.badgeColor || existing.badgeColor || 'rgba(249,115,22,0.15)',
-      badgeTextColor: leagueData.badgeTextColor || existing.badgeTextColor || 'var(--primary)',
-      updatedAt: new Date().toISOString()
-    };
+      badgeTextColor: leagueData.badgeTextColor || existing.badgeTextColor || 'var(--primary)'
+    }, {
+      actorName: existing.createdBy || getCurrentAuditAccount(),
+      isUpdate: !!existing.id
+    });
     localStorage.setItem(LEAGUES_STORAGE_KEY, JSON.stringify(leagues));
     return leagues[id];
   };
@@ -662,6 +825,58 @@
       }
     }
     return playersList;
+  };
+
+  window.getPlayerProfileById = function (playerId) {
+    const teams = window.getAdminTeams ? window.getAdminTeams() : {};
+    for (const teamId in teams) {
+      const team = teams[teamId];
+      if (!team || !Array.isArray(team.players)) continue;
+      const player = team.players.find((entry) => entry.id === playerId);
+      if (player) {
+        return {
+          teamId: team.id,
+          teamName: team.name,
+          player: {
+            ...player,
+            teamId: team.id,
+            teamName: team.name
+          }
+        };
+      }
+    }
+    return null;
+  };
+
+  window.savePlayerProfileById = function (playerId, profileData) {
+    const teams = window.getAdminTeams ? window.getAdminTeams() : {};
+    for (const teamId in teams) {
+      const team = teams[teamId];
+      if (!team || !Array.isArray(team.players)) continue;
+      const index = team.players.findIndex((entry) => entry.id === playerId);
+      if (index === -1) continue;
+
+      const current = team.players[index];
+      const merged = {
+        ...current,
+        ...profileData,
+        id: playerId,
+        name: [profileData.firstName || current.firstName || current.name?.split(' ')[0], profileData.lastName || current.lastName || current.name?.split(' ').slice(1).join(' ')].filter(Boolean).join(' '),
+        preferredName: profileData.preferredName || current.preferredName || profileData.firstName || current.firstName || current.name?.split(' ')[0],
+        teamId: team.id,
+        teamName: team.name,
+        updatedAt: new Date().toISOString()
+      };
+
+      team.players[index] = merged;
+      localStorage.setItem('surge_admin_teams_v2', JSON.stringify(teams));
+      return {
+        teamId: team.id,
+        teamName: team.name,
+        player: merged
+      };
+    }
+    return null;
   };
 
   /**
@@ -867,38 +1082,56 @@
     const entries = [];
 
     Object.values(window.getAdminLeagues() || {}).forEach((league) => {
-      if (league && league.updatedAt) {
-        entries.push({
-          type: 'league',
-          badge: 'orange',
-          description: `<strong>League updated:</strong> ${league.name || 'League'} was updated.`,
-          timestamp: league.updatedAt
-        });
-      }
+      const timestamp = league && (league.lastModifiedDate || league.lastModifiedAt || league.updatedAt || league.createdDate || league.createdAt);
+      if (!league || !timestamp) return;
+      const actor = league.lastModifiedBy || league.createdBy || getCurrentAuditAccount();
+      entries.push({
+        type: 'league',
+        badge: 'orange',
+        description: `<strong>League updated:</strong> ${league.name || 'League'} by ${actor}.`,
+        timestamp: timestamp
+      });
     });
 
     Object.values(window.getAdminTeams() || {}).forEach((team) => {
-      if (team && team.updatedAt) {
-        entries.push({
-          type: 'team',
-          badge: 'cyan',
-          description: `<strong>Team updated:</strong> ${team.name || 'Team'} was updated.`,
-          timestamp: team.updatedAt
-        });
-      }
+      const timestamp = team && (team.lastModifiedDate || team.lastModifiedAt || team.updatedAt || team.createdDate || team.createdAt);
+      if (!team || !timestamp) return;
+      const actor = team.lastModifiedBy || team.createdBy || getCurrentAuditAccount();
+      entries.push({
+        type: 'team',
+        badge: 'cyan',
+        description: `<strong>Team updated:</strong> ${team.name || 'Team'} by ${actor}.`,
+        timestamp: timestamp
+      });
     });
 
     Object.values(window.getAdminGames() || {}).forEach((game) => {
-      if (game && game.updatedAt) {
-        const matchup = `${getSafeTeamName(game.homeTeamId)} vs ${getSafeTeamName(game.awayTeamId)}`;
-        entries.push({
-          type: 'game',
-          badge: 'green',
-          description: `<strong>Game updated:</strong> ${matchup} was updated.`,
-          timestamp: game.updatedAt
-        });
-      }
+      const timestamp = game && (game.lastModifiedDate || game.lastModifiedAt || game.updatedAt || game.createdDate || game.createdAt);
+      if (!game || !timestamp) return;
+      const matchup = `${getSafeTeamName(game.homeTeamId)} vs ${getSafeTeamName(game.awayTeamId)}`;
+      const actor = game.lastModifiedBy || game.createdBy || getCurrentAuditAccount();
+      entries.push({
+        type: 'game',
+        badge: 'green',
+        description: `<strong>Game updated:</strong> ${matchup} by ${actor}.`,
+        timestamp: timestamp
+      });
     });
+
+    try {
+      const accountData = JSON.parse(localStorage.getItem('surge_admin_accounts_v1') || '{}');
+      Object.values(accountData || {}).forEach((account) => {
+        const timestamp = account && (account.lastModifiedDate || account.lastModifiedAt || account.updatedAt || account.createdDate || account.createdAt || account.lastLogin);
+        if (!account || !timestamp) return;
+        const actor = account.lastModifiedBy || account.createdBy || account.name || getCurrentAuditAccount();
+        entries.push({
+          type: 'account',
+          badge: 'purple',
+          description: `<strong>Account updated:</strong> ${account.name || 'Account'} by ${actor}.`,
+          timestamp: timestamp
+        });
+      });
+    } catch (e) {}
 
     entries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
@@ -950,7 +1183,14 @@
       venue: 'Surge Arena (Main Court)',
       status: 'scheduled',
       homeScore: null,
-      awayScore: null
+      awayScore: null,
+      createdAt: '2026-02-15T09:30:00Z',
+      createdDate: '2026-02-15T09:30:00Z',
+      createdBy: 'Admin Director',
+      lastModifiedAt: '2026-03-05T08:40:00Z',
+      lastModifiedDate: '2026-03-05T08:40:00Z',
+      lastModifiedBy: 'Marcus Thompson',
+      updatedAt: '2026-03-05T08:40:00Z'
     },
     'g002': {
       id: 'g002',
@@ -962,7 +1202,14 @@
       venue: 'Downtown Complex (Court B)',
       status: 'scheduled',
       homeScore: null,
-      awayScore: null
+      awayScore: null,
+      createdAt: '2026-02-22T09:30:00Z',
+      createdDate: '2026-02-22T09:30:00Z',
+      createdBy: 'Admin Director',
+      lastModifiedAt: '2026-03-01T15:10:00Z',
+      lastModifiedDate: '2026-03-01T15:10:00Z',
+      lastModifiedBy: 'Priya Patel',
+      updatedAt: '2026-03-01T15:10:00Z'
     },
     'g003': {
       id: 'g003',
@@ -974,7 +1221,14 @@
       venue: 'Venice Beach Arena',
       status: 'completed',
       homeScore: 112,
-      awayScore: 98
+      awayScore: 98,
+      createdAt: '2026-02-12T10:05:00Z',
+      createdDate: '2026-02-12T10:05:00Z',
+      createdBy: 'Admin Director',
+      lastModifiedAt: '2026-03-12T17:30:00Z',
+      lastModifiedDate: '2026-03-12T17:30:00Z',
+      lastModifiedBy: 'Sarah Chen',
+      updatedAt: '2026-03-12T17:30:00Z'
     },
     'g004': {
       id: 'g004',
@@ -986,7 +1240,14 @@
       venue: 'Northgate Court',
       status: 'scheduled',
       homeScore: null,
-      awayScore: null
+      awayScore: null,
+      createdAt: '2026-02-18T08:00:00Z',
+      createdDate: '2026-02-18T08:00:00Z',
+      createdBy: 'Admin Director',
+      lastModifiedAt: '2026-03-17T08:00:00Z',
+      lastModifiedDate: '2026-03-17T08:00:00Z',
+      lastModifiedBy: 'James Rivera',
+      updatedAt: '2026-03-17T08:00:00Z'
     }
   };
 
@@ -1011,12 +1272,15 @@
   window.saveAdminGame = function (gameData) {
     const games = window.getAdminGames();
     const id = gameData.id || `g_${Date.now()}`;
-    games[id] = {
-      ...games[id],
+    const existing = games[id] || {};
+    games[id] = applyAuditMetadata({
+      ...existing,
       ...gameData,
-      id: id,
-      updatedAt: new Date().toISOString()
-    };
+      id: id
+    }, {
+      actorName: existing.createdBy || getCurrentAuditAccount(),
+      isUpdate: !!existing.id
+    });
     localStorage.setItem(GAMES_STORAGE_KEY, JSON.stringify(games));
     return games[id];
   };

@@ -176,22 +176,25 @@
             </div>
           </div>
 
-          <table class="admin-table" id="playersTable">
-            <thead>
-              <tr>
-                <th>Player Name</th>
-                <th>Jersey #</th>
-                <th>Team</th>
-                <th>Position</th>
-                <th>Height / Weight</th>
-                <th>Status</th>
-                <th style="text-align: center;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="playersTableBody">
-              <!-- Rendered via JavaScript -->
-            </tbody>
-          </table>
+          <div class="admin-table-scroll">
+            <table class="admin-table" id="playersTable">
+              <thead>
+                <tr>
+                  <th>Player Name</th>
+                  <th>Jersey #</th>
+                  <th>Team</th>
+                  <th>Position</th>
+                  <th>Height / Weight</th>
+                  <th>Status</th>
+                  <th>Created By</th>
+                  <th style="text-align: center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="playersTableBody">
+                <!-- Rendered via JavaScript -->
+              </tbody>
+            </table>
+          </div>
 
           <div class="admin-table-footer">
             <span id="playersFooterText">Showing 0 of 0 entries</span>
@@ -266,6 +269,16 @@
             <option value="inactive">Inactive</option>
             <option value="free_agent">Free Agent</option>
           </select>
+        </div>
+
+        <div id="playerAuditMeta" style="display:none; margin-bottom:1.25rem; padding: 0.9rem 1rem; border-radius: var(--radius-md); background: rgba(148,163,184,0.06); border: 1px solid var(--border-light);">
+          <div style="font-size:0.72rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.55rem;">Audit Trail</div>
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap:0.75rem; font-size:0.8rem; color:var(--text-main);">
+            <div><div style="color:var(--text-muted); margin-bottom:0.15rem;">Created By</div><div id="playerCreatedByText">—</div></div>
+            <div><div style="color:var(--text-muted); margin-bottom:0.15rem;">Created Date</div><div id="playerCreatedAtText">—</div></div>
+            <div><div style="color:var(--text-muted); margin-bottom:0.15rem;">Last Modified By</div><div id="playerModifiedByText">—</div></div>
+            <div><div style="color:var(--text-muted); margin-bottom:0.15rem;">Last Modified Date</div><div id="playerModifiedAtText">—</div></div>
+          </div>
         </div>
 
         <div class="admin-modal-actions">
@@ -343,14 +356,17 @@
       const players = getAdminPlayers();
       const tbody = document.getElementById('playersTableBody');
 
-      document.getElementById('navPlayersCount').textContent = players.length;
-      document.getElementById('playersCountTitle').textContent = `Registered Athletes`;
-      document.getElementById('playersFooterText').textContent = `Showing ${players.length} of ${players.length} entries`;
+      const navPlayersCount = document.getElementById('navPlayersCount');
+      if (navPlayersCount) navPlayersCount.textContent = players.length;
+      const playersCountTitle = document.getElementById('playersCountTitle');
+      if (playersCountTitle) playersCountTitle.textContent = `Registered Athletes`;
+      const playersFooterText = document.getElementById('playersFooterText');
+      if (playersFooterText) playersFooterText.textContent = `Showing ${players.length} of ${players.length} entries`;
 
       if (players.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="7" style="text-align:center; padding: 2.5rem; color: var(--text-muted);">
+            <td colspan="8" style="text-align:center; padding: 2.5rem; color: var(--text-muted);">
               No player records found in the database.
             </td>
           </tr>
@@ -361,6 +377,7 @@
       tbody.innerHTML = players.map(p => {
         const initials = p.name ? p.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) : 'PL';
         const heightWeight = `${p.height || '--'} / ${p.weight || '--'}`;
+        const createdBy = resolveAuditActorName(p.createdBy);
 
         return `
           <tr data-player-id="${p.id}" data-team-id="${p.teamId}">
@@ -381,6 +398,7 @@
             <td>${p.position || 'Guard'}</td>
             <td>${heightWeight}</td>
             <td class="player-status-cell">${getStatusBadge(p.status)}</td>
+            <td>${createdBy}</td>
             <td>
               <div class="admin-row-actions" style="justify-content: center; gap: 0.4rem;">
                 <button class="admin-action-btn edit" title="Edit Player" onclick="openPlayerModal('${p.id}')">
@@ -457,6 +475,18 @@
       document.getElementById('playerHeightInput').value = player.height || '';
       document.getElementById('playerWeightInput').value = player.weight || '';
       document.getElementById('playerStatusInput').value = player.status || 'active';
+
+      const createdBy = player.createdBy || 'Admin Director';
+      const createdAt = player.createdDate || player.createdAt;
+      const modifiedBy = player.lastModifiedBy || player.createdBy || 'Admin Director';
+      const modifiedAt = player.lastModifiedDate || player.lastModifiedAt || player.updatedAt || createdAt;
+      const fmtDate = (value) => value ? new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+
+      document.getElementById('playerCreatedByText').textContent = createdBy;
+      document.getElementById('playerCreatedAtText').textContent = fmtDate(createdAt);
+      document.getElementById('playerModifiedByText').textContent = modifiedBy;
+      document.getElementById('playerModifiedAtText').textContent = fmtDate(modifiedAt);
+      document.getElementById('playerAuditMeta').style.display = 'block';
 
       populateTeamSelectDropdown(team.id);
       adminOpenModal('playerModal');

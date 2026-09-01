@@ -268,22 +268,6 @@
                 <div class="league-meta-label">Enrolled Teams</div>
                 <div class="league-meta-value" id="lgEnrolled" style="color:var(--primary);">—</div>
               </div>
-              <div class="league-meta-item">
-                <div class="league-meta-label">Created By</div>
-                <div class="league-meta-value" id="lgCreatedBy">—</div>
-              </div>
-              <div class="league-meta-item">
-                <div class="league-meta-label">Created Date</div>
-                <div class="league-meta-value" id="lgCreatedAt">—</div>
-              </div>
-              <div class="league-meta-item">
-                <div class="league-meta-label">Last Modified By</div>
-                <div class="league-meta-value" id="lgModifiedBy">—</div>
-              </div>
-              <div class="league-meta-item">
-                <div class="league-meta-label">Last Modified Date</div>
-                <div class="league-meta-value" id="lgUpdatedAt">—</div>
-              </div>
             </div>
           </div>
 
@@ -415,11 +399,13 @@
         return;
       }
 
-      // Nav counts
+      // Nav counts (guarded because some admin pages omit these count badges)
       const allLeagues = getAdminLeagues();
-      document.getElementById('navLeaguesCount').textContent = Object.keys(allLeagues).length;
+      const navLeaguesCount = document.getElementById('navLeaguesCount');
+      if (navLeaguesCount) navLeaguesCount.textContent = Object.keys(allLeagues).length;
       const allTeams = getAdminTeams();
-      document.getElementById('navTeamsCount').textContent = Object.keys(allTeams).length;
+      const navTeamsCount = document.getElementById('navTeamsCount');
+      if (navTeamsCount) navTeamsCount.textContent = Object.keys(allTeams).length;
 
       // Breadcrumb
       document.getElementById('breadcrumbLeagueName').textContent = league.name;
@@ -443,10 +429,6 @@
         return isNaN(d.getTime()) ? iso : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
       };
 
-      document.getElementById('lgCreatedBy').textContent = league.createdBy || 'System Admin';
-      document.getElementById('lgCreatedAt').textContent = fmtD(league.createdAt);
-      document.getElementById('lgModifiedBy').textContent = league.lastModifiedBy || league.createdBy || 'System Admin';
-      document.getElementById('lgUpdatedAt').textContent = fmtD(league.updatedAt || league.createdAt);
 
       // Count enrolled teams by matching league ID
       const enrolledTeams = Object.values(allTeams).filter(t => t.leagueId === league.id);

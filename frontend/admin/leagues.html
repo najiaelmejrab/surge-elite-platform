@@ -179,21 +179,24 @@
             </div>
           </div>
 
-          <table class="admin-table" id="leaguesTable">
-            <thead>
-              <tr>
-                <th>League Name</th>
-                <th>Season</th>
-                <th>Format</th>
-                <th>Teams Enrolled</th>
-                <th>Status</th>
-                <th style="text-align: center;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="leaguesTableBody">
-              <!-- Dynamically populated -->
-            </tbody>
-          </table>
+          <div class="admin-table-scroll">
+            <table class="admin-table" id="leaguesTable">
+              <thead>
+                <tr>
+                  <th>League Name</th>
+                  <th>Season</th>
+                  <th>Format</th>
+                  <th>Teams Enrolled</th>
+                  <th>Status</th>
+                  <th>Created By</th>
+                  <th style="text-align: center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="leaguesTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
 
           <div class="admin-table-footer">
             <span id="leaguesFooterText">Showing — entries</span>
@@ -295,14 +298,17 @@
       const leagueList = Object.values(leagues);
       const tbody = document.getElementById('leaguesTableBody');
 
-      document.getElementById('navLeaguesCount').textContent = leagueList.length;
-      document.getElementById('leaguesCountTitle').textContent = `Registered Leagues`;
-      document.getElementById('leaguesFooterText').textContent = `Showing ${leagueList.length} of ${leagueList.length} entries`;
+      const navLeaguesCount = document.getElementById('navLeaguesCount');
+      if (navLeaguesCount) navLeaguesCount.textContent = leagueList.length;
+      const leaguesCountTitle = document.getElementById('leaguesCountTitle');
+      if (leaguesCountTitle) leaguesCountTitle.textContent = `Registered Leagues`;
+      const leaguesFooterText = document.getElementById('leaguesFooterText');
+      if (leaguesFooterText) leaguesFooterText.textContent = `Showing ${leagueList.length} of ${leagueList.length} entries`;
 
       if (leagueList.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="6" style="text-align:center; padding: 2.5rem; color: var(--text-muted);">
+            <td colspan="7" style="text-align:center; padding: 2.5rem; color: var(--text-muted);">
               No leagues registered yet. Click <strong>+ Create League</strong> to add one.
             </td>
           </tr>`;
@@ -311,6 +317,7 @@
 
       tbody.innerHTML = leagueList.map(lg => {
         const enrolled = countTeamsInLeague(lg.id);
+        const createdBy = resolveAuditActorName(lg.createdBy);
         const maxLabel = lg.maxTeams ? `${enrolled} / ${lg.maxTeams} Teams` : `${enrolled} Teams`;
 
         return `
@@ -328,6 +335,7 @@
             <td>${lg.format || '—'}</td>
             <td><strong>${enrolled}</strong>${lg.maxTeams ? ` / ${lg.maxTeams} Teams` : ' Teams'}</td>
             <td>${leagueStatusBadge(lg.status)}</td>
+            <td>${createdBy}</td>
             <td>
               <div class="admin-row-actions" style="justify-content:center; gap:0.4rem;">
                 <a href="league-details.html?id=${lg.id}" class="btn btn-outline btn-sm" style="padding:0.35rem 0.65rem; font-size:0.78rem;">View</a>

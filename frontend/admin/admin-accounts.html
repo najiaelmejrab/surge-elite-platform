@@ -242,11 +242,11 @@
             <table class="admin-table" id="accountsTable">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Email</th>
+                  <th>Account</th>
                   <th>Role</th>
                   <th>Status</th>
                   <th>Created</th>
+                  <th>Last Login</th>
                   <th style="text-align: center;">Actions</th>
                 </tr>
               </thead>
@@ -361,16 +361,47 @@
       return 'acct_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
     }
 
+    function getAuditActorName() {
+      const accounts = loadAccounts();
+      const values = Object.values(accounts);
+      if (!values.length) return 'Admin Director';
+      const activeMatch = values.find(account => String(account.status || '').toLowerCase() === 'active');
+      const selected = activeMatch || values[0];
+      return selected && selected.name ? selected.name : 'Admin Director';
+    }
+
+    function applyAccountAudit(account, isCreate = false) {
+      const now = new Date().toISOString();
+      const actorName = getAuditActorName();
+      const next = { ...account };
+
+      if (!next.createdAt && !next.createdDate) {
+        next.createdAt = now;
+        next.createdDate = now;
+        next.createdBy = actorName;
+      } else {
+        next.createdAt = next.createdAt || next.createdDate || now;
+        next.createdDate = next.createdDate || next.createdAt || now;
+        next.createdBy = next.createdBy || actorName;
+      }
+
+      next.updatedAt = now;
+      next.lastModifiedAt = now;
+      next.lastModifiedDate = now;
+      next.lastModifiedBy = actorName;
+      return next;
+    }
+
     /* ── Seed demo data if empty ─────────────────────────────────────────── */
     function seedIfEmpty() {
       const accounts = loadAccounts();
       if (Object.keys(accounts).length > 0) return;
       const seed = {
-        acct_seed_001: { id: 'acct_seed_001', name: 'Admin Director', email: 'admin@surgeelite.com', role: 'administrator', status: 'active', createdAt: '2026-01-15T08:00:00Z' },
-        acct_seed_002: { id: 'acct_seed_002', name: 'Marcus Thompson', email: 'marcus.t@surgeelite.com', role: 'coach', status: 'active', createdAt: '2026-02-20T10:30:00Z' },
-        acct_seed_003: { id: 'acct_seed_003', name: 'Sarah Chen', email: 'sarah.chen@surgeelite.com', role: 'coach', status: 'pending', createdAt: '2026-08-01T14:00:00Z' },
-        acct_seed_004: { id: 'acct_seed_004', name: 'James Rivera', email: 'j.rivera@surgeelite.com', role: 'administrator', status: 'inactive', createdAt: '2026-03-10T09:15:00Z' },
-        acct_seed_005: { id: 'acct_seed_005', name: 'Priya Patel', email: 'priya.p@surgeelite.com', role: 'coach', status: 'active', createdAt: '2026-06-05T11:45:00Z' }
+        acct_seed_001: { id: 'acct_seed_001', name: 'Admin Director', email: 'admin@surgeelite.com', role: 'administrator', status: 'active', createdAt: '2026-01-15T08:00:00Z', createdDate: '2026-01-15T08:00:00Z', createdBy: 'Admin Director', lastModifiedAt: '2026-09-01T07:20:00Z', lastModifiedDate: '2026-09-01T07:20:00Z', lastModifiedBy: 'Admin Director', updatedAt: '2026-09-01T07:20:00Z', lastLogin: '2026-09-01T07:20:00Z' },
+        acct_seed_002: { id: 'acct_seed_002', name: 'Marcus Thompson', email: 'marcus.t@surgeelite.com', role: 'coach', status: 'active', createdAt: '2026-02-20T10:30:00Z', createdDate: '2026-02-20T10:30:00Z', createdBy: 'Admin Director', lastModifiedAt: '2026-08-29T18:15:00Z', lastModifiedDate: '2026-08-29T18:15:00Z', lastModifiedBy: 'Admin Director', updatedAt: '2026-08-29T18:15:00Z', lastLogin: '2026-08-29T18:15:00Z' },
+        acct_seed_003: { id: 'acct_seed_003', name: 'Sarah Chen', email: 'sarah.chen@surgeelite.com', role: 'coach', status: 'pending', createdAt: '2026-08-01T14:00:00Z', createdDate: '2026-08-01T14:00:00Z', createdBy: 'Admin Director', lastModifiedAt: '2026-08-18T09:05:00Z', lastModifiedDate: '2026-08-18T09:05:00Z', lastModifiedBy: 'Admin Director', updatedAt: '2026-08-18T09:05:00Z', lastLogin: '2026-08-18T09:05:00Z' },
+        acct_seed_004: { id: 'acct_seed_004', name: 'James Rivera', email: 'j.rivera@surgeelite.com', role: 'administrator', status: 'inactive', createdAt: '2026-03-10T09:15:00Z', createdDate: '2026-03-10T09:15:00Z', createdBy: 'Admin Director', lastModifiedAt: '2026-07-11T12:40:00Z', lastModifiedDate: '2026-07-11T12:40:00Z', lastModifiedBy: 'Admin Director', updatedAt: '2026-07-11T12:40:00Z', lastLogin: '2026-07-11T12:40:00Z' },
+        acct_seed_005: { id: 'acct_seed_005', name: 'Priya Patel', email: 'priya.p@surgeelite.com', role: 'coach', status: 'active', createdAt: '2026-06-05T11:45:00Z', createdDate: '2026-06-05T11:45:00Z', createdBy: 'Admin Director', lastModifiedAt: '2026-08-30T20:10:00Z', lastModifiedDate: '2026-08-30T20:10:00Z', lastModifiedBy: 'Admin Director', updatedAt: '2026-08-30T20:10:00Z', lastLogin: '2026-08-30T20:10:00Z' }
       };
       saveAccounts(seed);
     }
@@ -436,15 +467,29 @@
 
       tbody.innerHTML = filtered.map(a => `
         <tr>
-          <td><strong>${esc(a.name)}</strong></td>
-          <td>${esc(a.email)}</td>
+          <td>
+            <div class="admin-account-cell">
+              <div class="admin-account-meta">
+                <div class="admin-account-name">${esc(a.name)}</div>
+                <div class="admin-account-email">${esc(a.email)}</div>
+              </div>
+            </div>
+          </td>
           <td>${roleLabel(a.role)}</td>
           <td><span class="${statusClass(a.status)}">${a.status.charAt(0).toUpperCase() + a.status.slice(1)}</span></td>
           <td>${fmtDate(a.createdAt)}</td>
-          <td style="text-align: right; white-space: nowrap;">
-            <button class="admin-action-btn" onclick="viewAccount('${a.id}')" title="View">👁</button>
-            <button class="admin-action-btn" onclick="editAccount('${a.id}')" title="Edit">✏️</button>
-            <button class="admin-action-btn" onclick="toggleStatus('${a.id}')" title="${a.status === 'active' ? 'Deactivate' : 'Activate'}">${a.status === 'active' ? '⏸' : '▶'}</button>
+          <td>${fmtDate(a.lastLogin || a.createdAt)}</td>
+          <td style="white-space: nowrap;">
+            <div class="admin-row-actions">
+              <button class="admin-action-btn" onclick="viewAccount('${a.id}')" title="View">👁</button>
+              <button class="admin-action-btn" onclick="editAccount('${a.id}')" title="Edit" aria-label="Edit account">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
+                </svg>
+              </button>
+              <button class="admin-action-btn" onclick="toggleStatus('${a.id}')" title="${a.status === 'active' ? 'Deactivate' : 'Activate'}">${a.status === 'active' ? '⏸' : '▶'}</button>
+            </div>
           </td>
         </tr>
       `).join('');
@@ -516,9 +561,21 @@
           </div>
           <div>
             <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Created</div>
-            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${fmtDate(a.createdAt)}</div>
+            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${fmtDate(a.createdAt || a.createdDate)}</div>
           </div>
           <div>
+            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Created By</div>
+            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${esc(a.createdBy || getAuditActorName())}</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Last Modified</div>
+            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${fmtDate(a.lastModifiedAt || a.lastModifiedDate || a.updatedAt || a.createdAt)}</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Last Modified By</div>
+            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${esc(a.lastModifiedBy || a.createdBy || getAuditActorName())}</div>
+          </div>
+          <div style="grid-column: 1 / -1;">
             <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Account ID</div>
             <div style="font-size: 0.78rem; font-weight: 500; color: var(--text-muted); word-break: break-all;">${esc(a.id)}</div>
           </div>
@@ -533,6 +590,12 @@
       const a = accounts[id];
       if (!a) return;
       a.status = a.status === 'active' ? 'inactive' : 'active';
+      const now = new Date().toISOString();
+      a.updatedAt = now;
+      a.lastModifiedAt = now;
+      a.lastModifiedDate = now;
+      a.lastModifiedBy = getAuditActorName();
+      a.lastLogin = a.lastLogin || now;
       accounts[id] = a;
       saveAccounts(accounts);
       renderTable();
@@ -552,17 +615,26 @@
       if (!name || !email) return;
 
       if (id && accounts[id]) {
-        // Update
+        const now = new Date().toISOString();
         accounts[id].name = name;
         accounts[id].email = email;
         accounts[id].role = role;
         accounts[id].status = status;
+        accounts[id].createdAt = accounts[id].createdAt || accounts[id].createdDate || now;
+        accounts[id].createdDate = accounts[id].createdDate || accounts[id].createdAt || now;
+        accounts[id].createdBy = accounts[id].createdBy || getAuditActorName();
+        accounts[id].lastLogin = accounts[id].lastLogin || accounts[id].createdAt || now;
+        accounts[id].updatedAt = now;
+        accounts[id].lastModifiedAt = now;
+        accounts[id].lastModifiedDate = now;
+        accounts[id].lastModifiedBy = getAuditActorName();
         saveAccounts(accounts);
         showToast('Account updated successfully');
       } else {
-        // Create
         const newId = generateId();
-        accounts[newId] = { id: newId, name, email, role, status, createdAt: new Date().toISOString() };
+        const now = new Date().toISOString();
+        const actor = getAuditActorName();
+        accounts[newId] = { id: newId, name, email, role, status, createdAt: now, createdDate: now, createdBy: actor, lastModifiedAt: now, lastModifiedDate: now, lastModifiedBy: actor, updatedAt: now, lastLogin: now };
         saveAccounts(accounts);
         showToast('Account created successfully');
       }

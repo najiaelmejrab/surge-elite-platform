@@ -537,7 +537,7 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 0.85rem 1rem;
-  text-align: left;
+  text-align: center;
   white-space: nowrap;
   border-bottom: 1px solid var(--border-light);
 }
@@ -545,6 +545,7 @@
 .admin-table th,
 .admin-table td {
   vertical-align: middle;
+  text-align: center;
 }
 
 .admin-table#playersTable th:not(:first-child),
@@ -556,7 +557,9 @@
 .admin-table#gamesTable th,
 .admin-table#gamesTable td,
 .admin-table#rosterTable th:not(:first-child),
-.admin-table#rosterTable td:not(:first-child) {
+.admin-table#rosterTable td:not(:first-child),
+.admin-table#accountsTable th,
+.admin-table#accountsTable td {
   text-align: center;
 }
 
@@ -577,8 +580,70 @@
   justify-content: center;
 }
 
-.admin-table .admin-row-actions {
-  justify-content: center !important;
+.admin-table#accountsTable {
+  width: 100%;
+  table-layout: auto;
+  border-collapse: collapse;
+}
+
+.admin-table#accountsTable th,
+.admin-table#accountsTable td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.admin-table#accountsTable td {
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.admin-table#accountsTable .admin-account-cell {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.admin-table#accountsTable .admin-account-meta {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  text-align: center;
+}
+
+.admin-table#accountsTable .admin-account-name {
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.admin-table#accountsTable .admin-account-email {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.admin-table#accountsTable .admin-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.admin-action-btn svg {
+  width: 14px;
+  height: 14px;
+  display: block;
 }
 
 .admin-table tbody tr {
@@ -727,6 +792,22 @@
 .admin-cell-sub {
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+  .admin-table#accountsTable {
+   table-layout: auto;
+  }
+
+  .admin-table#accountsTable .admin-account-cell {
+   width: 100%;
+   max-width: none;
+  }
+
+  .admin-table#accountsTable .admin-account-meta {
+   text-align: center;
+   align-items: center;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -924,7 +1005,14 @@
 }
 
 .admin-table-scroll {
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-table-scroll .admin-table {
+  min-width: 900px;
 }
 
 .game-summary-empty {

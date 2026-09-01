@@ -181,22 +181,25 @@
             </div>
           </div>
 
-          <table class="admin-table" id="teamsTable">
-            <thead>
-              <tr>
-                <th>Team Name</th>
-                <th>League</th>
-                <th>Season</th>
-                <th>Coach</th>
-                <th>Number of Players</th>
-                <th>Status</th>
-                <th style="text-align: center;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="teamsTableBody">
-              <!-- Rendered via JavaScript from localStorage store -->
-            </tbody>
-          </table>
+          <div class="admin-table-scroll">
+            <table class="admin-table" id="teamsTable">
+              <thead>
+                <tr>
+                  <th>Team Name</th>
+                  <th>League</th>
+                  <th>Season</th>
+                  <th>Coach</th>
+                  <th>Number of Players</th>
+                  <th>Status</th>
+                  <th>Created By</th>
+                  <th style="text-align: center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="teamsTableBody">
+                <!-- Rendered via JavaScript from localStorage store -->
+              </tbody>
+            </table>
+          </div>
 
           <div class="admin-table-footer">
             <span id="teamsFooterText">Showing 0 of 0 entries</span>
@@ -316,14 +319,17 @@
       const tbody = document.getElementById('teamsTableBody');
       const teamList = Object.values(teams);
 
-      document.getElementById('navTeamsCount').textContent = teamList.length;
-      document.getElementById('teamsCountTitle').textContent = `Registered Teams`;
-      document.getElementById('teamsFooterText').textContent = `Showing ${teamList.length} of ${teamList.length} entries`;
+      const navTeamsCount = document.getElementById('navTeamsCount');
+      if (navTeamsCount) navTeamsCount.textContent = teamList.length;
+      const teamsCountTitle = document.getElementById('teamsCountTitle');
+      if (teamsCountTitle) teamsCountTitle.textContent = `Registered Teams`;
+      const teamsFooterText = document.getElementById('teamsFooterText');
+      if (teamsFooterText) teamsFooterText.textContent = `Showing ${teamList.length} of ${teamList.length} entries`;
 
       if (teamList.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="7" style="text-align:center; padding: 2.5rem; color: var(--text-muted);">
+            <td colspan="8" style="text-align:center; padding: 2.5rem; color: var(--text-muted);">
               No teams registered yet. Click <strong>+ Create Team</strong> to add one.
             </td>
           </tr>
@@ -337,6 +343,7 @@
         const statusBadge = t.status === 'active'
           ? `<span class="admin-status active">Active</span>`
           : `<span class="admin-status draft">Inactive</span>`;
+        const createdBy = resolveAuditActorName(t.createdBy);
 
         // Resolve League Name using team.leagueId (fallback to legacy team.league)
         const leagueObj = t.leagueId ? leagues[t.leagueId] : null;
@@ -357,6 +364,7 @@
             <td>${coachName}</td>
             <td><strong>${playerCount}</strong> Players</td>
             <td>${statusBadge}</td>
+            <td>${createdBy}</td>
             <td>
               <div class="admin-row-actions" style="justify-content: flex-end; gap: 0.4rem;">
                 <a href="team-details.html?id=${t.id}" class="btn btn-outline btn-sm" style="padding: 0.35rem 0.65rem; font-size: 0.78rem;">View Team</a>

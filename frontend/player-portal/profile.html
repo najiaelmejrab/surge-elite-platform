@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player Portal | Profile | Surge Elite</title>
+  <meta name="description" content="Player profile summary and athlete information in the Surge Elite portal.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/design-refinements.css">
+  <link rel="stylesheet" href="player-portal.css">
+</head>
+
+<body class="portal-page">
+  <header class="navbar portal-header" id="navbar">
+    <div class="container nav-container portal-nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M5.5 5.5A10 10 0 0 1 18.5 18.5"></path>
+            <path d="M18.5 5.5A10 10 0 0 0 5.5 18.5"></path>
+            <line x1="12" y1="2" x2="12" y2="22"></line>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+          </svg>
+        </div>
+        SURGE <span>ELITE</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="performance.html" class="nav-link">Performance</a></li>
+          <li><a href="training.html" class="nav-link">Training</a></li>
+          <li><a href="schedule.html" class="nav-link">Schedule</a></li>
+          <li><a href="goals.html" class="nav-link">Goals</a></li>
+          <li><a href="profile.html" class="nav-link active">Profile</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="portal-profile-pill">
+          <span class="portal-profile-pill__avatar">MV</span>
+          <span class="portal-profile-pill__meta">
+            <strong>Marcus Vance</strong>
+            <small>Guard</small>
+          </span>
+        </div>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <aside class="mobile-menu" id="mobileMenu">
+    <div>
+      <div class="mobile-menu-header">
+        <a href="index.html" class="logo">SURGE <span>ELITE</span></a>
+        <button class="mobile-close" id="mobileClose" aria-label="Close Navigation Menu">&times;</button>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+        <li><a href="performance.html" class="mobile-nav-link">Performance</a></li>
+        <li><a href="training.html" class="mobile-nav-link">Training</a></li>
+        <li><a href="schedule.html" class="mobile-nav-link">Schedule</a></li>
+        <li><a href="goals.html" class="mobile-nav-link">Goals</a></li>
+        <li><a href="profile.html" class="mobile-nav-link active">Profile</a></li>
+      </ul>
+    </div>
+    <div>
+      <a href="profile.html" class="btn btn-primary" style="width: 100%; text-align: center; display: block;">View Profile</a>
+    </div>
+  </aside>
+
+  <main class="portal-shell">
+    <section class="portal-hero">
+      <div class="container">
+        <div class="portal-hero-inner">
+          <div class="portal-hero-copy">
+            <span class="portal-eyebrow">Player profile</span>
+            <h1 id="profileHeroName">Marcus Vance</h1>
+            <p id="profileHeroMeta">Point Guard (PG) · Surge Wolves · Season 2026 · 6'3" · 190 lbs</p>
+          </div>
+
+          <div class="portal-summary-panel">
+            <div class="portal-summary-header">
+              <h2>Roster snapshot</h2>
+              <span class="portal-badge portal-badge--success">Active</span>
+            </div>
+
+            <div class="portal-summary-metrics">
+              <div class="portal-metric">
+                <strong id="snapshotJersey">23</strong>
+                <span>Jersey</span>
+              </div>
+              <div class="portal-metric">
+                <strong id="snapshotPosition">PG</strong>
+                <span>Position</span>
+              </div>
+              <div class="portal-metric">
+                <strong id="snapshotTeam">Surge</strong>
+                <span>Team</span>
+              </div>
+              <div class="portal-metric">
+                <strong id="snapshotHeight">6'3"</strong>
+                <span>Height</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="portal-section">
+      <div class="container">
+        <div class="profile-layout">
+          <aside class="portal-card profile-sidebar">
+            <div class="profile-avatar-panel">
+              <div class="profile-avatar" id="profileAvatarBadge">MV</div>
+              <div class="profile-avatar-meta">
+                <strong id="profileSidebarName">Marcus Vance</strong>
+                <span id="profileSidebarRole">Point Guard (PG)</span>
+              </div>
+            </div>
+
+            <div class="read-only-panel">
+              <div class="read-only-row">
+                <span class="read-only-label">Team</span>
+                <strong id="readOnlyTeam">Surge Wolves</strong>
+              </div>
+              <div class="read-only-row">
+                <span class="read-only-label">Jersey</span>
+                <strong id="readOnlyJersey">23</strong>
+              </div>
+              <div class="read-only-row">
+                <span class="read-only-label">Height</span>
+                <strong id="readOnlyHeight">6'3"</strong>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-title">Official data</div>
+              <ul class="info-card-list">
+                <li>Managed by the organization</li>
+                <li>Team assignment</li>
+                <li>Jersey number</li>
+                <li>Height and official roster data</li>
+              </ul>
+            </div>
+          </aside>
+
+          <div class="portal-card profile-form-card">
+            <div class="portal-card-header">
+              <h2>Profile details</h2>
+              <div class="profile-header-actions">
+                <button type="button" id="securityResetBtn" class="portal-cta portal-cta--secondary small-button">Security / Reset Password</button>
+                <button type="button" id="editProfileBtn" class="portal-cta portal-cta--primary small-button">Edit Profile</button>
+              </div>
+            </div>
+
+            <div id="profileViewState" class="profile-view-state">
+              <div class="profile-tabs" role="tablist" aria-label="Profile tabs">
+                <button type="button" class="profile-tab active" data-tab="personal" role="tab" aria-selected="true">Personal Information</button>
+                <button type="button" class="profile-tab" data-tab="basketball" role="tab" aria-selected="false">Basketball Information</button>
+                <button type="button" class="profile-tab" data-tab="guardian" role="tab" aria-selected="false">Parent / Guardian</button>
+              </div>
+
+              <div id="tab-personal" class="profile-tab-panel active" role="tabpanel">
+                <div class="profile-summary-grid">
+                  <div class="profile-summary-item">
+                    <span class="profile-summary-label">First Name</span>
+                    <span class="profile-summary-value" id="viewFirstName">Marcus</span>
+                  </div>
+                  <div class="profile-summary-item">
+                    <span class="profile-summary-label">Last Name</span>
+                    <span class="profile-summary-value" id="viewLastName">Vance</span>
+                  </div>
+                  <div class="profile-summary-item">
+                    <span class="profile-summary-label">Age</span>
+                    <span class="profile-summary-value" id="viewAge">17</span>
+                  </div>
+                  <div class="profile-summary-item">
+                    <span class="profile-summary-label">Date of Birth</span>
+                    <span class="profile-summary-value" id="viewDateOfBirth">2009-05-18</span>
+                  </div>
+                  <div class="profile-summary-item">
+                    <span class="profile-summary-label">Email</span>
+                    <span class="profile-summary-value" id="viewEmail">marcus.vance@surgelite.com</span>
+                  </div>
+                  <div class="profile-summary-item">
+                    <span class="profile-summary-label">Phone</span>
+                    <span class="profile-summary-value" id="viewPhone">(555) 123-4567</span>
+                  </div>
+                </div>
+              </div>
+
+              <div id="tab-basketball" class="profile-tab-panel" role="tabpanel" hidden>
+                <div class="profile-summary-grid">
+                  <div class="profile-summary-item">
+                    <span class="profile-summary-label">Position</span>
+                    <span class="profile-summary-value" id="viewPosition">Point Guard (PG)</span>
+                  </div>
+                  <div class="profile-summary-item">
+                    <span class="profile-summary-label">Height</span>
+                    <span class="profile-summary-value" id="viewHeight">6'3"</span>
+                  </div>
+                  <div class="profile-summary-item">
+                    <span class="profile-summary-label">Team</span>
+                    <span class="profile-summary-value" id="viewTeam">Surge Wolves</span>
+                  </div>
+                  <div class="profile-summary-item">
+                    <span class="profile-summary-label">Jersey Number</span>
+                    <span class="profile-summary-value" id="viewJersey">23</span>
+                  </div>
+                  <div class="profile-summary-item full-width-item">
+                    <span class="profile-summary-label">School</span>
+                    <span class="profile-summary-value" id="viewSchool">Northfield Academy</span>
+                  </div>
+                </div>
+              </div>
+
+              <div id="tab-guardian" class="profile-tab-panel" role="tabpanel" hidden>
+                <div class="profile-summary-grid">
+                  <div class="profile-summary-item">
+                    <span class="profile-summary-label">Full Name</span>
+                    <span class="profile-summary-value" id="viewGuardianName">Jane Vance</span>
+                  </div>
+                  <div class="profile-summary-item">
+                    <span class="profile-summary-label">Relationship</span>
+                    <span class="profile-summary-value" id="viewGuardianRelationship">Mother</span>
+                  </div>
+                  <div class="profile-summary-item">
+                    <span class="profile-summary-label">Email</span>
+                    <span class="profile-summary-value" id="viewGuardianEmail">jane.vance@example.com</span>
+                  </div>
+                  <div class="profile-summary-item">
+                    <span class="profile-summary-label">Phone</span>
+                    <span class="profile-summary-value" id="viewGuardianPhone">(555) 987-6543</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="edit-profile-modal-backdrop is-hidden" id="editProfileModal" aria-hidden="true">
+              <div class="profile-modal profile-modal--wide" role="dialog" aria-modal="true" aria-labelledby="editProfileTitle">
+                <div class="profile-modal-header">
+                  <h3 id="editProfileTitle">Edit Profile</h3>
+                  <button type="button" class="profile-modal-close" id="closeEditProfileModal" aria-label="Close edit profile form">×</button>
+                </div>
+
+                <form id="playerProfileForm" class="player-profile-form">
+                  <div class="profile-modal-avatar-panel">
+                    <div class="profile-image-preview profile-image-preview--modal" id="profileImagePreview">MV</div>
+                    <div class="profile-modal-avatar-meta">
+                      <label class="profile-avatar-upload-label" for="profilePicture">Upload / Change Picture</label>
+                      <input type="file" id="profilePicture" name="profilePicture" accept="image/*" class="profile-picture-input">
+                    </div>
+                  </div>
+
+                  <div class="profile-section">
+                    <div class="profile-section-head">
+                      <h3>Player Information</h3>
+                    </div>
+                    <div class="profile-form-grid">
+                      <div class="field-group field-half">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" placeholder="Marcus">
+                      </div>
+
+                      <div class="field-group field-half">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" placeholder="Vance">
+                      </div>
+
+                      <div class="field-group field-half">
+                        <label for="dateOfBirth">Date of Birth</label>
+                        <input type="date" id="dateOfBirth" name="dateOfBirth">
+                      </div>
+
+                      <div class="field-group field-half">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="marcus.vance@surgelite.com">
+                      </div>
+
+                      <div class="field-group field-half">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567">
+                      </div>
+
+                      <div class="field-group field-half">
+                        <label for="position">Position</label>
+                        <input type="text" id="position" name="position" placeholder="Point Guard (PG)">
+                      </div>
+
+                      <div class="field-group field-half">
+                        <label for="school">School</label>
+                        <input type="text" id="school" name="school" placeholder="Northfield Academy">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="profile-section">
+                    <div class="profile-section-head">
+                      <h3>Parent / Guardian Information</h3>
+                    </div>
+
+                    <div class="guardian-grid" id="guardianFields">
+                      <div class="field-group field-half">
+                        <label for="guardianName">Full Name</label>
+                        <input type="text" id="guardianName" name="guardianName" placeholder="Jane Vance">
+                      </div>
+
+                      <div class="field-group field-half">
+                        <label for="guardianRelationship">Relationship</label>
+                        <input type="text" id="guardianRelationship" name="guardianRelationship" placeholder="Mother">
+                      </div>
+
+                      <div class="field-group field-half">
+                        <label for="guardianEmail">Email</label>
+                        <input type="email" id="guardianEmail" name="guardianEmail" placeholder="jane.vance@example.com">
+                      </div>
+
+                      <div class="field-group field-half">
+                        <label for="guardianPhone">Phone</label>
+                        <input type="tel" id="guardianPhone" name="guardianPhone" placeholder="(555) 987-6543">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="profile-section">
+                    <div class="profile-section-head">
+                      <h3>Official / Read-only Information</h3>
+                    </div>
+                    <div class="profile-form-grid">
+                      <div class="field-group field-half">
+                        <label for="height">Height</label>
+                        <input type="text" id="height" name="height" readonly>
+                      </div>
+
+                      <div class="field-group field-half">
+                        <label for="teamName">Team</label>
+                        <input type="text" id="teamName" name="teamName" readonly>
+                      </div>
+
+                      <div class="field-group field-half">
+                        <label for="jersey">Jersey Number</label>
+                        <input type="text" id="jersey" name="jersey" readonly>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="button" id="cancelEditBtn" class="portal-cta portal-cta--secondary">Cancel</button>
+                    <button type="submit" class="portal-cta portal-cta--primary">Save Changes</button>
+                  </div>
+                  <p class="profile-save-state" id="profileSaveState" aria-live="polite"></p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="profile-modal-backdrop is-hidden" id="resetPasswordModal" aria-hidden="true">
+    <div class="profile-modal" role="dialog" aria-modal="true" aria-labelledby="resetPasswordTitle">
+      <div class="profile-modal-header">
+        <h3 id="resetPasswordTitle">Reset Password</h3>
+        <button type="button" class="profile-modal-close" id="closeResetPasswordModal" aria-label="Close reset password form">×</button>
+      </div>
+
+      <form id="resetPasswordForm" class="player-profile-form">
+        <p class="reset-password-copy">We’ll send a password reset link to your registered email address.</p>
+        <div class="field-group">
+          <label for="resetPasswordEmail">Email</label>
+          <input type="email" id="resetPasswordEmail" name="resetPasswordEmail" readonly>
+        </div>
+        <p id="resetPasswordMessage" class="profile-save-state" aria-live="polite"></p>
+        <div class="form-actions">
+          <button type="button" id="cancelResetPassword" class="portal-cta portal-cta--secondary">Cancel</button>
+          <button type="submit" class="portal-cta portal-cta--primary">Send Reset Link</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script src="player-portal.js"></script>
+</body>
+
+</html>

@@ -214,10 +214,6 @@
                   League: <strong id="teamMetaLeague" style="color: var(--text-main);">U19 Elite League</strong> &bull;
                   Season: <strong id="teamMetaSeason" style="color: var(--text-main);">Spring 2026</strong>
                 </p>
-                <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.25rem;" id="teamAuditMeta">
-                  Created by <span id="teamCreatedBy" style="color: var(--text-main);">System Admin</span> on <span id="teamCreatedAt" style="color: var(--text-main);">—</span> &bull;
-                  Modified by <span id="teamModifiedBy" style="color: var(--text-main);">System Admin</span> on <span id="teamUpdatedAt" style="color: var(--text-main);">—</span>
-                </p>
               </div>
             </div>
             <button class="btn btn-outline btn-sm" onclick="openEditTeamModal()">
@@ -448,10 +444,6 @@
         return isNaN(d.getTime()) ? iso : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
       };
 
-      document.getElementById('teamCreatedBy').textContent = team.createdBy || 'System Admin';
-      document.getElementById('teamCreatedAt').textContent = fmtD(team.createdAt);
-      document.getElementById('teamModifiedBy').textContent = team.lastModifiedBy || team.createdBy || 'System Admin';
-      document.getElementById('teamUpdatedAt').textContent = fmtD(team.updatedAt || team.createdAt);
 
       const statusBadge = document.getElementById('teamHeaderStatusBadge');
       if (team.status === 'active') {

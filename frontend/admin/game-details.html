@@ -561,9 +561,9 @@
       };
 
       document.getElementById('gameCreatedBy').textContent = game.createdBy || 'System Admin';
-      document.getElementById('gameCreatedAt').textContent = fmtD(game.createdAt);
+      document.getElementById('gameCreatedAt').textContent = fmtD(game.createdDate || game.createdAt);
       document.getElementById('gameModifiedBy').textContent = game.lastModifiedBy || game.createdBy || 'System Admin';
-      document.getElementById('gameUpdatedAt').textContent = fmtD(game.updatedAt || game.createdAt);
+      document.getElementById('gameUpdatedAt').textContent = fmtD(game.lastModifiedDate || game.lastModifiedAt || game.updatedAt || game.createdDate || game.createdAt);
 
       // Wire the Game Entry link to current game
       const entryBtn = document.getElementById('geOpenEntryBtn');
