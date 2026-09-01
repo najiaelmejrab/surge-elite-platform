@@ -231,7 +231,6 @@
               <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path>
             </svg>
             Leagues
-            <span class="nav-count">3</span>
           </a>
           <a href="teams.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -241,7 +240,6 @@
               <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg>
             Teams
-            <span class="nav-count">8</span>
           </a>
           <a href="players.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -249,7 +247,6 @@
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
             Players
-            <span class="nav-count">96</span>
           </a>
           <a href="games.html" class="admin-nav-link active">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -259,7 +256,6 @@
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
             Games
-            <span class="nav-count">24</span>
           </a>
           <a href="admin-accounts.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -327,6 +323,10 @@
                 </h1>
                 <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.25rem;" id="adminGameSubMeta">U19
                   Elite League • October 24, 2026 at 6:00 PM EST • Surge Arena (Main Court)</p>
+                <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.25rem;" id="adminGameAuditMeta">
+                  Created by <span id="gameCreatedBy" style="color: var(--text-main);">System Admin</span> on <span id="gameCreatedAt" style="color: var(--text-main);">—</span> &bull;
+                  Modified by <span id="gameModifiedBy" style="color: var(--text-main);">System Admin</span> on <span id="gameUpdatedAt" style="color: var(--text-main);">—</span>
+                </p>
               </div>
               <div style="display: flex; gap: 0.65rem; align-items: center;">
                 <a class="btn btn-outline btn-sm" id="geOpenEntryBtn" href="admin-game-entry.html?id=g001">Open Game
@@ -553,6 +553,17 @@
       document.getElementById('adminBreadcrumbGameTitle').textContent = currentGame.title;
       document.getElementById('adminGameMatchupTitle').textContent = `${homeName}${homeScoreText} VS ${awayName}${awayScoreText}`;
       document.getElementById('adminGameSubMeta').textContent = `${currentGame.league} • ${currentGame.date} at ${currentGame.time} • ${currentGame.venue}`;
+
+      const fmtD = (iso) => {
+        if (!iso) return '—';
+        const d = new Date(iso);
+        return isNaN(d.getTime()) ? iso : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      };
+
+      document.getElementById('gameCreatedBy').textContent = game.createdBy || 'System Admin';
+      document.getElementById('gameCreatedAt').textContent = fmtD(game.createdAt);
+      document.getElementById('gameModifiedBy').textContent = game.lastModifiedBy || game.createdBy || 'System Admin';
+      document.getElementById('gameUpdatedAt').textContent = fmtD(game.updatedAt || game.createdAt);
 
       // Wire the Game Entry link to current game
       const entryBtn = document.getElementById('geOpenEntryBtn');

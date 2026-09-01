@@ -134,7 +134,6 @@
               <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path>
             </svg>
             Leagues
-            <span class="nav-count" id="navLeaguesCount">—</span>
           </a>
           <a href="teams.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -144,7 +143,6 @@
               <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg>
             Teams
-            <span class="nav-count" id="navTeamsCount">—</span>
           </a>
           <a href="players.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -152,7 +150,6 @@
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
             Players
-            <span class="nav-count">—</span>
           </a>
           <a href="games.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -162,7 +159,6 @@
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
             Games
-            <span class="nav-count">—</span>
           </a>
           <a href="admin-accounts.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -256,7 +252,6 @@
             </div>
 
             <!-- Meta Grid -->
-            <div class="league-meta-grid">
               <div class="league-meta-item">
                 <div class="league-meta-label">Season</div>
                 <div class="league-meta-value" id="lgSeason">—</div>
@@ -272,6 +267,22 @@
               <div class="league-meta-item">
                 <div class="league-meta-label">Enrolled Teams</div>
                 <div class="league-meta-value" id="lgEnrolled" style="color:var(--primary);">—</div>
+              </div>
+              <div class="league-meta-item">
+                <div class="league-meta-label">Created By</div>
+                <div class="league-meta-value" id="lgCreatedBy">—</div>
+              </div>
+              <div class="league-meta-item">
+                <div class="league-meta-label">Created Date</div>
+                <div class="league-meta-value" id="lgCreatedAt">—</div>
+              </div>
+              <div class="league-meta-item">
+                <div class="league-meta-label">Last Modified By</div>
+                <div class="league-meta-value" id="lgModifiedBy">—</div>
+              </div>
+              <div class="league-meta-item">
+                <div class="league-meta-label">Last Modified Date</div>
+                <div class="league-meta-value" id="lgUpdatedAt">—</div>
               </div>
             </div>
           </div>
@@ -298,7 +309,7 @@
                   <th>Coach</th>
                   <th>Players</th>
                   <th>Status</th>
-                  <th style="text-align:right;">Actions</th>
+                  <th style="text-align:center;">Actions</th>
                 </tr>
               </thead>
               <tbody id="leagueTeamsBody">
@@ -425,6 +436,17 @@
       document.getElementById('lgSeason').textContent = league.season || '—';
       document.getElementById('lgFormat').textContent = league.format || '—';
       document.getElementById('lgCapacity').textContent = league.maxTeams ? `${league.maxTeams} Teams` : 'Unlimited';
+
+      const fmtD = (iso) => {
+        if (!iso) return '—';
+        const d = new Date(iso);
+        return isNaN(d.getTime()) ? iso : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      };
+
+      document.getElementById('lgCreatedBy').textContent = league.createdBy || 'System Admin';
+      document.getElementById('lgCreatedAt').textContent = fmtD(league.createdAt);
+      document.getElementById('lgModifiedBy').textContent = league.lastModifiedBy || league.createdBy || 'System Admin';
+      document.getElementById('lgUpdatedAt').textContent = fmtD(league.updatedAt || league.createdAt);
 
       // Count enrolled teams by matching league ID
       const enrolledTeams = Object.values(allTeams).filter(t => t.leagueId === league.id);

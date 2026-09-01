@@ -116,7 +116,6 @@
               <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path>
             </svg>
             Leagues
-            <span class="nav-count">3</span>
           </a>
           <a href="teams.html" class="admin-nav-link active">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -126,7 +125,6 @@
               <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg>
             Teams
-            <span class="nav-count">4</span>
           </a>
           <a href="players.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -134,7 +132,6 @@
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
             Players
-            <span class="nav-count">96</span>
           </a>
           <a href="games.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -144,7 +141,6 @@
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
             Games
-            <span class="nav-count">24</span>
           </a>
           <a href="admin-accounts.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -218,6 +214,10 @@
                   League: <strong id="teamMetaLeague" style="color: var(--text-main);">U19 Elite League</strong> &bull;
                   Season: <strong id="teamMetaSeason" style="color: var(--text-main);">Spring 2026</strong>
                 </p>
+                <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.25rem;" id="teamAuditMeta">
+                  Created by <span id="teamCreatedBy" style="color: var(--text-main);">System Admin</span> on <span id="teamCreatedAt" style="color: var(--text-main);">—</span> &bull;
+                  Modified by <span id="teamModifiedBy" style="color: var(--text-main);">System Admin</span> on <span id="teamUpdatedAt" style="color: var(--text-main);">—</span>
+                </p>
               </div>
             </div>
             <button class="btn btn-outline btn-sm" onclick="openEditTeamModal()">
@@ -270,7 +270,7 @@
                 <th>Position</th>
                 <th>Height / Weight</th>
                 <th>Status</th>
-                <th style="text-align: right;">Actions</th>
+                <th style="text-align: center;">Actions</th>
               </tr>
             </thead>
             <tbody id="rosterTableBody">
@@ -441,6 +441,17 @@
       const leagueName = leagueObj ? leagueObj.name : (team.league || 'Unassigned');
       document.getElementById('teamMetaLeague').textContent = leagueName;
       document.getElementById('teamMetaSeason').textContent = team.season || 'Spring 2026';
+
+      const fmtD = (iso) => {
+        if (!iso) return '—';
+        const d = new Date(iso);
+        return isNaN(d.getTime()) ? iso : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      };
+
+      document.getElementById('teamCreatedBy').textContent = team.createdBy || 'System Admin';
+      document.getElementById('teamCreatedAt').textContent = fmtD(team.createdAt);
+      document.getElementById('teamModifiedBy').textContent = team.lastModifiedBy || team.createdBy || 'System Admin';
+      document.getElementById('teamUpdatedAt').textContent = fmtD(team.updatedAt || team.createdAt);
 
       const statusBadge = document.getElementById('teamHeaderStatusBadge');
       if (team.status === 'active') {
