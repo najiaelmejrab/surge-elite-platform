@@ -809,6 +809,57 @@
   };
 
   // ─── PLAYER STORE HELPER FUNCTIONS ───────────────────────────────────────
+  const DEFAULT_PLAYER_DEVELOPMENT = {
+    performance: {
+      ppg: 24.8,
+      apg: 9.4,
+      rpg: 6.2,
+      fgPct: 58,
+      threePct: 41,
+      usage: 34,
+      trend: 'Upward'
+    },
+    training: {
+      focus: 'Ball handling and finishing',
+      workouts: '4 sessions / week',
+      recovery: 'On track',
+      nextSession: 'Tue 6:15 PM'
+    },
+    schedule: {
+      availability: 'Available',
+      nextGame: 'Next game TBD',
+      nextPractice: 'Wed 6:00 PM',
+      notes: 'No conflicts this week'
+    },
+    goals: {
+      seasonGoal: 'Lead team in assists and efficiency',
+      immediateGoal: 'Improve transition decisions',
+      actionPlan: 'Daily film + extra ball-handling work'
+    },
+    progress: {
+      overall: 88,
+      readiness: 91,
+      summary: 'Strong development curve with growth in tempo control and finishing.'
+    }
+  };
+
+  function normalizePlayerDevelopment(player = {}) {
+    const current = player.development || {};
+    const teamCoach = player.teamCoachName || player.coachName || 'Coach Staff';
+    const actor = player.lastModifiedBy || player.createdBy || teamCoach || 'Coach Staff';
+    return {
+      performance: { ...DEFAULT_PLAYER_DEVELOPMENT.performance, ...(current.performance || {}) },
+      training: { ...DEFAULT_PLAYER_DEVELOPMENT.training, ...(current.training || {}) },
+      schedule: { ...DEFAULT_PLAYER_DEVELOPMENT.schedule, ...(current.schedule || {}) },
+      goals: { ...DEFAULT_PLAYER_DEVELOPMENT.goals, ...(current.goals || {}) },
+      progress: { ...DEFAULT_PLAYER_DEVELOPMENT.progress, ...(current.progress || {}) },
+      createdBy: current.createdBy || player.createdBy || teamCoach || 'Coach Staff',
+      updatedBy: current.updatedBy || current.lastUpdatedBy || actor,
+      lastUpdated: current.lastUpdated || new Date().toISOString(),
+      lastUpdatedBy: current.lastUpdatedBy || current.updatedBy || actor
+    };
+  }
+
   window.getAdminPlayers = function () {
     const teams = window.getAdminTeams();
     const playersList = [];
@@ -819,12 +870,87 @@
           playersList.push({
             ...p,
             teamId: team.id,
-            teamName: team.name
+            teamName: team.name,
+            teamCoachName: team.coach && team.coach.name ? team.coach.name : 'Coach Staff',
+            development: normalizePlayerDevelopment({ ...p, teamCoachName: team.coach && team.coach.name ? team.coach.name : 'Coach Staff' })
           });
         });
       }
     }
     return playersList;
+  };
+
+  window.getPlayerDevelopmentRecord = function (playerId) {
+    const teams = window.getAdminTeams ? window.getAdminTeams() : {};
+    for (const teamId in teams) {
+      const team = teams[teamId];
+      if (!team || !Array.isArray(team.players)) continue;
+      const player = team.players.find((entry) => entry.id === playerId);
+      if (player) {
+        const normalized = normalizePlayerDevelopment({ ...player, teamCoachName: team.coach && team.coach.name ? team.coach.name : 'Coach Staff' });
+        player.development = normalized;
+        localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
+        return normalized;
+      }
+    }
+    return normalizePlayerDevelopment({ teamCoachName: 'Coach Staff' });
+  };
+
+  window.savePlayerDevelopmentRecord = function (playerId, updatedValues) {
+    const teams = window.getAdminTeams ? window.getAdminTeams() : {};
+    const selectedTeam = Object.values(teams).find(team => Array.isArray(team.players) && team.players.some(entry => entry.id === playerId));
+    const coachName = (selectedTeam && selectedTeam.coach && selectedTeam.coach.name) || 'Coach Staff';
+    const actorName = updatedValues && (updatedValues.lastUpdatedBy || updatedValues.updatedBy) ? (updatedValues.lastUpdatedBy || updatedValues.updatedBy) : coachName;
+
+    for (const teamId in teams) {
+      const team = teams[teamId];
+      if (!team || !Array.isArray(team.players)) continue;
+      const index = team.players.findIndex((entry) => entry.id === playerId);
+      if (index === -1) continue;
+
+      const existing = normalizePlayerDevelopment({ ...team.players[index], teamCoachName: coachName });
+      const merged = normalizePlayerDevelopment({
+        ...team.players[index],
+        teamCoachName: coachName,
+        development: {
+          ...existing,
+          ...(updatedValues || {}),
+          performance: {
+            ...existing.performance,
+            ...((updatedValues && updatedValues.performance) || {})
+          },
+          training: {
+            ...existing.training,
+            ...((updatedValues && updatedValues.training) || {})
+          },
+          schedule: {
+            ...existing.schedule,
+            ...((updatedValues && updatedValues.schedule) || {})
+          },
+          goals: {
+            ...existing.goals,
+            ...((updatedValues && updatedValues.goals) || {})
+          },
+          progress: {
+            ...existing.progress,
+            ...((updatedValues && updatedValues.progress) || {})
+          },
+          createdBy: team.players[index].createdBy || existing.createdBy || coachName,
+          updatedBy: actorName,
+          lastUpdated: new Date().toISOString(),
+          lastUpdatedBy: actorName
+        }
+      });
+
+      team.players[index].development = merged;
+      team.players[index].createdBy = team.players[index].createdBy || coachName;
+      team.players[index].lastModifiedBy = actorName;
+      team.players[index].lastModifiedAt = new Date().toISOString();
+      team.players[index].updatedAt = new Date().toISOString();
+      localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
+      return merged;
+    }
+    return normalizePlayerDevelopment({ teamCoachName: coachName });
   };
 
   window.getPlayerProfileById = function (playerId) {

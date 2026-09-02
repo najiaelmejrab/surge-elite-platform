@@ -92,6 +92,17 @@ function initPlayerProfilePage() {
   const resetPasswordEmailInput = document.getElementById('resetPasswordEmail');
   const resetPasswordMessage = document.getElementById('resetPasswordMessage');
   const playerId = new URLSearchParams(window.location.search).get('playerId') || 'p001';
+  const dobInput = document.getElementById('dateOfBirth');
+  const ageInput = document.getElementById('age');
+  const syncAgeField = () => {
+    if (!dobInput || !ageInput) return;
+    const computedAge = calculateAge(dobInput.value);
+    ageInput.value = computedAge === '' ? '' : String(computedAge);
+  };
+  if (dobInput) {
+    dobInput.addEventListener('input', syncAgeField);
+    dobInput.addEventListener('change', syncAgeField);
+  }
   let currentPlayer = getSharedPlayerProfile(playerId);
 
   const setStatus = (message, tone = 'success') => {
@@ -173,8 +184,12 @@ function initPlayerProfilePage() {
     const account = getEditableAccount();
     const email = account && account.email ? account.email : currentPlayer.player.email || '';
     if (resetPasswordEmailInput) resetPasswordEmailInput.value = email;
+    const newPasswordInput = document.getElementById('newPassword');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    if (newPasswordInput) newPasswordInput.value = '';
+    if (confirmPasswordInput) confirmPasswordInput.value = '';
     setResetMessage('');
-    if (resetPasswordEmailInput) resetPasswordEmailInput.focus();
+    if (newPasswordInput) newPasswordInput.focus();
   };
 
   const sendPasswordResetLink = (email) => {
@@ -194,25 +209,45 @@ function initPlayerProfilePage() {
     return { ok: true, result: { email: normalized } };
   };
 
-  const dobInput = document.getElementById('dateOfBirth');
-  const ageInput = document.getElementById('age');
-  if (dobInput) {
-    dobInput.addEventListener('input', () => {
-      if (!ageInput) return;
-      const nextAge = calculateAge(dobInput.value);
-      ageInput.value = nextAge !== '' ? String(nextAge) : '';
-    });
-  }
+  const updateAccountPassword = (newPassword, confirmPassword) => {
+    const trimmed = (newPassword || '').trim();
+    const trimmedConfirm = (confirmPassword || '').trim();
+    if (!trimmed || !trimmedConfirm) {
+      return { ok: false, message: 'Please enter and confirm a new password.' };
+    }
+    if (trimmed.length < 8) {
+      return { ok: false, message: 'Password must be at least 8 characters long.' };
+    }
+    if (trimmed !== trimmedConfirm) {
+      return { ok: false, message: 'Passwords do not match.' };
+    }
+
+    const account = getEditableAccount();
+    if (!account) {
+      return { ok: false, message: 'No account found for this player.' };
+    }
+
+    const store = getAccountStore();
+    store[account.id] = { ...account, password: trimmed };
+    localStorage.setItem('surge_admin_accounts_v1', JSON.stringify(store));
+    return { ok: true, message: 'Password updated successfully.' };
+  };
+
+  const normalizePhotoValue = (value) => {
+    if (!value || value === 'none') return '';
+    return value;
+  };
 
   const applyProfilePhoto = (photoValue) => {
+    const normalized = normalizePhotoValue(photoValue);
     const avatarBadge = document.getElementById('profileAvatarBadge');
     const modalPreview = document.getElementById('profileImagePreview');
     const viewPreview = document.getElementById('viewProfileImagePreview');
 
     [avatarBadge, modalPreview, viewPreview].forEach((element) => {
       if (!element) return;
-      if (photoValue) {
-        element.style.backgroundImage = `url(${photoValue})`;
+      if (normalized) {
+        element.style.backgroundImage = `url(${normalized})`;
         element.textContent = '';
       } else {
         element.style.backgroundImage = 'none';
@@ -223,6 +258,12 @@ function initPlayerProfilePage() {
   };
 
   const fileInput = document.getElementById('profilePicture');
+  const profilePictureTrigger = document.getElementById('profilePictureTrigger');
+
+  if (profilePictureTrigger && fileInput) {
+    profilePictureTrigger.addEventListener('click', () => fileInput.click());
+  }
+
   if (fileInput) {
     fileInput.addEventListener('change', (event) => {
       const file = event.target.files && event.target.files[0];
@@ -286,19 +327,37 @@ function initPlayerProfilePage() {
 
   resetPasswordForm?.addEventListener('submit', (event) => {
     event.preventDefault();
+    const newPasswordInput = document.getElementById('newPassword');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
     const email = resetPasswordEmailInput ? resetPasswordEmailInput.value.trim() : '';
-    const result = sendPasswordResetLink(email);
-    if (!result.ok) {
-      setResetMessage(result.message, 'warning');
+    const newPassword = newPasswordInput ? newPasswordInput.value : '';
+    const confirmPassword = confirmPasswordInput ? confirmPasswordInput.value : '';
+
+    const passwordResult = updateAccountPassword(newPassword, confirmPassword);
+    if (!passwordResult.ok) {
+      setResetMessage(passwordResult.message, 'warning');
       return;
     }
-    setResetMessage('Password reset link sent. Please check your email.');
+
+    const linkResult = sendPasswordResetLink(email);
+    if (!linkResult.ok) {
+      setResetMessage(linkResult.message, 'warning');
+      return;
+    }
+
+    setResetMessage('Password updated and reset instructions sent to the registered email.');
+    closeResetPasswordModal();
   });
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const email = document.getElementById('email').value.trim();
+    const previewStyle = document.getElementById('profileImagePreview').style.backgroundImage || '';
+    const resolvedPhoto = previewStyle && previewStyle !== 'none'
+      ? previewStyle.replace(/^url\(["']?/, '').replace(/["']?\)$/, '')
+      : '';
+
     const profileData = {
       firstName: document.getElementById('firstName').value.trim(),
       lastName: document.getElementById('lastName').value.trim(),
@@ -306,14 +365,12 @@ function initPlayerProfilePage() {
       phone: document.getElementById('phone').value.trim(),
       dateOfBirth: document.getElementById('dateOfBirth').value,
       age: document.getElementById('age') ? document.getElementById('age').value.trim() : '',
-      position: document.getElementById('position').value.trim(),
       school: document.getElementById('school').value.trim(),
-      profilePhoto: document.getElementById('profileImagePreview').style.backgroundImage
-        ? document.getElementById('profileImagePreview').style.backgroundImage.replace(/^url\(["']?/, '').replace(/["']?\)$/, '')
-        : currentPlayer.player.profilePhoto || '',
-      teamName: document.getElementById('teamName').value.trim(),
-      height: document.getElementById('height').value.trim(),
-      jersey: document.getElementById('jersey').value.trim(),
+      profilePhoto: resolvedPhoto || currentPlayer.player.profilePhoto || '',
+      teamName: document.getElementById('teamName') ? document.getElementById('teamName').value.trim() : (currentPlayer.player.teamName || ''),
+      height: document.getElementById('height') ? document.getElementById('height').value.trim() : (currentPlayer.player.height || ''),
+      jersey: document.getElementById('jersey') ? document.getElementById('jersey').value.trim() : (currentPlayer.player.jersey || ''),
+      position: document.getElementById('positionReadOnly') ? document.getElementById('positionReadOnly').value.trim() : (currentPlayer.player.position || 'Point Guard (PG)'),
       name: [
         document.getElementById('firstName').value.trim(),
         document.getElementById('lastName').value.trim()
@@ -461,7 +518,7 @@ function renderPlayerProfile(result) {
 
   const avatar = document.getElementById('profileAvatarBadge');
   const modalPreview = document.getElementById('profileImagePreview');
-  const photoValue = player.profilePhoto || '';
+  const photoValue = player.profilePhoto && player.profilePhoto !== 'none' ? player.profilePhoto : '';
 
   if (avatar) {
     if (photoValue) {
@@ -489,30 +546,53 @@ function renderPlayerProfile(result) {
   document.getElementById('viewLastName').textContent = player.lastName || fullName.split(' ').slice(1).join(' ') || '';
   document.getElementById('viewAge').textContent = ageValue;
   document.getElementById('viewDateOfBirth').textContent = dateOfBirth;
-  document.getElementById('viewEmail').textContent = player.email || account.email || 'marcus.vance@surgelite.com';
-  document.getElementById('viewPhone').textContent = player.phone || '(555) 123-4567';
-  document.getElementById('viewPosition').textContent = position;
-  document.getElementById('viewHeight').textContent = height;
-  document.getElementById('viewTeam').textContent = teamName;
-  document.getElementById('viewJersey').textContent = jersey;
-  document.getElementById('viewSchool').textContent = player.school || 'Northfield Academy';
+
+  const playerEmailValue = player.email || account.email || 'marcus.vance@surgelite.com';
+  const emailElement = document.getElementById('viewEmail');
+  if (emailElement) emailElement.textContent = playerEmailValue;
+  const securityEmailElement = document.getElementById('viewSecurityEmail');
+  if (securityEmailElement) securityEmailElement.textContent = playerEmailValue;
+
+  const phoneElement = document.getElementById('viewPhone');
+  if (phoneElement) phoneElement.textContent = player.phone || '(555) 123-4567';
+
+  const positionElement = document.getElementById('viewPosition');
+  if (positionElement) positionElement.textContent = position;
+
+  const teamElement = document.getElementById('viewTeam');
+  if (teamElement) teamElement.textContent = teamName;
+
+  const jerseyElement = document.getElementById('viewJersey');
+  if (jerseyElement) jerseyElement.textContent = jersey;
+
+  const heightElement = document.getElementById('viewHeight');
+  if (heightElement) heightElement.textContent = height;
+
+  const schoolValue = player.school || 'Northfield Academy';
+  const schoolElement = document.getElementById('viewSchool');
+  if (schoolElement) schoolElement.textContent = schoolValue;
 
   const guardianDetails = player.parentGuardian || {};
-  document.getElementById('viewGuardianName').textContent = guardianDetails.fullName || 'Jane Vance';
-  document.getElementById('viewGuardianRelationship').textContent = guardianDetails.relationship || 'Mother';
-  document.getElementById('viewGuardianEmail').textContent = guardianDetails.email || 'jane.vance@example.com';
-  document.getElementById('viewGuardianPhone').textContent = guardianDetails.phone || '(555) 987-6543';
+  const guardianNameElement = document.getElementById('viewGuardianName');
+  if (guardianNameElement) guardianNameElement.textContent = guardianDetails.fullName || 'Jane Vance';
+  const guardianRelationshipElement = document.getElementById('viewGuardianRelationship');
+  if (guardianRelationshipElement) guardianRelationshipElement.textContent = guardianDetails.relationship || 'Mother';
+  const guardianEmailElement = document.getElementById('viewGuardianEmail');
+  if (guardianEmailElement) guardianEmailElement.textContent = guardianDetails.email || 'jane.vance@example.com';
+  const guardianPhoneElement = document.getElementById('viewGuardianPhone');
+  if (guardianPhoneElement) guardianPhoneElement.textContent = guardianDetails.phone || '(555) 987-6543';
 
   const resetEmailInput = document.getElementById('resetPasswordEmail');
   if (resetEmailInput) {
     resetEmailInput.value = account.email || player.email || 'marcus.vance@surgelite.com';
   }
 
-  document.getElementById('profileSidebarName').textContent = fullName;
-  document.getElementById('profileSidebarRole').textContent = position;
-  document.getElementById('readOnlyTeam').textContent = teamName;
-  document.getElementById('readOnlyJersey').textContent = jersey;
-  document.getElementById('readOnlyHeight').textContent = height;
+  const profileSidebarName = document.getElementById('profileSidebarName');
+  if (profileSidebarName) profileSidebarName.textContent = fullName;
+  const profileSidebarRole = document.getElementById('profileSidebarRole');
+  if (profileSidebarRole) profileSidebarRole.textContent = position;
+  const overviewName = document.getElementById('profileOverviewName');
+  if (overviewName) overviewName.textContent = fullName;
 
   const preview = document.getElementById('profileImagePreview');
   if (preview) {
@@ -533,10 +613,10 @@ function renderPlayerProfile(result) {
     phone: document.getElementById('phone'),
     dateOfBirth: document.getElementById('dateOfBirth'),
     age: document.getElementById('age'),
-    position: document.getElementById('position'),
     height: document.getElementById('height'),
     teamName: document.getElementById('teamName'),
     jersey: document.getElementById('jersey'),
+    positionReadOnly: document.getElementById('positionReadOnly'),
     school: document.getElementById('school'),
     guardianName: document.getElementById('guardianName'),
     guardianRelationship: document.getElementById('guardianRelationship'),
@@ -550,10 +630,10 @@ function renderPlayerProfile(result) {
   if (fields.phone) fields.phone.value = player.phone || '(555) 123-4567';
   if (fields.dateOfBirth) fields.dateOfBirth.value = dateOfBirth;
   if (fields.age) fields.age.value = ageValue;
-  if (fields.position) fields.position.value = position;
   if (fields.height) fields.height.value = height;
   if (fields.teamName) fields.teamName.value = teamName;
   if (fields.jersey) fields.jersey.value = jersey;
+  if (fields.positionReadOnly) fields.positionReadOnly.value = position;
   if (fields.school) fields.school.value = player.school || 'Northfield Academy';
 
   const guardianFormDetails = player.parentGuardian || {};
@@ -562,10 +642,17 @@ function renderPlayerProfile(result) {
   if (fields.guardianEmail) fields.guardianEmail.value = guardianFormDetails.email || 'jane.vance@example.com';
   if (fields.guardianPhone) fields.guardianPhone.value = guardianFormDetails.phone || '(555) 987-6543';
 
-  document.getElementById('snapshotJersey').textContent = jersey;
-  document.getElementById('snapshotPosition').textContent = position.includes('(') ? position.match(/\(([^)]+)\)/)?.[1] || position : position;
-  document.getElementById('snapshotTeam').textContent = teamName.split(' ')[0] || teamName;
-  document.getElementById('snapshotHeight').textContent = height;
+  const snapshotJersey = document.getElementById('snapshotJersey');
+  if (snapshotJersey) snapshotJersey.textContent = jersey;
+
+  const snapshotPosition = document.getElementById('snapshotPosition');
+  if (snapshotPosition) snapshotPosition.textContent = position.includes('(') ? position.match(/\(([^)]+)\)/)?.[1] || position : position;
+
+  const snapshotTeam = document.getElementById('snapshotTeam');
+  if (snapshotTeam) snapshotTeam.textContent = teamName.split(' ')[0] || teamName;
+
+  const snapshotHeight = document.getElementById('snapshotHeight');
+  if (snapshotHeight) snapshotHeight.textContent = height;
 }
 
 function calculateAge(dobValue) {

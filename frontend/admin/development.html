@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Development | Surge Elite Basketball Platform</title>
+  <meta name="description" content="Development tracking for player portal enrollees. Review performance, training, schedule, goals, and progress.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/design-refinements.css">
+  <link rel="stylesheet" href="../css/admin.css">
+
+  <style>
+    .development-layout {
+      display: grid;
+      grid-template-columns: 340px minmax(0, 1fr);
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .development-sidebar,
+    .development-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+
+    .development-sidebar {
+      min-height: 520px;
+    }
+
+    .development-sidebar-header,
+    .development-panel-header {
+      padding: 1.1rem 1.25rem;
+      border-bottom: 1px solid var(--border-light);
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    .development-sidebar-header,
+    .development-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .development-sidebar-header h3,
+    .development-panel-header h3 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-main);
+    }
+
+    .development-filter-row {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-light);
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .development-filter-row select {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      padding: 0.7rem 0.8rem;
+      font: inherit;
+    }
+
+    .development-player-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 1rem;
+      max-height: 520px;
+      overflow: auto;
+    }
+
+    .development-player-item {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      color: var(--text-main);
+      text-align: left;
+      padding: 0.9rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .development-player-item:hover,
+    .development-player-item.is-active {
+      border-color: rgba(249, 115, 22, 0.4);
+      background: rgba(249, 115, 22, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .development-player-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(249, 115, 22, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: var(--primary);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .development-player-meta {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .development-player-meta strong,
+    .development-player-meta span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .development-player-meta strong {
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .development-player-meta span {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    .development-panel {
+      min-height: 520px;
+    }
+
+    .development-panel-body {
+      padding: 1.25rem;
+    }
+
+    .development-profile-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .development-profile-header h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 2vw, 2rem);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-main);
+    }
+
+    .development-profile-header p {
+      margin: 0.35rem 0 0;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .development-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .development-audit-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: -0.35rem 0 1rem;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.45);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+    }
+
+    .development-stat-card {
+      background: rgba(15, 23, 42, 0.52);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.1rem;
+    }
+
+    .development-stat-card .label {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.45rem;
+    }
+
+    .development-stat-card strong {
+      display: block;
+      font-size: 1.25rem;
+      color: var(--text-main);
+      font-family: var(--font-display);
+      letter-spacing: 0.04em;
+    }
+
+    .development-tab-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .development-tab {
+      border: 1px solid var(--border-light);
+      background: rgba(15, 23, 42, 0.45);
+      color: var(--text-muted);
+      border-radius: var(--radius-full);
+      padding: 0.6rem 0.9rem;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .development-tab.is-active {
+      background: rgba(249, 115, 22, 0.12);
+      border-color: rgba(249, 115, 22, 0.35);
+      color: var(--primary);
+    }
+
+    .development-tab-panel {
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .development-tab-panel.is-active {
+      display: block;
+    }
+
+    .development-card-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .development-card {
+      background: rgba(15, 23, 42, 0.52);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.1rem;
+    }
+
+    .development-card h4 {
+      margin: 0 0 0.8rem;
+      color: var(--text-main);
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .development-card .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.8rem;
+    }
+
+    .development-card .field,
+    .development-card textarea,
+    .development-card input,
+    .development-card select {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      padding: 0.72rem 0.8rem;
+      font: inherit;
+    }
+
+    .development-card label {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.38rem;
+    }
+
+    .development-card textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .development-card input:disabled,
+    .development-card textarea:disabled,
+    .development-card select:disabled {
+      background: transparent;
+      border-color: transparent;
+      padding: 0.25rem 0;
+      color: var(--text-main);
+      font-weight: 600;
+      opacity: 1;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .development-card input:disabled {
+      min-height: auto;
+    }
+
+    .development-readonly-value {
+      display: block;
+      width: 100%;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      font-weight: 600;
+      padding: 0.25rem 0;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+
+    .development-view-only {
+      display: block;
+    }
+
+    .development-edit-only {
+      display: none;
+    }
+
+    .development-is-editing .development-view-only {
+      display: none;
+    }
+
+    .development-is-editing .development-edit-only {
+      display: block;
+    }
+
+    .development-performance-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .development-metric-pill {
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 0.85rem;
+    }
+
+    .development-metric-pill span {
+      display: block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .development-metric-pill strong {
+      font-size: 1.1rem;
+      color: var(--text-main);
+    }
+
+    .development-schedule-card {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+      background: rgba(15, 23, 42, 0.45);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 0.85rem;
+    }
+
+    .development-schedule-box {
+      background: rgba(7, 12, 22, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      padding: 0.7rem 0.8rem;
+    }
+
+    .development-schedule-kicker {
+      display: block;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .development-schedule-box strong {
+      color: var(--text-main);
+      font-size: 1rem;
+    }
+
+    .development-compact-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .development-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(2px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 920px) {
+      .development-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .development-sidebar,
+      .development-panel {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .development-card .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .development-profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="admin-layout">
+    <div class="admin-sidebar-overlay" id="adminSidebarOverlay"></div>
+
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-brand">
+        <a href="../index.html" class="logo">
+          <div class="logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M5.5 5.5A10 10 0 0 1 18.5 18.5"></path>
+              <path d="M18.5 5.5A10 10 0 0 0 5.5 18.5"></path>
+              <line x1="12" y1="2" x2="12" y2="22"></line>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+            </svg>
+          </div>
+          SURGE <span>ELITE</span>
+        </a>
+      </div>
+
+      <nav class="admin-nav">
+        <div class="admin-nav-section">
+          <a href="index.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
+            Dashboard
+          </a>
+          <a href="leagues.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path></svg>
+            Leagues
+          </a>
+          <a href="teams.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            Teams
+          </a>
+          <a href="players.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            Players
+          </a>
+          <a href="games.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            Games
+          </a>
+          <a href="development.html" class="admin-nav-link active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19h16"></path><path d="M7 16V8"></path><path d="M12 16V5"></path><path d="M17 16v-9"></path></svg>
+            Development
+          </a>
+          <a href="admin-accounts.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            Accounts
+          </a>
+        </div>
+      </nav>
+
+      <div class="admin-sidebar-footer">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">AD</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">Admin Director</div>
+            <div class="admin-user-role">System Administrator</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <button class="admin-mobile-toggle" id="adminMobileToggle" aria-label="Toggle Menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="admin-breadcrumb">
+            <a href="index.html">Admin</a>
+            <span class="sep">/</span>
+            <span class="current">Development</span>
+          </div>
+        </div>
+        <div class="admin-topbar-right">
+          <a href="../login.html" class="btn btn-outline btn-sm">Log Out</a>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <div class="section-tag" style="margin-bottom: 0.5rem;">PLAYER GROWTH</div>
+            <h1 class="admin-topbar-title" style="font-size: 2rem; text-transform: uppercase;">Development</h1>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Track enrolled player development progress, workouts, goals, and schedule from the shared player roster.</p>
+          </div>
+        </div>
+
+        <div class="development-layout">
+          <div class="development-sidebar">
+            <div class="development-sidebar-header">
+              <h3>Enrolled Players</h3>
+              <span class="admin-status active" id="developmentPlayerCount">0</span>
+            </div>
+
+            <div class="development-filter-row">
+              <div class="admin-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="developmentSearchInput" placeholder="Search player or team">
+              </div>
+              <select id="developmentTeamFilter" class="admin-filter-select">
+                <option value="all">All Teams</option>
+              </select>
+              <select id="developmentStatusFilter" class="admin-filter-select">
+                <option value="all">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="injured">Injured</option>
+                <option value="inactive">Inactive</option>
+                <option value="free_agent">Free Agent</option>
+              </select>
+            </div>
+
+            <div id="developmentPlayerList" class="development-player-list" aria-live="polite"></div>
+          </div>
+
+          <div class="development-panel">
+            <div class="development-panel-header">
+              <h3>Development Workbench</h3>
+              <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <button type="button" class="btn btn-outline btn-sm" id="developmentRefreshBtn">Refresh</button>
+                <button type="button" class="btn btn-primary btn-sm" id="developmentEditBtn">Edit Development</button>
+              </div>
+            </div>
+            <div class="development-panel-body">
+              <div id="developmentEmptyState" style="display:none; color: var(--text-muted); padding: 1rem 0;">
+                No players match the current filter.
+              </div>
+
+              <div id="developmentProfileContent">
+                <div class="development-profile-header">
+                  <div>
+                    <h2 id="devPlayerName">Marcus Vance</h2>
+                    <p id="devPlayerMeta">Surge Wolves • Point Guard (PG)</p>
+                  </div>
+                  <span class="admin-status active" id="devStatusBadge">Active</span>
+                </div>
+
+                <div class="development-audit-row">
+                  <span id="devCreatedByText">Added by: —</span>
+                  <span id="devUpdatedByText">Updated by: —</span>
+                </div>
+
+                <div class="development-grid">
+                  <div class="development-stat-card">
+                    <span class="label">PPG</span>
+                    <strong id="devPpg">24.8</strong>
+                  </div>
+                  <div class="development-stat-card">
+                    <span class="label">APG</span>
+                    <strong id="devApg">9.4</strong>
+                  </div>
+                  <div class="development-stat-card">
+                    <span class="label">RPG</span>
+                    <strong id="devRpg">6.2</strong>
+                  </div>
+                  <div class="development-stat-card">
+                    <span class="label">Overall Progress</span>
+                    <strong id="devOverallProgress">88%</strong>
+                  </div>
+                </div>
+
+                <div class="development-tab-row" role="tablist" aria-label="Development sections">
+                  <button type="button" class="development-tab is-active" data-tab="performance" role="tab" aria-selected="true">Performance</button>
+                  <button type="button" class="development-tab" data-tab="training" role="tab" aria-selected="false">Training</button>
+                  <button type="button" class="development-tab" data-tab="schedule" role="tab" aria-selected="false">Schedule</button>
+                  <button type="button" class="development-tab" data-tab="goals" role="tab" aria-selected="false">Goals</button>
+                  <button type="button" class="development-tab" data-tab="progress" role="tab" aria-selected="false">Progress</button>
+                </div>
+
+                <div class="development-tab-panel is-active" data-panel="performance">
+                  <div class="development-card-group">
+                    <div class="development-card" style="grid-column: 1 / -1;">
+                      <h4 style="margin:0 0 1rem;">Performance</h4>
+
+                      <div class="development-view-only development-performance-summary">
+                        <div class="development-metric-pill"><span>PPG</span><strong id="readonlyPpg">24.8</strong></div>
+                        <div class="development-metric-pill"><span>APG</span><strong id="readonlyApg">9.4</strong></div>
+                        <div class="development-metric-pill"><span>RPG</span><strong id="readonlyRpg">6.2</strong></div>
+                        <div class="development-metric-pill"><span>FG%</span><strong id="readonlyFgPct">58%</strong></div>
+                        <div class="development-metric-pill"><span>3PT%</span><strong id="readonlyThreePct">41%</strong></div>
+                        <div class="development-metric-pill"><span>Usage</span><strong id="readonlyUsage">34%</strong></div>
+                      </div>
+
+                      <div class="development-edit-only form-grid">
+                        <div>
+                          <label for="inputPpg">PPG</label>
+                          <input id="inputPpg" type="number" step="0.1" value="24.8">
+                        </div>
+                        <div>
+                          <label for="inputApg">APG</label>
+                          <input id="inputApg" type="number" step="0.1" value="9.4">
+                        </div>
+                        <div>
+                          <label for="inputRpg">RPG</label>
+                          <input id="inputRpg" type="number" step="0.1" value="6.2">
+                        </div>
+                        <div>
+                          <label for="inputFgPct">FG%</label>
+                          <input id="inputFgPct" type="number" step="0.1" value="58">
+                        </div>
+                        <div>
+                          <label for="inputThreePct">3PT%</label>
+                          <input id="inputThreePct" type="number" step="0.1" value="41">
+                        </div>
+                        <div>
+                          <label for="inputUsage">Usage %</label>
+                          <input id="inputUsage" type="number" step="1" value="34">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="development-tab-panel" data-panel="training">
+                  <div class="development-card-group">
+                    <div class="development-card" style="grid-column: 1 / -1;">
+                      <h4>Training / Workouts</h4>
+                      <div class="development-view-only form-grid">
+                        <div style="grid-column: 1 / -1;">
+                          <label>Primary Focus</label>
+                          <div class="development-readonly-value" id="viewFocus">Ball handling and finishing</div>
+                        </div>
+                        <div>
+                          <label>Workout Load</label>
+                          <div class="development-readonly-value" id="viewWorkouts">4 sessions / week</div>
+                        </div>
+                        <div>
+                          <label>Recovery</label>
+                          <div class="development-readonly-value" id="viewRecovery">On track</div>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                          <label>Next Session</label>
+                          <div class="development-schedule-card">
+                            <div class="development-schedule-box">
+                              <span class="development-schedule-kicker">Date</span>
+                              <strong id="viewNextSessionDate">Tue, Sep 2</strong>
+                            </div>
+                            <div class="development-schedule-box">
+                              <span class="development-schedule-kicker">Time</span>
+                              <strong id="viewNextSessionTime">6:15 PM</strong>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="development-edit-only form-grid">
+                        <div style="grid-column: 1 / -1;">
+                          <label for="inputFocus">Primary Focus</label>
+                          <input id="inputFocus" type="text" value="Ball handling and finishing">
+                        </div>
+                        <div>
+                          <label for="inputWorkouts">Workout Load</label>
+                          <input id="inputWorkouts" type="text" value="4 sessions / week">
+                        </div>
+                        <div>
+                          <label for="inputRecovery">Recovery</label>
+                          <input id="inputRecovery" type="text" value="On track">
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                          <label>Next Session</label>
+                          <div class="development-schedule-card">
+                            <div class="development-schedule-box">
+                              <span class="development-schedule-kicker">Date</span>
+                              <input id="inputNextSessionDate" type="date">
+                            </div>
+                            <div class="development-schedule-box">
+                              <span class="development-schedule-kicker">Time</span>
+                              <input id="inputNextSessionTime" type="time">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="development-tab-panel" data-panel="schedule">
+                  <div class="development-card-group">
+                    <div class="development-card" style="grid-column: 1 / -1;">
+                      <h4>Schedule</h4>
+                      <div class="development-view-only form-grid">
+                        <div>
+                          <label>Availability</label>
+                          <div class="development-readonly-value" id="viewAvailability">Available</div>
+                        </div>
+                        <div>
+                          <label>Next Game</label>
+                          <div class="development-readonly-value" id="viewNextGame">Next game TBD</div>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                          <label>Next Practice</label>
+                          <div class="development-schedule-card">
+                            <div class="development-schedule-box">
+                              <span class="development-schedule-kicker">Date</span>
+                              <strong id="viewNextPracticeDate">Wed, Sep 3</strong>
+                            </div>
+                            <div class="development-schedule-box">
+                              <span class="development-schedule-kicker">Time</span>
+                              <strong id="viewNextPracticeTime">6:00 PM</strong>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="development-edit-only form-grid">
+                        <div>
+                          <label for="inputAvailability">Availability</label>
+                          <input id="inputAvailability" type="text" value="Available">
+                        </div>
+                        <div>
+                          <label for="inputNextGame">Next Game</label>
+                          <input id="inputNextGame" type="text" value="Next game TBD">
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                          <label>Next Practice</label>
+                          <div class="development-schedule-card">
+                            <div class="development-schedule-box">
+                              <span class="development-schedule-kicker">Date</span>
+                              <input id="inputNextPracticeDate" type="date">
+                            </div>
+                            <div class="development-schedule-box">
+                              <span class="development-schedule-kicker">Time</span>
+                              <input id="inputNextPracticeTime" type="time">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="development-tab-panel" data-panel="goals">
+                  <div class="development-card-group">
+                    <div class="development-card" style="grid-column: 1 / -1;">
+                      <h4>Goals</h4>
+                      <div class="form-grid">
+                        <div style="grid-column: 1 / -1;">
+                          <label for="inputSeasonGoal">Season Goal</label>
+                          <textarea id="inputSeasonGoal">Lead team in assists and efficiency</textarea>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                          <label for="inputImmediateGoal">Immediate Goal</label>
+                          <textarea id="inputImmediateGoal">Improve transition decisions</textarea>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                          <label for="inputActionPlan">Action Plan</label>
+                          <textarea id="inputActionPlan">Daily film + extra ball-handling work</textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="development-tab-panel" data-panel="progress">
+                  <div class="development-card-group">
+                    <div class="development-card" style="grid-column: 1 / -1;">
+                      <h4>Development Progress</h4>
+                      <div class="form-grid">
+                        <div>
+                          <label for="inputOverallProgress">Overall Progress</label>
+                          <input id="inputOverallProgress" type="number" min="0" max="100" value="88">
+                        </div>
+                        <div>
+                          <label for="inputReadiness">Readiness</label>
+                          <input id="inputReadiness" type="number" min="0" max="100" value="91">
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                          <label for="inputSummary">Summary</label>
+                          <textarea id="inputSummary">Strong development curve with growth in tempo control and finishing.</textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="development-actions">
+                  <button type="button" class="btn btn-outline" id="developmentCancelBtn" style="display: none;">Cancel</button>
+                  <button type="button" class="btn btn-outline" id="developmentResetBtn" style="display: none;">Reset</button>
+                  <button type="button" class="btn btn-primary" id="developmentSaveBtn" style="display: none;">Save Changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/admin.js"></script>
+  <script>
+    const DEFAULT_PLAYER_LIST = getAdminPlayers();
+    const playerList = document.getElementById('developmentPlayerList');
+    const searchInput = document.getElementById('developmentSearchInput');
+    const teamFilter = document.getElementById('developmentTeamFilter');
+    const statusFilter = document.getElementById('developmentStatusFilter');
+    const emptyState = document.getElementById('developmentEmptyState');
+    const profileContent = document.getElementById('developmentProfileContent');
+    const playerCount = document.getElementById('developmentPlayerCount');
+    const tabButtons = Array.from(document.querySelectorAll('.development-tab'));
+    let selectedPlayerId = null;
+    let isEditingDevelopment = false;
+
+    function populateDropdowns() {
+      const teams = getAdminTeams();
+      const current = teamFilter.value || 'all';
+      teamFilter.innerHTML = '<option value="all">All Teams</option>';
+      Object.values(teams).forEach(team => {
+        const option = document.createElement('option');
+        option.value = team.name;
+        option.textContent = team.name;
+        teamFilter.appendChild(option);
+      });
+      teamFilter.value = current !== 'all' && Array.from(teamFilter.options).some(opt => opt.value === current) ? current : 'all';
+    }
+
+    function formatDateTimeDisplay(value) {
+      if (!value) return 'Not scheduled';
+      const raw = String(value).trim();
+      if (!raw) return 'Not scheduled';
+      const isoMatch = raw.match(/^(\d{4}-\d{2}-\d{2})(?:[T\s](\d{2}:\d{2}))?/);
+      if (isoMatch) {
+        const date = new Date(raw.includes('T') || raw.includes(' ') ? raw : `${raw}T00:00`);
+        if (!Number.isNaN(date.getTime())) {
+          return new Intl.DateTimeFormat('en-US', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            hour: raw.includes(':') || isoMatch[2] ? 'numeric' : undefined,
+            minute: raw.includes(':') || isoMatch[2] ? '2-digit' : undefined,
+          }).format(date);
+        }
+      }
+
+      const dateValue = new Date(raw);
+      if (!Number.isNaN(dateValue.getTime())) {
+        return new Intl.DateTimeFormat('en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit'
+        }).format(dateValue);
+      }
+
+      return raw;
+    }
+
+    function getCombinedDateTime(dateValue, timeValue) {
+      if (!dateValue && !timeValue) return '';
+      if (!dateValue) return timeValue;
+      if (!timeValue) return dateValue;
+      return `${dateValue}T${timeValue}`;
+    }
+
+    function parseDateTimePair(value) {
+      if (!value) return { date: '', time: '' };
+      const raw = String(value).trim();
+      if (!raw) return { date: '', time: '' };
+      if (raw.includes('T')) {
+        const [datePart, timePart] = raw.split('T');
+        return { date: datePart || '', time: timePart || '' };
+      }
+      if (raw.includes(' ')) {
+        const [datePart, timePart] = raw.split(' ');
+        return { date: datePart || '', time: timePart || '' };
+      }
+      if (raw.length >= 16 && raw[10] === ' ') {
+        const [datePart, timePart] = raw.split(' ');
+        return { date: datePart || '', time: timePart || '' };
+      }
+      return { date: raw, time: '' };
+    }
+
+    function getAuditValue(value) {
+      return (value || 'Admin Director').toString().replace(/_/g, ' ');
+    }
+
+    function formatAuditDate(value) {
+      if (!value) return 'N/A';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return new Intl.DateTimeFormat('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+      }).format(date);
+    }
+
+    function resolveAuditActor(player) {
+      const teamEntry = Object.values(getAdminTeams()).find(team => Array.isArray(team.players) && team.players.some(entry => entry.id === player.id));
+      const teamCoach = teamEntry && teamEntry.coach ? teamEntry.coach.name : null;
+      const fallbackName = teamCoach || player.name || 'Coach Staff';
+      const candidate = teamCoach || player.lastModifiedBy || player.createdBy || teamEntry?.lastModifiedBy || teamEntry?.createdBy || player.name || 'Coach Staff';
+      const normalized = getAuditValue(candidate).replace(/Player Portal/gi, '').trim() || fallbackName;
+      const lower = normalized.toLowerCase();
+      if (teamCoach && normalized.toLowerCase() === teamCoach.toLowerCase()) return `${normalized} (Coach)`;
+      if (player.name && normalized.toLowerCase().includes(player.name.toLowerCase())) return `${normalized} (Player)`;
+      if (lower.includes('admin')) return `${normalized} (Admin)`;
+      if (lower.includes('coach')) return `${normalized} (Coach)`;
+      return `${normalized} (Coach)`;
+    }
+
+    function setDevelopmentEditing(enabled) {
+      isEditingDevelopment = enabled;
+      const fieldIds = [
+        'inputPpg', 'inputApg', 'inputRpg', 'inputFgPct', 'inputThreePct', 'inputUsage',
+        'inputFocus', 'inputWorkouts', 'inputRecovery', 'inputNextSessionDate', 'inputNextSessionTime',
+        'inputAvailability', 'inputNextGame', 'inputNextPracticeDate', 'inputNextPracticeTime',
+        'inputSeasonGoal', 'inputImmediateGoal', 'inputActionPlan',
+        'inputOverallProgress', 'inputReadiness', 'inputSummary'
+      ];
+
+      fieldIds.forEach((id) => {
+        const field = document.getElementById(id);
+        if (!field) return;
+        field.disabled = !enabled;
+        field.readOnly = !enabled;
+      });
+
+      const panel = document.getElementById('developmentProfileContent');
+      if (panel) {
+        panel.classList.toggle('development-is-editing', enabled);
+      }
+
+      const editBtn = document.getElementById('developmentEditBtn');
+      const saveBtn = document.getElementById('developmentSaveBtn');
+      const resetBtn = document.getElementById('developmentResetBtn');
+      const cancelBtn = document.getElementById('developmentCancelBtn');
+
+      if (editBtn) {
+        editBtn.textContent = enabled ? 'Cancel Edit' : 'Edit Development';
+        editBtn.classList.toggle('btn-primary', !enabled);
+        editBtn.classList.toggle('btn-outline', enabled);
+      }
+      if (saveBtn) saveBtn.style.display = enabled ? 'inline-flex' : 'none';
+      if (resetBtn) resetBtn.style.display = enabled ? 'inline-flex' : 'none';
+      if (cancelBtn) cancelBtn.style.display = enabled ? 'inline-flex' : 'none';
+    }
+
+    function renderAuditMeta(player) {
+      const teamEntry = Object.values(getAdminTeams()).find(team => Array.isArray(team.players) && team.players.some(entry => entry.id === player.id));
+      const createdBy = resolveAuditActor({ ...player, createdBy: player.createdBy || player.development?.createdBy || teamEntry?.createdBy || player.lastModifiedBy || 'Admin Director' });
+      const updatedBy = resolveAuditActor({ ...player, lastModifiedBy: player.lastModifiedBy || player.development?.updatedBy || teamEntry?.lastModifiedBy || player.createdBy || 'Admin Director' });
+      const createdAt = player.createdAt || player.development?.createdAt || teamEntry?.createdAt || player.createdOn || new Date().toISOString();
+      const updatedAt = player.lastModifiedAt || player.updatedAt || player.development?.lastUpdated || teamEntry?.lastModifiedAt || teamEntry?.updatedAt || new Date().toISOString();
+      document.getElementById('devCreatedByText').textContent = 'Added by: ' + createdBy + ' • ' + formatAuditDate(createdAt);
+      document.getElementById('devUpdatedByText').textContent = 'Updated by: ' + updatedBy + ' • ' + formatAuditDate(updatedAt);
+    }
+
+    function initialsForName(name) {
+      return (name || 'P').split(' ').map(part => part[0]).slice(0, 2).join('').toUpperCase() || 'P';
+    }
+
+    function getSelectedPlayer() {
+      return getAdminPlayers().find(player => player.id === selectedPlayerId) || null;
+    }
+
+    function getNormalizedDevelopment(player) {
+      const record = player && player.development ? player.development : getPlayerDevelopmentRecord(player.id);
+      return record || {
+        performance: {}, training: {}, schedule: {}, goals: {}, progress: {}
+      };
+    }
+
+    function setActiveTab(tabName) {
+      tabButtons.forEach(button => {
+        const isActive = button.dataset.tab === tabName;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-selected', String(isActive));
+      });
+      document.querySelectorAll('.development-tab-panel').forEach(panel => {
+        panel.classList.toggle('is-active', panel.dataset.panel === tabName);
+      });
+    }
+
+    function renderPlayerList() {
+      const allPlayers = getAdminPlayers();
+      const term = (searchInput.value || '').toLowerCase().trim();
+      const teamValue = teamFilter.value || 'all';
+      const statusValue = statusFilter.value || 'all';
+      const filtered = allPlayers.filter(player => {
+        const matchesTerm = `${player.name || ''} ${player.teamName || ''} ${player.position || ''}`.toLowerCase().includes(term);
+        const matchesTeam = teamValue === 'all' || (player.teamName || '').toLowerCase() === teamValue.toLowerCase();
+        const matchesStatus = statusValue === 'all' || (player.status || 'active').toLowerCase() === statusValue.toLowerCase();
+        return matchesTerm && matchesTeam && matchesStatus;
+      });
+
+      playerCount.textContent = filtered.length;
+
+      if (!filtered.length) {
+        emptyState.style.display = 'block';
+        playerList.innerHTML = '';
+        profileContent.style.display = 'none';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      playerList.innerHTML = filtered.map(player => `
+        <button type="button" class="development-player-item ${player.id === selectedPlayerId ? 'is-active' : ''}" data-player-id="${player.id}">
+          <span class="development-player-avatar">${initialsForName(player.name)}</span>
+          <span class="development-player-meta">
+            <strong>${player.name || 'Player'}</strong>
+            <span>${player.teamName || 'Unassigned'} • ${player.position || 'Player'}</span>
+          </span>
+        </button>
+      `).join('');
+
+      playerList.querySelectorAll('.development-player-item').forEach(button => {
+        button.addEventListener('click', () => {
+          selectedPlayerId = button.dataset.playerId;
+          renderPlayerList();
+          renderSelectedProfile();
+        });
+      });
+
+      if (!selectedPlayerId || !filtered.some(player => player.id === selectedPlayerId)) {
+        selectedPlayerId = filtered[0].id;
+      }
+
+      profileContent.style.display = 'block';
+    }
+
+    function populateFieldsFromPlayer(player, keepEditing = false) {
+      const dev = getNormalizedDevelopment(player);
+      const performance = dev.performance || {};
+      const training = dev.training || {};
+      const schedule = dev.schedule || {};
+      const goals = dev.goals || {};
+      const progress = dev.progress || {};
+
+      const nextSessionDateTime = parseDateTimePair(training.nextSession || '');
+      const nextPracticeDateTime = parseDateTimePair(schedule.nextPractice || '');
+
+      document.getElementById('devPlayerName').textContent = player.name || 'Player';
+      document.getElementById('devPlayerMeta').textContent = `${player.teamName || 'Unassigned'} • ${player.position || 'Player'}`;
+      document.getElementById('devStatusBadge').textContent = (player.status || 'active').replace('_', ' ');
+      document.getElementById('devStatusBadge').className = `admin-status ${(player.status || 'active').toLowerCase() === 'injured' ? 'draft' : 'active'}`;
+      document.getElementById('devPpg').textContent = performance.ppg ?? '0';
+      document.getElementById('devApg').textContent = performance.apg ?? '0';
+      document.getElementById('devRpg').textContent = performance.rpg ?? '0';
+      document.getElementById('devOverallProgress').textContent = `${progress.overall ?? 0}%`;
+
+      document.getElementById('readonlyPpg').textContent = performance.ppg ?? '0';
+      document.getElementById('readonlyApg').textContent = performance.apg ?? '0';
+      document.getElementById('readonlyRpg').textContent = performance.rpg ?? '0';
+      document.getElementById('readonlyFgPct').textContent = performance.fgPct ? `${performance.fgPct}%` : '0%';
+      document.getElementById('readonlyThreePct').textContent = performance.threePct ? `${performance.threePct}%` : '0%';
+      document.getElementById('readonlyUsage').textContent = performance.usage ? `${performance.usage}%` : '0%';
+
+      document.getElementById('inputPpg').value = performance.ppg ?? 0;
+      document.getElementById('inputApg').value = performance.apg ?? 0;
+      document.getElementById('inputRpg').value = performance.rpg ?? 0;
+      document.getElementById('inputFgPct').value = performance.fgPct ?? 0;
+      document.getElementById('inputThreePct').value = performance.threePct ?? 0;
+      document.getElementById('inputUsage').value = performance.usage ?? 0;
+
+      document.getElementById('viewFocus').textContent = training.focus || 'Not specified';
+      document.getElementById('viewWorkouts').textContent = training.workouts || 'Not specified';
+      document.getElementById('viewRecovery').textContent = training.recovery || 'Not specified';
+      document.getElementById('viewNextSessionDate').textContent = nextSessionDateTime.date ? new Date(`${nextSessionDateTime.date}T00:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Not scheduled';
+      document.getElementById('viewNextSessionTime').textContent = nextSessionDateTime.time ? new Date(`1970-01-01T${nextSessionDateTime.time}:00`).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : '—';
+      document.getElementById('inputFocus').value = training.focus || '';
+      document.getElementById('inputWorkouts').value = training.workouts || '';
+      document.getElementById('inputRecovery').value = training.recovery || '';
+      document.getElementById('inputNextSessionDate').value = nextSessionDateTime.date || '';
+      document.getElementById('inputNextSessionTime').value = nextSessionDateTime.time || '';
+
+      document.getElementById('viewAvailability').textContent = schedule.availability || 'TBD';
+      document.getElementById('viewNextGame').textContent = schedule.nextGame || 'Not scheduled';
+      document.getElementById('viewNextPracticeDate').textContent = nextPracticeDateTime.date ? new Date(`${nextPracticeDateTime.date}T00:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Not scheduled';
+      document.getElementById('viewNextPracticeTime').textContent = nextPracticeDateTime.time ? new Date(`1970-01-01T${nextPracticeDateTime.time}:00`).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : '—';
+      document.getElementById('inputAvailability').value = schedule.availability || '';
+      document.getElementById('inputNextGame').value = schedule.nextGame || '';
+      document.getElementById('inputNextPracticeDate').value = nextPracticeDateTime.date || '';
+      document.getElementById('inputNextPracticeTime').value = nextPracticeDateTime.time || '';
+
+      const seasonGoalView = document.getElementById('viewSeasonGoal');
+      const immediateGoalView = document.getElementById('viewImmediateGoal');
+      const actionPlanView = document.getElementById('viewActionPlan');
+      const overallProgressView = document.getElementById('viewOverallProgress');
+      const readinessView = document.getElementById('viewReadiness');
+      const summaryView = document.getElementById('viewSummary');
+
+      if (seasonGoalView) seasonGoalView.textContent = goals.seasonGoal || 'No season goal set';
+      if (immediateGoalView) immediateGoalView.textContent = goals.immediateGoal || 'No immediate goal set';
+      if (actionPlanView) actionPlanView.textContent = goals.actionPlan || 'No action plan set';
+      document.getElementById('inputSeasonGoal').value = goals.seasonGoal || '';
+      document.getElementById('inputImmediateGoal').value = goals.immediateGoal || '';
+      document.getElementById('inputActionPlan').value = goals.actionPlan || '';
+
+      if (overallProgressView) overallProgressView.textContent = progress.overall ? `${progress.overall}%` : '—';
+      if (readinessView) readinessView.textContent = progress.readiness ? `${progress.readiness}%` : '—';
+      if (summaryView) summaryView.textContent = progress.summary || 'No summary recorded';
+      document.getElementById('inputOverallProgress').value = progress.overall ?? 0;
+      document.getElementById('inputReadiness').value = progress.readiness ?? 0;
+      document.getElementById('inputSummary').value = progress.summary || '';
+      renderAuditMeta(player);
+      setDevelopmentEditing(keepEditing);
+    }
+
+    function renderSelectedProfile() {
+      const player = getSelectedPlayer();
+      if (!player) {
+        profileContent.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      profileContent.style.display = 'block';
+      emptyState.style.display = 'none';
+      populateFieldsFromPlayer(player, false);
+    }
+
+    function collectDevelopmentData() {
+      const nextSession = getCombinedDateTime(
+        document.getElementById('inputNextSessionDate').value,
+        document.getElementById('inputNextSessionTime').value
+      );
+      const nextPractice = getCombinedDateTime(
+        document.getElementById('inputNextPracticeDate').value,
+        document.getElementById('inputNextPracticeTime').value
+      );
+
+      return {
+        performance: {
+          ppg: Number(document.getElementById('inputPpg').value || 0),
+          apg: Number(document.getElementById('inputApg').value || 0),
+          rpg: Number(document.getElementById('inputRpg').value || 0),
+          fgPct: Number(document.getElementById('inputFgPct').value || 0),
+          threePct: Number(document.getElementById('inputThreePct').value || 0),
+          usage: Number(document.getElementById('inputUsage').value || 0)
+        },
+        training: {
+          focus: document.getElementById('inputFocus').value,
+          workouts: document.getElementById('inputWorkouts').value,
+          recovery: document.getElementById('inputRecovery').value,
+          nextSession
+        },
+        schedule: {
+          availability: document.getElementById('inputAvailability').value,
+          nextGame: document.getElementById('inputNextGame').value,
+          nextPractice
+        },
+        goals: {
+          seasonGoal: document.getElementById('inputSeasonGoal').value,
+          immediateGoal: document.getElementById('inputImmediateGoal').value,
+          actionPlan: document.getElementById('inputActionPlan').value
+        },
+        progress: {
+          overall: Number(document.getElementById('inputOverallProgress').value || 0),
+          readiness: Number(document.getElementById('inputReadiness').value || 0),
+          summary: document.getElementById('inputSummary').value
+        }
+      };
+    }
+
+    function resetFields() {
+      const player = getSelectedPlayer();
+      if (player) populateFieldsFromPlayer(player, isEditingDevelopment);
+    }
+
+    teamFilter.addEventListener('change', () => {
+      renderPlayerList();
+      renderSelectedProfile();
+    });
+
+    statusFilter.addEventListener('change', () => {
+      renderPlayerList();
+      renderSelectedProfile();
+    });
+
+    searchInput.addEventListener('input', () => {
+      renderPlayerList();
+      renderSelectedProfile();
+    });
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => setActiveTab(button.dataset.tab));
+    });
+
+    document.getElementById('developmentRefreshBtn').addEventListener('click', () => {
+      renderPlayerList();
+      renderSelectedProfile();
+      adminToast('Development roster refreshed.', 'info');
+    });
+
+    document.getElementById('developmentEditBtn').addEventListener('click', () => {
+      const player = getSelectedPlayer();
+      if (!player) return;
+
+      if (isEditingDevelopment) {
+        populateFieldsFromPlayer(player, false);
+        return;
+      }
+
+      setDevelopmentEditing(true);
+    });
+
+    document.getElementById('developmentCancelBtn').addEventListener('click', () => {
+      const player = getSelectedPlayer();
+      if (player) populateFieldsFromPlayer(player, false);
+    });
+
+    document.getElementById('developmentResetBtn').addEventListener('click', resetFields);
+    document.getElementById('developmentSaveBtn').addEventListener('click', () => {
+      const player = getSelectedPlayer();
+      if (!player) return;
+      const updatedValues = collectDevelopmentData();
+      const teamEntry = Object.values(getAdminTeams()).find(team => Array.isArray(team.players) && team.players.some(entry => entry.id === player.id));
+      const coachName = teamEntry && teamEntry.coach ? teamEntry.coach.name : 'Coach Staff';
+      updatedValues.lastUpdatedBy = coachName;
+      updatedValues.updatedBy = coachName;
+      savePlayerDevelopmentRecord(player.id, updatedValues);
+      player.lastModifiedBy = coachName;
+      profileContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      adminToast('Development updates saved for ' + player.name + '.', 'success');
+      renderPlayerList();
+      renderSelectedProfile();
+    });
+
+    populateDropdowns();
+    setDevelopmentEditing(false);
+    if (DEFAULT_PLAYER_LIST.length) {
+      selectedPlayerId = DEFAULT_PLAYER_LIST[0].id;
+      renderPlayerList();
+      renderSelectedProfile();
+    }
+  </script>
+</body>
+
+</html>

@@ -30,6 +30,27 @@
       position: relative;
     }
 
+    .league-header-main {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .league-header-info {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .league-header-copy {
+      min-width: 0;
+    }
+
     .league-badge-xl {
       width: 68px;
       height: 68px;
@@ -41,13 +62,60 @@
       font-size: 1.5rem;
       font-weight: 700;
       flex-shrink: 0;
+      background: var(--primary-gradient);
+      color: #fff;
+      box-shadow: var(--shadow-orange);
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 0.45rem;
+      padding: 0.32rem 0.7rem;
+      border-radius: var(--radius-full);
+      background: rgba(249, 115, 22, 0.12);
+      border: 1px solid rgba(249, 115, 22, 0.22);
+      color: var(--primary);
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .league-header-name {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--text-main);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .league-header-desc {
+      margin: 0.5rem 0 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      max-width: 560px;
+    }
+
+    .league-header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      margin-left: auto;
     }
 
     .league-meta-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1.25rem;
+      gap: 1rem;
       margin-top: 1.5rem;
+      width: 100%;
     }
 
     .league-meta-item {
@@ -55,6 +123,10 @@
       border: 1px solid var(--border-light);
       border-radius: var(--radius-md);
       padding: 1rem 1.25rem;
+      min-height: 86px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .league-meta-label {
@@ -66,7 +138,7 @@
     }
 
     .league-meta-value {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 700;
       color: var(--text-main);
     }
@@ -86,6 +158,13 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 1rem;
+    }
+
+    .admin-row-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
     }
   </style>
 </head>
@@ -160,6 +239,10 @@
             </svg>
             Games
           </a>
+          <a href="development.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19h16"></path><path d="M7 16V8"></path><path d="M12 16V5"></path><path d="M17 16v-9"></path></svg>
+            Development
+          </a>
           <a href="admin-accounts.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
@@ -225,20 +308,17 @@
 
           <!-- Header Card -->
           <div class="league-header-card">
-            <div
-              style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1.25rem;">
-              <div style="display:flex; align-items:center; gap:1.25rem;">
+            <div class="league-header-main">
+              <div class="league-header-info">
                 <div class="league-badge-xl" id="lgBadge">LG</div>
-                <div>
-                  <div class="section-tag" style="margin-bottom:0.3rem;">LEAGUE</div>
-                  <h1 id="lgName"
-                    style="font-family:var(--font-display); font-size:1.75rem; font-weight:700; color:var(--text-main); line-height:1.2;">
-                    —</h1>
-                  <p id="lgDesc"
-                    style="color:var(--text-muted); font-size:0.88rem; margin-top:0.3rem; max-width:520px;"></p>
+                <div class="league-header-copy">
+                  <div class="section-tag">LEAGUE</div>
+                  <h1 id="lgName" class="page-title league-header-name">—</h1>
+                  <p id="lgDesc" class="inline-subtitle league-header-desc"></p>
                 </div>
               </div>
-              <div style="display:flex; gap:0.65rem; flex-wrap:wrap;">
+
+              <div class="league-header-actions">
                 <span id="lgStatusBadge" class="admin-status active">Active</span>
                 <button class="btn btn-outline btn-sm" id="editLeagueBtn">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -251,7 +331,7 @@
               </div>
             </div>
 
-            <!-- Meta Grid -->
+            <div class="league-meta-grid">
               <div class="league-meta-item">
                 <div class="league-meta-label">Season</div>
                 <div class="league-meta-value" id="lgSeason">—</div>
@@ -478,7 +558,7 @@
             <td><strong>${playerCount}</strong> Players</td>
             <td>${statusBadgeHtml}</td>
             <td>
-              <div class="admin-row-actions" style="justify-content:flex-end;">
+              <div class="admin-row-actions">
                 <a href="team-details.html?id=${t.id}" class="btn btn-outline btn-sm" style="padding:0.35rem 0.65rem; font-size:0.78rem;">View Team</a>
               </div>
             </td>

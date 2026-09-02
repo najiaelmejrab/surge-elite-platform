@@ -184,6 +184,46 @@
       height: 100%;
       border: 0;
     }
+
+    .game-summary-boxes {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      width: 100%;
+    }
+
+    .game-summary-box {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 0.75rem;
+    }
+
+    .game-summary-box h3 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-main);
+      text-align: center;
+      padding-left: 0.1rem;
+    }
+
+    .game-summary-box .admin-table-scroll {
+      margin-top: 0;
+    }
+
+    .game-summary-box .admin-table {
+      margin-top: 0;
+    }
+
+    .game-summary-empty {
+      text-align: left;
+      padding: 1rem 0.5rem;
+      color: var(--text-muted);
+    }
   </style>
 </head>
 
@@ -256,6 +296,10 @@
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
             Games
+          </a>
+          <a href="development.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19h16"></path><path d="M7 16V8"></path><path d="M12 16V5"></path><path d="M17 16v-9"></path></svg>
+            Development
           </a>
           <a href="admin-accounts.html" class="admin-nav-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
