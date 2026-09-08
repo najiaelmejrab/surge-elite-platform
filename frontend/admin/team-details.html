@@ -152,14 +152,6 @@
             </svg>
             Accounts
           </a>
-          <a href="error-logs.html" class="admin-nav-link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 9v4"></path>
-              <path d="M12 17h.01"></path>
-              <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-            </svg>
-            Error Logs
-          </a>
         </div>
       </nav>
 
@@ -219,12 +211,12 @@
               <div>
                 <div style="display: flex; align-items: center; gap: 0.75rem;">
                   <h1 class="admin-topbar-title" id="teamHeaderTitle"
-                    style="font-size: 2.2rem; text-transform: uppercase;">SURGE WOLVES</h1>
+                    style="font-size: 2.2rem; text-transform: uppercase;">Team details</h1>
                   <span id="teamHeaderStatusBadge" class="admin-status active">Active</span>
                 </div>
                 <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem;" id="teamHeaderMeta">
-                  League: <strong id="teamMetaLeague" style="color: var(--text-main);">U19 Elite League</strong> &bull;
-                  Season: <strong id="teamMetaSeason" style="color: var(--text-main);">Spring 2026</strong>
+                  League: <strong id="teamMetaLeague" style="color: var(--text-main);">-</strong> &bull;
+                  Season: <strong id="teamMetaSeason" style="color: var(--text-main);">-</strong>
                 </p>
               </div>
             </div>
@@ -448,7 +440,7 @@
       const leagueObj = team.leagueId ? leagues[team.leagueId] : null;
       const leagueName = leagueObj ? leagueObj.name : (team.league || 'Unassigned');
       document.getElementById('teamMetaLeague').textContent = leagueName;
-      document.getElementById('teamMetaSeason').textContent = team.season || 'Spring 2026';
+      document.getElementById('teamMetaSeason').textContent = team.season || '-';
 
       const fmtD = (iso) => {
         if (!iso) return '—';
@@ -578,7 +570,7 @@
       // Populate select option list dynamically
       populateEditTeamLeagueDropdown(team.leagueId);
 
-      document.getElementById('editTeamSeason').value = team.season || 'Spring 2026';
+      document.getElementById('editTeamSeason').value = team.season || '-';
       document.getElementById('editTeamStatus').value = team.status || 'active';
       adminOpenModal('editTeamModal');
     }

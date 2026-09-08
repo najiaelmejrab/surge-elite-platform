@@ -1,17 +1,37 @@
-/* Shared read-only public rendering for the localStorage prototype. */
+/* Shared read-only public rendering backed by the MySQL API. */
 (function () {
-  const keys = {
-    leagues: 'surge_admin_leagues_v1',
-    teams: 'surge_admin_teams_v2',
-    games: 'surge_admin_games_v1'
-  };
-
-  function read(key) {
-    try { return JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch (e) { return {}; }
-  }
-
-  function data() {
-    return { leagues: read(keys.leagues), teams: read(keys.teams), games: read(keys.games) };
+  async function data() {
+    const response = await fetch('../backend/public/api/public-data.php', { credentials: 'same-origin' });
+    if (!response.ok) throw new Error('Public data request failed');
+    const payload = await response.json();
+    if (!payload.success || !payload.data) throw new Error(payload.message || 'Public data request failed');
+    const source = payload.data;
+    Object.values(source.teams || {}).forEach(team => {
+      team.id = String(team.id);
+      team.leagueId = String(team.league_id || team.leagueId || '');
+      team.season = team.season || team.season_name || '';
+      team.players = [];
+    });
+    Object.values(source.leagues || {}).forEach(league => {
+      league.id = String(league.id);
+    });
+    Object.values(source.players || {}).forEach(player => {
+      const team = source.teams?.[String(player.team_id || player.teamId)];
+      if (team) team.players.push({
+        ...player,
+        id: String(player.id),
+        name: [player.first_name, player.last_name].filter(Boolean).join(' ') || player.name,
+        jersey: player.jersey_number || player.jersey
+      });
+    });
+    Object.values(source.games || {}).forEach(game => {
+      game.id = String(game.id);
+      game.homeTeamId = String(game.home_team_id || game.homeTeamId || '');
+      game.awayTeamId = String(game.away_team_id || game.awayTeamId || '');
+      game.leagueId = String(game.league_id || game.leagueId || '');
+      game.status = game.status || 'scheduled';
+    });
+    return source;
   }
 
   function esc(value) {
@@ -189,8 +209,13 @@
     const link = document.getElementById('profileTeamLink'); if (link) link.href = `team-details.html?id=${encodeURIComponent(team.id)}`;
   }
 
-  function init() {
-    const source = data();
+  async function init() {
+    let source;
+    try {
+      source = await data();
+    } catch (error) {
+      source = { leagues: {}, teams: {}, players: {}, games: {} };
+    }
     const path = location.pathname.toLowerCase();
     const requestedId = id();
     if (requestedId && path.endsWith('league-details.html') && !source.leagues[requestedId]) return renderNotFound('This league is unavailable.');
@@ -204,6 +229,5 @@
   }
   document.addEventListener('DOMContentLoaded', () => {
     init();
-    setTimeout(init, 0);
   });
 })();

@@ -10,22 +10,6 @@ $users = [
         'role' => 'admin',
         'status' => 'active',
     ],
-    [
-        'first_name' => 'Coach',
-        'last_name' => 'James',
-        'email' => 'coach@surgelite.com',
-        'password' => 'Coach123!',
-        'role' => 'coach',
-        'status' => 'active',
-    ],
-    [
-        'first_name' => 'Marcus',
-        'last_name' => 'Vance',
-        'email' => 'player@surgelite.com',
-        'password' => 'Player123!',
-        'role' => 'player',
-        'status' => 'active',
-    ],
 ];
 
 $db = Database::getConnection();
@@ -58,33 +42,6 @@ foreach ($users as $user) {
         ]);
 
     echo "Inserted user: {$user['email']}\n";
-}
-
-$adminUser = $db->query("SELECT id FROM users WHERE email = 'admin@surgelite.com' LIMIT 1")->fetch();
-if ($adminUser) {
-    $coachUser = $db->query("SELECT id FROM users WHERE email = 'coach@surgelite.com' LIMIT 1")->fetch();
-    $playerUser = $db->query("SELECT id FROM users WHERE email = 'player@surgelite.com' LIMIT 1")->fetch();
-
-    $db->prepare('INSERT INTO coaches (user_id, first_name, last_name, role_title, experience_years, status) VALUES (:user_id, :first_name, :last_name, :role_title, 5, :status) ON DUPLICATE KEY UPDATE first_name = VALUES(first_name), last_name = VALUES(last_name)')
-        ->execute([
-            'user_id' => (int)$coachUser['id'],
-            'first_name' => 'Coach',
-            'last_name' => 'James',
-            'role_title' => 'Head Coach',
-            'status' => 'active',
-        ]);
-
-    $db->prepare('INSERT INTO players (user_id, first_name, last_name, jersey_number, position, height, date_of_birth, status) VALUES (:user_id, :first_name, :last_name, :jersey_number, :position, :height, :date_of_birth, :status) ON DUPLICATE KEY UPDATE first_name = VALUES(first_name), last_name = VALUES(last_name), jersey_number = VALUES(jersey_number), position = VALUES(position), height = VALUES(height), date_of_birth = VALUES(date_of_birth)')
-        ->execute([
-            'user_id' => (int)$playerUser['id'],
-            'first_name' => 'Marcus',
-            'last_name' => 'Vance',
-            'jersey_number' => '23',
-            'position' => 'PG',
-            'height' => '6\'3"',
-            'date_of_birth' => '2009-04-18',
-            'status' => 'active',
-        ]);
 }
 
 echo "Authentication seed completed.\n";

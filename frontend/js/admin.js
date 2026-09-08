@@ -198,18 +198,7 @@
 
   // ─── AUDIT TRAIL HELPERS ───────────────────────────────────────────────
   function getCurrentAuditAccount() {
-    try {
-      const raw = localStorage.getItem('surge_admin_accounts_v1');
-      if (!raw) return 'Admin Director';
-      const accounts = JSON.parse(raw) || {};
-      const values = Object.values(accounts);
-      if (!values.length) return 'Admin Director';
-      const activeMatch = values.find(account => String(account.status || '').toLowerCase() === 'active');
-      const selected = activeMatch || values[0];
-      return selected && selected.name ? selected.name : 'Admin Director';
-    } catch (e) {
-      return 'Admin Director';
-    }
+    return 'Admin Director';
   }
 
   function resolveAuditActorName(value, fallback = getCurrentAuditAccount()) {
@@ -259,600 +248,95 @@
     return applyAuditMetadata(record, options || {});
   };
 
-  // ─── LIVE BROADCAST DATA STORE ─────────────────────────────────────────
-  const BROADCAST_STORAGE_KEY = 'surge_live_broadcasts';
-
-  const DEFAULT_BROADCASTS = {
-    'g001': {
-      gameId: 'g001',
-      enabled: true,
-      title: 'Surge Wolves vs Apex Titans',
-      url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-      scheduledDateIso: '2026-10-24',
-      scheduledDate: 'October 24, 2026',
-      scheduledTimeVal: '19:00',
-      scheduledTime: '2026-10-24T19:00',
-      status: 'live',
-      thumbnail: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80',
-      description: 'High-octane U15 Youth League matchup featuring PPG leader Marcus Vance vs Elena Rostova.'
-    },
-    'g002': {
-      gameId: 'g002',
-      enabled: true,
-      title: 'Metro Vipers vs Coastal Ballers',
-      url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-      scheduledDateIso: '2026-10-25',
-      scheduledDate: 'October 25, 2026',
-      scheduledTimeVal: '16:30',
-      scheduledTime: '2026-10-25T16:30',
-      status: 'scheduled',
-      thumbnail: 'https://images.unsplash.com/photo-1519861531473-9200262188bf?auto=format&fit=crop&w=800&q=80',
-      description: 'U17 Junior Division battle for playoff position.'
-    },
-    'g003': {
-      gameId: 'g003',
-      enabled: true,
-      title: 'Venice Wave vs Gotham Knights',
-      url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-      scheduledDateIso: '2026-10-17',
-      scheduledDate: 'October 17, 2026',
-      scheduledTimeVal: '19:30',
-      scheduledTime: '2026-10-17T19:30',
-      status: 'ended',
-      thumbnail: 'https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&w=800&q=80',
-      description: 'Full official game replay and box score commentary.'
+  // ─── BACKEND-BACKED ADMIN DATA ───────────────────────────────────────────
+  const ADMIN_API = '../../backend/public/api/admin-data.php';
+  const GAME_API = '../../backend/public/api/games.php';
+  const adminCache = { leagues: {}, teams: {}, players: [], games: {}, broadcasts: {} };
+  function request(url, method = 'GET', body = null) {
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, url, false);
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    if (body !== null) xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(body === null ? null : JSON.stringify(body));
+    if (xhr.status < 200 || xhr.status >= 300) return null;
+    try { const payload = JSON.parse(xhr.responseText); return payload.data ?? payload; } catch (e) { return null; }
+  }
+  function reloadAdminData() {
+    const data = request(ADMIN_API);
+    if (data && typeof data === 'object') {
+      adminCache.leagues = data.leagues || {};
+      adminCache.teams = {};
+      Object.keys(data.teams || {}).forEach(id => {
+        const team = data.teams[id];
+        adminCache.teams[id] = { ...team, id: team.id || id, leagueId: team.leagueId || team.league_id, players: Array.isArray(team.players) ? team.players : [] };
+      });
+      adminCache.players = Array.isArray(data.players) ? data.players.map(player => ({ ...player, id: player.id, teamId: player.teamId || player.team_id, teamName: player.teamName || player.team_name, name: player.name || `${player.first_name || ''} ${player.last_name || ''}`.trim() })) : [];
     }
-  };
-
-  window.getLiveBroadcasts = function () {
-    try {
-      const stored = localStorage.getItem(BROADCAST_STORAGE_KEY);
-      if (!stored) {
-        localStorage.setItem(BROADCAST_STORAGE_KEY, JSON.stringify(DEFAULT_BROADCASTS));
-        return DEFAULT_BROADCASTS;
-      }
-      return JSON.parse(stored);
-    } catch (e) {
-      return DEFAULT_BROADCASTS;
+    const games = request(GAME_API);
+    if (Array.isArray(games)) {
+      adminCache.games = {      }
+      const broadcasts = request(`${ADMIN_API}?entity=broadcasts`);
+      adminCache.broadcasts = broadcasts && typeof broadcasts === 'object' ? broadcasts : {};;
+      games.forEach(game => { adminCache.games[String(game.id)] = {
+        ...game, date: game.game_date, time: game.game_time, homeTeamId: game.home_team_id,
+        awayTeamId: game.away_team_id, leagueId: game.league_id, seasonId: game.season_id,
+        homeScore: game.home_score, awayScore: game.away_score, venue: game.venue_name
+      }; });
     }
+  }
+  window.getLiveBroadcasts = () => adminCache.broadcasts;
+  window.getBroadcastForGame = (id) => window.getLiveBroadcasts()[id] || null;
+  window.saveBroadcastForGame = (id, data) => {
+    const saved = request(`${ADMIN_API}?entity=broadcasts`, 'POST', { ...data, gameId: id });
+    const result = saved || { ...data, gameId: id };
+    adminCache.broadcasts[id] = result;
+    return result;
   };
-
-  window.getBroadcastForGame = function (gameId) {
-    const broadcasts = window.getLiveBroadcasts();
-    return broadcasts[gameId] || null;
+  window.removeBroadcastForGame = (id) => { request(`${ADMIN_API}?entity=broadcasts&id=${id}`, 'DELETE'); delete adminCache.broadcasts[id]; };
+  window.getAdminLeagues = () => adminCache.leagues;
+  window.getAdminLeagueById = (id) => adminCache.leagues[id] || null;
+  window.saveAdminLeague = (data) => {
+    const saved = request(`${ADMIN_API}?entity=leagues${data.id ? `&id=${data.id}` : ''}`, data.id ? 'PUT' : 'POST', data);
+    if (saved) adminCache.leagues[String(saved.id)] = { ...data, ...saved, id: saved.id };
+    return saved || data;
   };
-
-  window.saveBroadcastForGame = function (gameId, broadcastData) {
-    const broadcasts = window.getLiveBroadcasts();
-    broadcasts[gameId] = {
-      ...broadcastData,
-      gameId: gameId,
-      updatedAt: new Date().toISOString()
-    };
-    localStorage.setItem(BROADCAST_STORAGE_KEY, JSON.stringify(broadcasts));
-    return broadcasts[gameId];
+  window.deleteAdminLeague = (id) => {
+    if (Object.values(adminCache.teams).some(t => String(t.league_id || t.leagueId) === String(id))) return { ok: false, reason: 'League still has teams assigned.' };
+    const result = request(`${ADMIN_API}?entity=leagues&id=${id}`, 'DELETE');
+    if (result) { delete adminCache.leagues[id]; return { ok: true }; }
+    return { ok: false, reason: 'Unable to delete league.' };
   };
-
-  window.removeBroadcastForGame = function (gameId) {
-    const broadcasts = window.getLiveBroadcasts();
-    if (broadcasts[gameId]) {
-      delete broadcasts[gameId];
-      localStorage.setItem(BROADCAST_STORAGE_KEY, JSON.stringify(broadcasts));
-    }
+  window.getAdminTeams = () => adminCache.teams;
+  window.getAdminTeamById = (id) => adminCache.teams[id] || null;
+  window.saveAdminTeam = (data) => {
+    const saved = request(`${ADMIN_API}?entity=teams${data.id ? `&id=${data.id}` : ''}`, data.id ? 'PUT' : 'POST', data);
+    if (saved) adminCache.teams[String(saved.id)] = { ...data, ...saved, id: saved.id, leagueId: saved.league_id, season: saved.season };
+    return saved || data;
   };
-
-  // ─── TEAM, COACH & PLAYER CENTRALIZED STORE ──────────────────────────────
-  const TEAMS_STORAGE_KEY = 'surge_admin_teams_v2';
-
-  const DEFAULT_TEAMS_DATA = {
-    't001': {
-      id: 't001',
-      name: 'Surge Wolves',
-      badge: 'SW',
-      league: 'U19 Elite League',
-      season: 'Spring 2026',
-      status: 'active',
-      coach: {
-        name: 'Juan Dela Cruz',
-        title: 'Head Coach',
-        email: 'juan.delacruz@surgelite.com',
-        phone: '(555) 234-5678'
-      },
-      players: [
-        { id: 'p001', name: 'Marcus Vance', jersey: '23', position: 'Point Guard (PG)', height: "6'3\"", weight: '190 lbs', status: 'active' },
-        { id: 'p002', name: 'Jamal Brooks', jersey: '55', position: 'Center (C)', height: "6'11\"", weight: '245 lbs', status: 'injured' },
-        { id: 'p003', name: 'Cameron Cole', jersey: '04', position: 'Shooting Guard (SG)', height: "6'2\"", weight: '185 lbs', status: 'active' },
-        { id: 'p004', name: 'Daniel Garcia', jersey: '12', position: 'Point Guard (PG)', height: "6'0\"", weight: '175 lbs', status: 'active' }
-      ],
-      createdAt: '2026-01-15T08:00:00Z',
-      createdDate: '2026-01-15T08:00:00Z',
-      createdBy: 'Admin Director',
-      lastModifiedAt: '2026-02-12T11:00:00Z',
-      lastModifiedDate: '2026-02-12T11:00:00Z',
-      lastModifiedBy: 'Marcus Thompson',
-      updatedAt: '2026-02-12T11:00:00Z'
-    },
-    't002': {
-      id: 't002',
-      name: 'Apex Titans',
-      badge: 'AT',
-      league: 'U19 Elite League',
-      season: 'Spring 2026',
-      status: 'active',
-      coach: {
-        name: 'Brian Mitchell',
-        title: 'Head Coach',
-        email: 'brian.mitchell@apextitans.org',
-        phone: '(555) 876-5432'
-      },
-      players: [
-        { id: 'p005', name: 'Elena Rostova', jersey: '03', position: 'Shooting Guard (SG)', height: "5'11\"", weight: '165 lbs', status: 'active' },
-        { id: 'p006', name: 'David Okafor', jersey: '44', position: 'Center (C)', height: "6'10\"", weight: '235 lbs', status: 'active' },
-        { id: 'p007', name: 'Mateo Silva', jersey: '10', position: 'Point Guard (PG)', height: "6'1\"", weight: '180 lbs', status: 'active' }
-      ],
-      createdAt: '2026-01-18T09:00:00Z',
-      createdDate: '2026-01-18T09:00:00Z',
-      createdBy: 'Admin Director',
-      lastModifiedAt: '2026-02-20T13:20:00Z',
-      lastModifiedDate: '2026-02-20T13:20:00Z',
-      lastModifiedBy: 'Sarah Chen',
-      updatedAt: '2026-02-20T13:20:00Z'
-    },
-    't003': {
-      id: 't003',
-      name: 'Venice Wave',
-      badge: 'VW',
-      league: 'Pro-Am Division',
-      season: 'Spring 2026',
-      status: 'active',
-      coach: {
-        name: 'Dave Henderson',
-        title: 'Head Coach',
-        email: 'dave.henderson@venicewave.com',
-        phone: '(555) 345-6789'
-      },
-      players: [
-        { id: 'p008', name: 'Paolo Reyes', jersey: '07', position: 'Power Forward (PF)', height: "6'8\"", weight: '220 lbs', status: 'active' },
-        { id: 'p009', name: 'Alex Cruz', jersey: '10', position: 'Center (C)', height: "6'9\"", weight: '230 lbs', status: 'active' }
-      ],
-      createdAt: '2026-01-25T08:00:00Z',
-      createdDate: '2026-01-25T08:00:00Z',
-      createdBy: 'Admin Director',
-      lastModifiedAt: '2026-02-25T09:45:00Z',
-      lastModifiedDate: '2026-02-25T09:45:00Z',
-      lastModifiedBy: 'Priya Patel',
-      updatedAt: '2026-02-25T09:45:00Z'
-    },
-    't004': {
-      id: 't004',
-      name: 'Gotham Knights',
-      badge: 'GK',
-      league: 'Pro-Am Division',
-      season: 'Spring 2026',
-      status: 'active',
-      coach: {
-        name: 'Marcus Vance Sr.',
-        title: 'Head Coach',
-        email: 'marcus.vance@gothamknights.com',
-        phone: '(555) 987-6543'
-      },
-      players: [
-        { id: 'p010', name: 'Miguel Santos', jersey: '04', position: 'Point Guard (PG)', height: "6'1\"", weight: '175 lbs', status: 'active' }
-      ],
-      createdAt: '2026-02-03T08:00:00Z',
-      createdDate: '2026-02-03T08:00:00Z',
-      createdBy: 'Admin Director',
-      lastModifiedAt: '2026-03-08T11:05:00Z',
-      lastModifiedDate: '2026-03-08T11:05:00Z',
-      lastModifiedBy: 'James Rivera',
-      updatedAt: '2026-03-08T11:05:00Z'
-    },
-    't005': {
-      id: 't005',
-      name: 'Metro Vipers',
-      badge: 'MV',
-      leagueId: 'l002', // U17 Junior League
-      league: 'U17 Junior League',
-      season: 'Spring 2026',
-      status: 'active',
-      coach: null,
-      players: [],
-      createdAt: '2026-02-10T08:00:00Z',
-      createdDate: '2026-02-10T08:00:00Z',
-      createdBy: 'Admin Director',
-      lastModifiedAt: '2026-02-28T08:55:00Z',
-      lastModifiedDate: '2026-02-28T08:55:00Z',
-      lastModifiedBy: 'Priya Patel',
-      updatedAt: '2026-02-28T08:55:00Z'
-    },
-    't006': {
-      id: 't006',
-      name: 'Coastal Ballers',
-      badge: 'CB',
-      leagueId: 'l002', // U17 Junior League
-      league: 'U17 Junior League',
-      season: 'Spring 2026',
-      status: 'active',
-      coach: null,
-      players: [],
-      createdAt: '2026-02-12T08:00:00Z',
-      createdDate: '2026-02-12T08:00:00Z',
-      createdBy: 'Admin Director',
-      lastModifiedAt: '2026-03-04T10:00:00Z',
-      lastModifiedDate: '2026-03-04T10:00:00Z',
-      lastModifiedBy: 'Sarah Chen',
-      updatedAt: '2026-03-04T10:00:00Z'
-    }
-  };
-
-  window.getAdminTeams = function () {
-    try {
-      const stored = localStorage.getItem(TEAMS_STORAGE_KEY);
-      let teams = {};
-      if (!stored) {
-        teams = { ...DEFAULT_TEAMS_DATA };
-      } else {
-        teams = JSON.parse(stored);
-      }
-
-      // Safe migration/normalization of old t.league (name string) to t.leagueId
-      let migrated = false;
-      let leagues = {};
-      try {
-        const storedLeagues = localStorage.getItem('surge_admin_leagues_v1');
-        if (storedLeagues) {
-          leagues = JSON.parse(storedLeagues);
-        } else {
-          // Default fallback leagues data from the block below
-          leagues = {
-            'l001': { id: 'l001', name: 'U19 Elite League' },
-            'l002': { id: 'l002', name: 'U17 Junior League' },
-            'l003': { id: 'l003', name: 'U15 Youth League' },
-            'l004': { id: 'l004', name: 'Pro-Am Division' }
-          };
-        }
-      } catch (err) { }
-
-      for (const id in teams) {
-        const t = teams[id];
-        if (t.league && !t.leagueId) {
-          const match = Object.values(leagues).find(
-            l => l.name.trim().toLowerCase() === t.league.trim().toLowerCase()
-          );
-          if (match) {
-            t.leagueId = match.id;
-            migrated = true;
-          }
-        }
-      }
-
-      if (migrated || !stored) {
-        localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
-      }
-
-      return teams;
-    } catch (e) {
-      return DEFAULT_TEAMS_DATA;
-    }
-  };
-
-  window.getAdminTeamById = function (teamId) {
-    const teams = window.getAdminTeams();
-    return teams[teamId] || null;
-  };
-
-  window.saveAdminTeam = function (teamData) {
-    const teams = window.getAdminTeams();
-    const id = teamData.id || `t_${Date.now()}`;
-
-    const words = (teamData.name || 'Team').trim().split(/\s+/);
-    const badge = teamData.badge || (words.length > 1 ? (words[0][0] + words[1][0]).toUpperCase() : words[0].substring(0, 2).toUpperCase());
-
-    const existing = teams[id] || {};
-    const savedTeam = applyAuditMetadata({
-      ...existing,
-      ...teamData,
-      id: id,
-      badge: badge,
-      coach: teamData.coach !== undefined ? teamData.coach : (existing.coach || null),
-      players: teamData.players !== undefined ? teamData.players : (existing.players || [])
-    }, {
-      actorName: existing.createdBy || getCurrentAuditAccount(),
-      isUpdate: !!existing.id
-    });
-
-    teams[id] = savedTeam;
-    localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
-    return teams[id];
-  };
-
-  window.deleteAdminTeam = function (teamId) {
-    const teams = window.getAdminTeams();
-    const games = window.getAdminGames ? window.getAdminGames() : {};
-    const isReferenced = Object.values(games).some(game => game.homeTeamId === teamId || game.awayTeamId === teamId);
-    if (isReferenced) return false;
-
-    if (teams[teamId]) {
-      delete teams[teamId];
-      localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
-      return true;
-    }
+  window.deleteAdminTeam = (id) => {
+    const result = request(`${ADMIN_API}?entity=teams&id=${id}`, 'DELETE');
+    if (result) { delete adminCache.teams[id]; return true; }
     return false;
   };
-
-  // Coach CRUD within Team
-  window.saveTeamCoach = function (teamId, coachData) {
-    const teams = window.getAdminTeams();
-    if (!teams[teamId]) return null;
-    teams[teamId] = applyAuditMetadata({
-      ...teams[teamId],
-      coach: coachData
-    }, {
-      actorName: teams[teamId].createdBy || getCurrentAuditAccount(),
-      isUpdate: true
-    });
-    localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
-    return teams[teamId];
+  window.saveTeamCoach = (id, coach) => { const team = window.getAdminTeamById(id); return team ? (team.coach = coach, team) : null; };
+  window.removeTeamCoach = (id) => window.saveTeamCoach(id, null);
+  window.saveTeamPlayer = (teamId, player) => {
+    const payload = { ...player, team_id: teamId, first_name: player.first_name || player.firstName || (player.name || '').split(' ')[0], last_name: player.last_name || player.lastName || (player.name || '').split(' ').slice(1).join(' ') };
+    const saved = request(`${ADMIN_API}?entity=players${player.id ? `&id=${player.id}` : ''}`, player.id ? 'PUT' : 'POST', payload);
+    reloadAdminData(); return window.getAdminTeamById(teamId) || saved;
   };
-
-  window.removeTeamCoach = function (teamId) {
-    const teams = window.getAdminTeams();
-    if (!teams[teamId]) return null;
-    teams[teamId] = applyAuditMetadata({
-      ...teams[teamId],
-      coach: null
-    }, {
-      actorName: teams[teamId].createdBy || getCurrentAuditAccount(),
-      isUpdate: true
-    });
-    localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
-    return teams[teamId];
-  };
-
-  // Player CRUD within Team
-  window.saveTeamPlayer = function (teamId, playerData) {
-    const teams = window.getAdminTeams();
-    if (!teams[teamId]) return null;
-    if (!teams[teamId].players) teams[teamId].players = [];
-
-    const pid = playerData.id || `p_${Date.now()}`;
-    const pidx = teams[teamId].players.findIndex(p => p.id === pid);
-
-    const updatedPlayer = applyAuditMetadata({
-      ...playerData,
-      id: pid
-    }, {
-      actorName: getCurrentAuditAccount(),
-      isUpdate: pidx >= 0
-    });
-
-    if (pidx >= 0) {
-      teams[teamId].players[pidx] = updatedPlayer;
-    } else {
-      teams[teamId].players.push(updatedPlayer);
-    }
-
-    teams[teamId] = applyAuditMetadata({
-      ...teams[teamId]
-    }, {
-      actorName: teams[teamId].createdBy || getCurrentAuditAccount(),
-      isUpdate: true
-    });
-
-    localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
-    return teams[teamId];
-  };
-
-  window.removeTeamPlayer = function (teamId, playerId) {
-    const teams = window.getAdminTeams();
-    if (!teams[teamId] || !teams[teamId].players) return null;
-    teams[teamId].players = teams[teamId].players.filter(p => p.id !== playerId);
-    teams[teamId] = applyAuditMetadata({ ...teams[teamId] }, {
-      actorName: teams[teamId].createdBy || getCurrentAuditAccount(),
-      isUpdate: true
-    });
-    localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
-    return teams[teamId];
-  };
-
-  // ─── LEAGUE DATA STORE ────────────────────────────────────────────────────
-  const LEAGUES_STORAGE_KEY = 'surge_admin_leagues_v1';
-
-  const DEFAULT_LEAGUES_DATA = {
-    'l001': {
-      id: 'l001',
-      name: 'U19 Elite League',
-      badge: 'U19',
-      badgeColor: 'rgba(249,115,22,0.15)',
-      badgeTextColor: 'var(--primary)',
-      season: 'Spring 2026',
-      status: 'active',
-      format: '16 Games + Finals',
-      maxTeams: 12,
-      description: 'Premier Showcase Division for U19-and-under athletes. Competitive round-robin format followed by a single-elimination finals bracket.',
-      createdAt: '2026-01-10T08:00:00Z',
-      createdDate: '2026-01-10T08:00:00Z',
-      createdBy: 'Admin Director',
-      lastModifiedAt: '2026-02-05T12:30:00Z',
-      lastModifiedDate: '2026-02-05T12:30:00Z',
-      lastModifiedBy: 'Admin Director',
-      updatedAt: '2026-02-05T12:30:00Z'
-    },
-    'l002': {
-      id: 'l002',
-      name: 'U17 Junior League',
-      badge: 'U17',
-      badgeColor: 'rgba(6,182,212,0.15)',
-      badgeTextColor: 'var(--cyan-highlight)',
-      season: 'Spring 2026',
-      status: 'active',
-      format: '14 Games + Tournament',
-      maxTeams: 20,
-      description: 'Junior Championship Tier for U17 athletes. Full season play with tournament-style playoffs.',
-      createdAt: '2026-01-18T08:00:00Z',
-      createdDate: '2026-01-18T08:00:00Z',
-      createdBy: 'Admin Director',
-      lastModifiedAt: '2026-02-18T09:15:00Z',
-      lastModifiedDate: '2026-02-18T09:15:00Z',
-      lastModifiedBy: 'Marcus Thompson',
-      updatedAt: '2026-02-18T09:15:00Z'
-    },
-    'l003': {
-      id: 'l003',
-      name: 'U15 Youth League',
-      badge: 'U15',
-      badgeColor: 'rgba(16,185,129,0.15)',
-      badgeTextColor: '#10b981',
-      season: 'Spring 2026',
-      status: 'upcoming',
-      format: '12 Games + Playoffs',
-      maxTeams: 16,
-      description: 'Developmental Youth Division focusing on fundamentals, teamwork, and competitive experience for U15 athletes.',
-      createdAt: '2026-02-02T08:00:00Z',
-      createdDate: '2026-02-02T08:00:00Z',
-      createdBy: 'Admin Director',
-      lastModifiedAt: '2026-03-02T10:00:00Z',
-      lastModifiedDate: '2026-03-02T10:00:00Z',
-      lastModifiedBy: 'Priya Patel',
-      updatedAt: '2026-03-02T10:00:00Z'
-    },
-    'l004': {
-      id: 'l004',
-      name: 'Pro-Am Division',
-      badge: 'PRO',
-      badgeColor: 'rgba(139,92,246,0.15)',
-      badgeTextColor: '#8b5cf6',
-      season: 'Spring 2026',
-      status: 'active',
-      format: '18 Games + Championship',
-      maxTeams: 8,
-      description: 'Premier adult Pro-Am showcase league for post-collegiate and professional-level athletes.',
-      createdAt: '2026-01-20T08:00:00Z',
-      createdDate: '2026-01-20T08:00:00Z',
-      createdBy: 'Admin Director',
-      lastModifiedAt: '2026-02-11T07:20:00Z',
-      lastModifiedDate: '2026-02-11T07:20:00Z',
-      lastModifiedBy: 'Marcus Thompson',
-      updatedAt: '2026-02-11T07:20:00Z'
-    }
-  };
-
-  window.getAdminLeagues = function () {
-    try {
-      const stored = localStorage.getItem(LEAGUES_STORAGE_KEY);
-      if (!stored) {
-        localStorage.setItem(LEAGUES_STORAGE_KEY, JSON.stringify(DEFAULT_LEAGUES_DATA));
-        return DEFAULT_LEAGUES_DATA;
-      }
-      return JSON.parse(stored);
-    } catch (e) {
-      return DEFAULT_LEAGUES_DATA;
-    }
-  };
-
-  window.getAdminLeagueById = function (leagueId) {
-    const leagues = window.getAdminLeagues();
-    return leagues[leagueId] || null;
-  };
-
-  window.saveAdminLeague = function (leagueData) {
-    const leagues = window.getAdminLeagues();
-    const id = leagueData.id || `l_${Date.now()}`;
-
-    const words = (leagueData.name || 'League').trim().split(/\s+/);
-    const badge = leagueData.badge || (words.length > 1
-      ? words[0].toUpperCase().substring(0, 3)
-      : words[0].toUpperCase().substring(0, 3));
-
-    const existing = leagues[id] || {};
-    leagues[id] = applyAuditMetadata({
-      ...existing,
-      ...leagueData,
-      id,
-      badge,
-      badgeColor: leagueData.badgeColor || existing.badgeColor || 'rgba(249,115,22,0.15)',
-      badgeTextColor: leagueData.badgeTextColor || existing.badgeTextColor || 'var(--primary)'
-    }, {
-      actorName: existing.createdBy || getCurrentAuditAccount(),
-      isUpdate: !!existing.id
-    });
-    localStorage.setItem(LEAGUES_STORAGE_KEY, JSON.stringify(leagues));
-    return leagues[id];
-  };
-
-  /**
-   * Delete a league — blocks if the league still has teams assigned to it.
-   * Returns { ok: true } or { ok: false, reason: string }
-   */
-  window.deleteAdminLeague = function (leagueId) {
-    const leagues = window.getAdminLeagues();
-    if (!leagues[leagueId]) return { ok: false, reason: 'League not found.' };
-
-    // Check for associated teams using leagueId
-    const teams = window.getAdminTeams();
-    const leagueName = leagues[leagueId].name;
-    const associatedTeams = Object.values(teams).filter(
-      t => t.leagueId === leagueId
-    );
-
-    if (associatedTeams.length > 0) {
-      const teamNames = associatedTeams.map(t => t.name).join(', ');
-      return {
-        ok: false,
-        reason: `Cannot delete "${leagueName}" — it still has ${associatedTeams.length} team(s) enrolled: ${teamNames}. Re-assign or remove those teams first.`
-      };
-    }
-
-    delete leagues[leagueId];
-    localStorage.setItem(LEAGUES_STORAGE_KEY, JSON.stringify(leagues));
-    return { ok: true };
-  };
-
-  // ─── PLAYER STORE HELPER FUNCTIONS ───────────────────────────────────────
-  const DEFAULT_PLAYER_DEVELOPMENT = {
-    performance: {
-      ppg: 24.8,
-      apg: 9.4,
-      rpg: 6.2,
-      fgPct: 58,
-      threePct: 41,
-      usage: 34,
-      trend: 'Upward'
-    },
-    training: {
-      focus: 'Ball handling and finishing',
-      workouts: '4 sessions / week',
-      recovery: 'On track',
-      nextSession: 'Tue 6:15 PM'
-    },
-    schedule: {
-      availability: 'Available',
-      nextGame: 'Next game TBD',
-      nextPractice: 'Wed 6:00 PM',
-      notes: 'No conflicts this week'
-    },
-    goals: {
-      seasonGoal: 'Lead team in assists and efficiency',
-      immediateGoal: 'Improve transition decisions',
-      actionPlan: 'Daily film + extra ball-handling work'
-    },
-    progress: {
-      overall: 88,
-      readiness: 91,
-      summary: 'Strong development curve with growth in tempo control and finishing.'
-    }
-  };
-
+  window.removeTeamPlayer = () => null;
   function normalizePlayerDevelopment(player = {}) {
     const current = player.development || {};
     const teamCoach = player.teamCoachName || player.coachName || 'Coach Staff';
     const actor = player.lastModifiedBy || player.createdBy || teamCoach || 'Coach Staff';
     return {
-      performance: { ...DEFAULT_PLAYER_DEVELOPMENT.performance, ...(current.performance || {}) },
-      training: { ...DEFAULT_PLAYER_DEVELOPMENT.training, ...(current.training || {}) },
-      schedule: { ...DEFAULT_PLAYER_DEVELOPMENT.schedule, ...(current.schedule || {}) },
-      goals: { ...DEFAULT_PLAYER_DEVELOPMENT.goals, ...(current.goals || {}) },
-      progress: { ...DEFAULT_PLAYER_DEVELOPMENT.progress, ...(current.progress || {}) },
+      performance: { ...(current.performance || {}) },
+      training: { ...(current.training || {}) },
+      schedule: { ...(current.schedule || {}) },
+      goals: { ...(current.goals || {}) },
+      progress: { ...(current.progress || {}) },
       createdBy: current.createdBy || player.createdBy || teamCoach || 'Coach Staff',
       updatedBy: current.updatedBy || current.lastUpdatedBy || actor,
       lastUpdated: current.lastUpdated || new Date().toISOString(),
@@ -860,25 +344,7 @@
     };
   }
 
-  window.getAdminPlayers = function () {
-    const teams = window.getAdminTeams();
-    const playersList = [];
-    for (const teamId in teams) {
-      const team = teams[teamId];
-      if (team.players && Array.isArray(team.players)) {
-        team.players.forEach(p => {
-          playersList.push({
-            ...p,
-            teamId: team.id,
-            teamName: team.name,
-            teamCoachName: team.coach && team.coach.name ? team.coach.name : 'Coach Staff',
-            development: normalizePlayerDevelopment({ ...p, teamCoachName: team.coach && team.coach.name ? team.coach.name : 'Coach Staff' })
-          });
-        });
-      }
-    }
-    return playersList;
-  };
+  window.getAdminPlayers = () => adminCache.players;
 
   window.getPlayerDevelopmentRecord = function (playerId) {
     const teams = window.getAdminTeams ? window.getAdminTeams() : {};
@@ -889,7 +355,6 @@
       if (player) {
         const normalized = normalizePlayerDevelopment({ ...player, teamCoachName: team.coach && team.coach.name ? team.coach.name : 'Coach Staff' });
         player.development = normalized;
-        localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
         return normalized;
       }
     }
@@ -947,7 +412,6 @@
       team.players[index].lastModifiedBy = actorName;
       team.players[index].lastModifiedAt = new Date().toISOString();
       team.players[index].updatedAt = new Date().toISOString();
-      localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
       return merged;
     }
     return normalizePlayerDevelopment({ teamCoachName: coachName });
@@ -995,7 +459,6 @@
       };
 
       team.players[index] = merged;
-      localStorage.setItem('surge_admin_teams_v2', JSON.stringify(teams));
       return {
         teamId: team.id,
         teamName: team.name,
@@ -1244,21 +707,6 @@
       });
     });
 
-    try {
-      const accountData = JSON.parse(localStorage.getItem('surge_admin_accounts_v1') || '{}');
-      Object.values(accountData || {}).forEach((account) => {
-        const timestamp = account && (account.lastModifiedDate || account.lastModifiedAt || account.updatedAt || account.createdDate || account.createdAt || account.lastLogin);
-        if (!account || !timestamp) return;
-        const actor = account.lastModifiedBy || account.createdBy || account.name || getCurrentAuditAccount();
-        entries.push({
-          type: 'account',
-          badge: 'purple',
-          description: `<strong>Account updated:</strong> ${account.name || 'Account'} by ${actor}.`,
-          timestamp: timestamp
-        });
-      });
-    } catch (e) {}
-
     entries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
     if (!entries.length) {
@@ -1295,127 +743,26 @@
     initAdminDashboard();
   });
 
-  // ─── CENTRAL GAMES DATA STORE ─────────────────────────────────────────────
-  const GAMES_STORAGE_KEY = 'surge_admin_games_v1';
-
-  const DEFAULT_GAMES_DATA = {
-    'g001': {
-      id: 'g001',
-      leagueId: 'l001',      // U19 Elite League
-      homeTeamId: 't001',    // Surge Wolves
-      awayTeamId: 't002',    // Apex Titans
-      date: '2026-10-24',
-      time: '18:00',
-      venue: 'Surge Arena (Main Court)',
-      status: 'scheduled',
-      homeScore: null,
-      awayScore: null,
-      createdAt: '2026-02-15T09:30:00Z',
-      createdDate: '2026-02-15T09:30:00Z',
-      createdBy: 'Admin Director',
-      lastModifiedAt: '2026-03-05T08:40:00Z',
-      lastModifiedDate: '2026-03-05T08:40:00Z',
-      lastModifiedBy: 'Marcus Thompson',
-      updatedAt: '2026-03-05T08:40:00Z'
-    },
-    'g002': {
-      id: 'g002',
-      leagueId: 'l002',      // U17 Junior League
-      homeTeamId: 't005',    // Metro Vipers
-      awayTeamId: 't006',    // Coastal Ballers
-      date: '2026-10-25',
-      time: '16:30',
-      venue: 'Downtown Complex (Court B)',
-      status: 'scheduled',
-      homeScore: null,
-      awayScore: null,
-      createdAt: '2026-02-22T09:30:00Z',
-      createdDate: '2026-02-22T09:30:00Z',
-      createdBy: 'Admin Director',
-      lastModifiedAt: '2026-03-01T15:10:00Z',
-      lastModifiedDate: '2026-03-01T15:10:00Z',
-      lastModifiedBy: 'Priya Patel',
-      updatedAt: '2026-03-01T15:10:00Z'
-    },
-    'g003': {
-      id: 'g003',
-      leagueId: 'l004',      // Pro-Am Division
-      homeTeamId: 't003',    // Venice Wave
-      awayTeamId: 't004',    // Gotham Knights
-      date: '2026-10-17',
-      time: '19:30',
-      venue: 'Venice Beach Arena',
-      status: 'completed',
-      homeScore: 112,
-      awayScore: 98,
-      createdAt: '2026-02-12T10:05:00Z',
-      createdDate: '2026-02-12T10:05:00Z',
-      createdBy: 'Admin Director',
-      lastModifiedAt: '2026-03-12T17:30:00Z',
-      lastModifiedDate: '2026-03-12T17:30:00Z',
-      lastModifiedBy: 'Sarah Chen',
-      updatedAt: '2026-03-12T17:30:00Z'
-    },
-    'g004': {
-      id: 'g004',
-      leagueId: 'l001',      // U19 Elite League
-      homeTeamId: 't001',    // Surge Wolves
-      awayTeamId: 't003',    // Venice Wave
-      date: '2026-10-26',
-      time: '20:00',
-      venue: 'Northgate Court',
-      status: 'scheduled',
-      homeScore: null,
-      awayScore: null,
-      createdAt: '2026-02-18T08:00:00Z',
-      createdDate: '2026-02-18T08:00:00Z',
-      createdBy: 'Admin Director',
-      lastModifiedAt: '2026-03-17T08:00:00Z',
-      lastModifiedDate: '2026-03-17T08:00:00Z',
-      lastModifiedBy: 'James Rivera',
-      updatedAt: '2026-03-17T08:00:00Z'
-    }
+  window.getAdminGames = () => adminCache.games;
+  window.getAdminGameById = (id) => adminCache.games[id] || null;
+  window.saveAdminGame = (gameData) => {
+    const homeTeam = adminCache.teams[gameData.homeTeamId || gameData.home_team_id] || {};
+    const payload = {
+      season_id: gameData.seasonId || gameData.season_id || homeTeam.season_id,
+      league_id: gameData.leagueId || gameData.league_id,
+      home_team_id: gameData.homeTeamId || gameData.home_team_id,
+      away_team_id: gameData.awayTeamId || gameData.away_team_id,
+      game_date: gameData.date || gameData.game_date,
+      game_time: gameData.time || gameData.game_time,
+      status: gameData.status === 'in-progress' || gameData.status === 'in_progress' ? 'live' : (gameData.status === 'verified' ? 'completed' : gameData.status),
+      home_score: gameData.homeScore || gameData.home_score || 0,
+      away_score: gameData.awayScore || gameData.away_score || 0,
+      venue_id: gameData.venue_id || null
+    };
+    const saved = request(`${GAME_API}${gameData.id ? `?id=${gameData.id}` : ''}`, gameData.id ? 'PUT' : 'POST', payload);
+    if (saved) { const id = String(saved.id); adminCache.games[id] = { ...gameData, ...saved, id: saved.id, date: saved.game_date, time: saved.game_time, homeTeamId: saved.home_team_id, awayTeamId: saved.away_team_id, leagueId: saved.league_id }; }
+    return saved || gameData;
   };
-
-  window.getAdminGames = function () {
-    try {
-      const stored = localStorage.getItem(GAMES_STORAGE_KEY);
-      if (!stored) {
-        localStorage.setItem(GAMES_STORAGE_KEY, JSON.stringify(DEFAULT_GAMES_DATA));
-        return DEFAULT_GAMES_DATA;
-      }
-      return JSON.parse(stored);
-    } catch (e) {
-      return DEFAULT_GAMES_DATA;
-    }
-  };
-
-  window.getAdminGameById = function (gameId) {
-    const games = window.getAdminGames();
-    return games[gameId] || null;
-  };
-
-  window.saveAdminGame = function (gameData) {
-    const games = window.getAdminGames();
-    const id = gameData.id || `g_${Date.now()}`;
-    const existing = games[id] || {};
-    games[id] = applyAuditMetadata({
-      ...existing,
-      ...gameData,
-      id: id
-    }, {
-      actorName: existing.createdBy || getCurrentAuditAccount(),
-      isUpdate: !!existing.id
-    });
-    localStorage.setItem(GAMES_STORAGE_KEY, JSON.stringify(games));
-    return games[id];
-  };
-
-  window.deleteAdminGame = function (gameId) {
-    const games = window.getAdminGames();
-    if (games[gameId]) {
-      delete games[gameId];
-      localStorage.setItem(GAMES_STORAGE_KEY, JSON.stringify(games));
-    }
-  };
+  window.deleteAdminGame = (id) => !!request(`${GAME_API}?id=${id}`, 'DELETE');
+  reloadAdminData();
 })();

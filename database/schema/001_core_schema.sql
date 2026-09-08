@@ -15,6 +15,7 @@ SET time_zone = "+00:00";
 -- Drop existing tables in reverse dependency order
 -- ----------------------------------------------------------------------------
 DROP TABLE IF EXISTS `player_game_stats`;
+DROP TABLE IF EXISTS `broadcasts`;
 DROP TABLE IF EXISTS `game_quarters`;
 DROP TABLE IF EXISTS `games`;
 DROP TABLE IF EXISTS `venues`;
@@ -437,6 +438,24 @@ CREATE TABLE `player_game_stats` (
     REFERENCES `teams` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `broadcasts` (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `game_id` INT NOT NULL,
+  `enabled` TINYINT(1) NOT NULL DEFAULT 0,
+  `title` VARCHAR(255) NOT NULL,
+  `url` VARCHAR(500) NOT NULL,
+  `scheduled_date` DATE NULL,
+  `scheduled_time` TIME NULL,
+  `status` ENUM('scheduled','live','ended') NOT NULL DEFAULT 'scheduled',
+  `thumbnail` VARCHAR(500) NULL,
+  `description` TEXT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_broadcast_game` (`game_id`),
+  CONSTRAINT `fk_broadcast_game` FOREIGN KEY (`game_id`) REFERENCES `games` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

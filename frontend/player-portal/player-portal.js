@@ -43,13 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function getAccountStore() {
-  const raw = localStorage.getItem('surge_admin_accounts_v1');
-  if (!raw) return {};
-  try {
-    return JSON.parse(raw) || {};
-  } catch (error) {
-    return {};
-  }
+  return {};
 }
 
 function resolveAccountForPlayer(player = {}) {
@@ -65,17 +59,7 @@ function resolveAccountForPlayer(player = {}) {
 
   if (account) return account;
 
-  const seeded = {
-    id: `acct_player_${player.id || 'default'}`,
-    name: player.name || 'Player',
-    email: player.email || 'player@surgelite.com',
-    password: 'SurgeElite123!',
-    status: 'active'
-  };
-
-  const nextStore = { ...store, [seeded.id]: seeded };
-  localStorage.setItem('surge_admin_accounts_v1', JSON.stringify(nextStore));
-  return seeded;
+  return null;
 }
 
 function initPlayerProfilePage() {
@@ -104,6 +88,13 @@ function initPlayerProfilePage() {
     dobInput.addEventListener('change', syncAgeField);
   }
   let currentPlayer = getSharedPlayerProfile(playerId);
+  if (!currentPlayer) {
+    if (viewState) {
+      viewState.classList.remove('is-hidden');
+      viewState.textContent = 'No player profile is available yet.';
+    }
+    return;
+  }
 
   const setStatus = (message, tone = 'success') => {
     const statusEl = document.getElementById('profileSaveState');
@@ -128,17 +119,7 @@ function initPlayerProfilePage() {
 
     if (fallback) return fallback;
 
-    const seeded = {
-      id: `acct_player_${currentPlayer.player.id || 'default'}`,
-      name: currentPlayer.player.name || 'Player',
-      email: currentPlayer.player.email || 'player@surgelite.com',
-      password: 'SurgeElite123!',
-      status: 'active'
-    };
-
-    const nextStore = { ...store, [seeded.id]: seeded };
-    localStorage.setItem('surge_admin_accounts_v1', JSON.stringify(nextStore));
-    return seeded;
+    return null;
   };
 
   const syncAccountEmail = (nextEmail) => {
@@ -146,9 +127,7 @@ function initPlayerProfilePage() {
     const account = getEditableAccount();
     if (!account || !account.email) return;
     const nextAccount = { ...account, email: nextEmail };
-    const store = getAccountStore();
-    store[account.id || nextAccount.id] = nextAccount;
-    localStorage.setItem('surge_admin_accounts_v1', JSON.stringify(store));
+    return nextAccount;
   };
 
   const calculateAge = (dobValue) => {
@@ -203,10 +182,7 @@ function initPlayerProfilePage() {
       return { ok: true, result: response };
     }
 
-    const existing = JSON.parse(localStorage.getItem('surge_password_reset_requests') || '[]');
-    existing.push({ email: normalized, sentAt: new Date().toISOString() });
-    localStorage.setItem('surge_password_reset_requests', JSON.stringify(existing));
-    return { ok: true, result: { email: normalized } };
+    return { ok: false, message: 'Password reset is not configured.' };
   };
 
   const updateAccountPassword = (newPassword, confirmPassword) => {
@@ -227,10 +203,7 @@ function initPlayerProfilePage() {
       return { ok: false, message: 'No account found for this player.' };
     }
 
-    const store = getAccountStore();
-    store[account.id] = { ...account, password: trimmed };
-    localStorage.setItem('surge_admin_accounts_v1', JSON.stringify(store));
-    return { ok: true, message: 'Password updated successfully.' };
+    return { ok: false, message: 'Password updates must be completed through the account service.' };
   };
 
   const normalizePhotoValue = (value) => {
@@ -435,37 +408,7 @@ function getSharedPlayerProfile(playerId) {
     }
   }
 
-  const fallbackTeam = {
-    id: 't001',
-    name: 'Surge Wolves',
-    league: 'U19 Elite League'
-  };
-
-  return {
-    teamId: fallbackTeam.id,
-    teamName: fallbackTeam.name,
-    player: {
-      id: playerId,
-      name: 'Marcus Vance',
-      firstName: 'Marcus',
-      lastName: 'Vance',
-      email: 'marcus.vance@surgelite.com',
-      phone: '(555) 123-4567',
-      dateOfBirth: '2009-05-18',
-      position: 'Point Guard (PG)',
-      jersey: '23',
-      height: "6'3\"",
-      teamName: fallbackTeam.name,
-      profilePhoto: '',
-      school: 'Northfield Academy',
-      parentGuardian: {
-        fullName: 'Jane Vance',
-        relationship: 'Mother',
-        email: 'jane.vance@example.com',
-        phone: '(555) 987-6543'
-      }
-    }
-  };
+  return null;
 }
 
 function saveSharedPlayerProfile(playerId, profileData) {
@@ -498,19 +441,18 @@ function saveSharedPlayerProfile(playerId, profileData) {
   };
 
   target.team.players[target.index] = merged;
-  localStorage.setItem('surge_admin_teams_v2', JSON.stringify(teams));
   return { teamId: target.teamId, teamName: target.team.name, player: merged };
 }
 
 function renderPlayerProfile(result) {
   const player = result && result.player ? result.player : {};
   const fullName = [player.firstName || player.name?.split(' ')[0], player.lastName || player.name?.split(' ').slice(1).join(' ')].filter(Boolean).join(' ') || 'Player';
-  const teamName = result && result.teamName ? result.teamName : player.teamName || 'Surge Wolves';
-  const position = player.position || 'Point Guard (PG)';
-  const jersey = player.jersey || '23';
-  const height = player.height || "6'3\"";
-  const dateOfBirth = player.dateOfBirth || '2009-05-18';
-  const ageValue = player.age || calculateAge(dateOfBirth) || '17';
+  const teamName = result && result.teamName ? result.teamName : player.teamName || '—';
+  const position = player.position || '—';
+  const jersey = player.jersey || '—';
+  const height = player.height || '—';
+  const dateOfBirth = player.dateOfBirth || '';
+  const ageValue = player.age || (dateOfBirth ? calculateAge(dateOfBirth) : '—') || '—';
   const account = resolveAccountForPlayer(player);
 
   document.getElementById('profileHeroName').textContent = fullName;

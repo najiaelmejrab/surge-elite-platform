@@ -101,14 +101,6 @@
             </svg>
             Accounts
           </a>
-          <a href="error-logs.html" class="admin-nav-link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 9v4"></path>
-              <path d="M12 17h.01"></path>
-              <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-            </svg>
-            Error Logs
-          </a>
         </div>
       </nav>
 
@@ -208,7 +200,7 @@
                 </tr>
               </thead>
               <tbody id="teamsTableBody">
-                <!-- Rendered via JavaScript from localStorage store -->
+                <!-- Rendered dynamically from the backend -->
               </tbody>
             </table>
           </div>
@@ -238,7 +230,7 @@
 
         <div class="admin-form-group" style="margin-bottom: 1rem;">
           <label class="admin-form-label" for="teamNameInput">Team Name *</label>
-          <input type="text" id="teamNameInput" class="admin-form-input" placeholder="e.g. Coastal Ballers" required>
+          <input type="text" id="teamNameInput" class="admin-form-input" placeholder="e.g. -" required>
         </div>
 
         <div class="admin-form-row cols-2">
@@ -250,7 +242,7 @@
           </div>
           <div class="admin-form-group">
             <label class="admin-form-label" for="teamSeasonInput">Season *</label>
-            <input type="text" id="teamSeasonInput" class="admin-form-input" placeholder="e.g. Spring 2026" required>
+            <input type="text" id="teamSeasonInput" class="admin-form-input" placeholder="e.g. -" required>
           </div>
         </div>
 
@@ -357,7 +349,7 @@
           : `<span class="admin-status draft">Inactive</span>`;
         const createdBy = resolveAuditActorName(t.createdBy);
 
-        // Resolve League Name using team.leagueId (fallback to legacy team.league)
+        // Resolve the league name from the backend record.
         const leagueObj = t.leagueId ? leagues[t.leagueId] : null;
         const leagueName = leagueObj ? leagueObj.name : (t.league || 'Unassigned');
 
@@ -372,7 +364,7 @@
               </div>
             </td>
             <td>${leagueName}</td>
-            <td>${t.season || 'Spring 2026'}</td>
+            <td>${t.season || '-'}</td>
             <td>${coachName}</td>
             <td><strong>${playerCount}</strong> Players</td>
             <td>${statusBadge}</td>
@@ -408,7 +400,7 @@
           title.textContent = 'Edit Team Details';
           idInp.value = team.id;
           nameInp.value = team.name;
-          seasonInp.value = team.season || 'Spring 2026';
+          seasonInp.value = team.season || '-';
           coachInp.value = team.coach ? (typeof team.coach === 'string' ? team.coach : team.coach.name) : '';
           statusInp.value = team.status || 'active';
 
@@ -419,7 +411,7 @@
         title.textContent = 'Create Team';
         document.getElementById('teamForm').reset();
         idInp.value = '';
-        seasonInp.value = 'Spring 2026';
+        seasonInp.value = '-';
         statusInp.value = 'active';
 
         // Populate modal select for new team creation
