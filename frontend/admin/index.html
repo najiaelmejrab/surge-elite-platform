@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="../css/admin.css">
 </head>
 
-<body>
+<body data-portal-role="admin">
 
   <div class="admin-layout">
     <!-- Sidebar Overlay for Mobile -->
@@ -102,6 +102,14 @@
             </svg>
             Accounts
           </a>
+          <a href="error-logs.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 9v4"></path>
+              <path d="M12 17h.01"></path>
+              <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            </svg>
+            Error Logs
+          </a>
         </div>
       </nav>
 
@@ -135,7 +143,7 @@
           </div>
         </div>
         <div class="admin-topbar-right">
-          <a href="../login.html" class="btn btn-outline btn-sm">Log Out</a>
+          <a href="../../backend/public/api/auth.php?action=logout" class="btn btn-outline btn-sm">Log Out</a>
         </div>
       </header>
 
@@ -311,66 +319,68 @@
               <h3 class="admin-table-title">Recent &amp; Upcoming Games</h3>
               <a href="games.html" class="btn btn-outline btn-sm">View All Games</a>
             </div>
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>Matchup</th>
-                  <th>League</th>
-                  <th>Date &amp; Time</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <div class="admin-matchup-cell">
-                      <span>Surge Wolves</span>
-                      <span class="admin-matchup-vs">VS</span>
-                      <span>Apex Titans</span>
-                    </div>
-                  </td>
-                  <td>U19 Elite League</td>
-                  <td>Oct 24, 2026 • 6:00 PM</td>
-                  <td><span class="admin-status scheduled">Scheduled</span></td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="admin-matchup-cell">
-                      <span>Metro Vipers</span>
-                      <span class="admin-matchup-vs">VS</span>
-                      <span>Coastal Ballers</span>
-                    </div>
-                  </td>
-                  <td>U17 Junior League</td>
-                  <td>Oct 25, 2026 • 4:30 PM</td>
-                  <td><span class="admin-status scheduled">Scheduled</span></td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="admin-matchup-cell">
-                      <span>Venice Wave</span>
-                      <span class="admin-matchup-vs">VS</span>
-                      <span>Gotham Knights</span>
-                    </div>
-                  </td>
-                  <td>Pro-Am Division</td>
-                  <td>Oct 17, 2026 • 7:30 PM</td>
-                  <td><span class="admin-status completed">Completed (112 - 98)</span></td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="admin-matchup-cell">
-                      <span>Thunder Hawks</span>
-                      <span class="admin-matchup-vs">VS</span>
-                      <span>Skyline Knights</span>
-                    </div>
-                  </td>
-                  <td>U19 Elite League</td>
-                  <td>Oct 25, 2026 • 7:15 PM</td>
-                  <td><span class="admin-status scheduled">Scheduled</span></td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="admin-table-scroll">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Matchup</th>
+                    <th>League</th>
+                    <th>Date &amp; Time</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="admin-matchup-cell">
+                        <span>Surge Wolves</span>
+                        <span class="admin-matchup-vs">VS</span>
+                        <span>Apex Titans</span>
+                      </div>
+                    </td>
+                    <td>U19 Elite League</td>
+                    <td>Oct 24, 2026 • 6:00 PM</td>
+                    <td><span class="admin-status scheduled">Scheduled</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="admin-matchup-cell">
+                        <span>Metro Vipers</span>
+                        <span class="admin-matchup-vs">VS</span>
+                        <span>Coastal Ballers</span>
+                      </div>
+                    </td>
+                    <td>U17 Junior League</td>
+                    <td>Oct 25, 2026 • 4:30 PM</td>
+                    <td><span class="admin-status scheduled">Scheduled</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="admin-matchup-cell">
+                        <span>Venice Wave</span>
+                        <span class="admin-matchup-vs">VS</span>
+                        <span>Gotham Knights</span>
+                      </div>
+                    </td>
+                    <td>Pro-Am Division</td>
+                    <td>Oct 17, 2026 • 7:30 PM</td>
+                    <td><span class="admin-status completed">Completed (112 - 98)</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="admin-matchup-cell">
+                        <span>Thunder Hawks</span>
+                        <span class="admin-matchup-vs">VS</span>
+                        <span>Skyline Knights</span>
+                      </div>
+                    </td>
+                    <td>U19 Elite League</td>
+                    <td>Oct 25, 2026 • 7:15 PM</td>
+                    <td><span class="admin-status scheduled">Scheduled</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <!-- Platform Activity Feed -->
@@ -420,6 +430,7 @@
   </div>
 
   <script src="../js/admin.js"></script>
+  <script src="../js/auth-guard.js"></script>
 </body>
 
 </html>

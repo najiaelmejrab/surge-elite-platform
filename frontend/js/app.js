@@ -231,68 +231,20 @@ function initStatCounters() {
 }
 
 /**
- * 4. Modal Dialog Handlers for Login & Unlock Premium CTAs
+ * 4. Login CTAs route to the single shared login page.
+ * No separate login modal or premium login flow is kept in the public site.
  */
 function initModals() {
-  const loginModal = document.getElementById('loginModal');
-  const premiumModal = document.getElementById('premiumModal');
+ const loginButtons = document.querySelectorAll('.btn-trigger-login, .btn-trigger-premium');
 
-  const loginBtns = document.querySelectorAll('.btn-trigger-login');
-  const premiumBtns = document.querySelectorAll('.btn-trigger-premium');
-  const modalCloses = document.querySelectorAll('.modal-close, .modal-backdrop');
-
-  const openModal = (modal) => {
-    if (!modal) return;
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeModal = (modal) => {
-    if (!modal) return;
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-  };
-
-  loginBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      openModal(loginModal);
-    });
-  });
-
-  premiumBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      openModal(premiumModal);
-    });
-  });
-
-  modalCloses.forEach(close => {
-    close.addEventListener('click', (e) => {
-      const modal = e.target.closest('.modal');
-      closeModal(modal);
-    });
-  });
-
-  // Handle Demo Login Form Submission
-  const loginForm = document.getElementById('loginForm');
-  if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Surge Elite Platform: Login functionality will be implemented in Milestone 2! Thank you for testing.');
-      closeModal(loginModal);
-    });
-  }
-
-  // Handle Demo Premium Form Submission
-  const premiumForm = document.getElementById('premiumForm');
-  if (premiumForm) {
-    premiumForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Surge Elite Premium: Registration submitted! Feature activation will launch in Milestone 2.');
-      closeModal(premiumModal);
-    });
-  }
+ loginButtons.forEach((btn) => {
+   btn.addEventListener('click', (event) => {
+     const isAnchor = btn.tagName.toLowerCase() === 'a';
+     if (isAnchor) return;
+     event.preventDefault();
+     window.location.href = 'login.html';
+   });
+ });
 }
 
 /**

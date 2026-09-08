@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="../css/admin.css">
 </head>
 
-<body>
+<body data-portal-role="admin">
 
   <div class="admin-layout">
     <!-- Sidebar Overlay for Mobile -->
@@ -101,6 +101,14 @@
             </svg>
             Accounts
           </a>
+          <a href="error-logs.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 9v4"></path>
+              <path d="M12 17h.01"></path>
+              <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            </svg>
+            Error Logs
+          </a>
         </div>
       </nav>
 
@@ -134,7 +142,7 @@
           </div>
         </div>
         <div class="admin-topbar-right">
-          <a href="../login.html" class="btn btn-outline btn-sm">Log Out</a>
+          <a href="../../backend/public/api/auth.php?action=logout" class="btn btn-outline btn-sm">Log Out</a>
         </div>
       </header>
 
@@ -484,7 +492,11 @@
       const createdAt = player.createdDate || player.createdAt;
       const modifiedBy = player.lastModifiedBy || player.createdBy || 'Admin Director';
       const modifiedAt = player.lastModifiedDate || player.lastModifiedAt || player.updatedAt || createdAt;
-      const fmtDate = (value) => value ? new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+      const fmtDate = (value) => {
+        if (!value) return '—';
+        const d = new Date(String(value).trim().replace(' ', 'T'));
+        return isNaN(d.getTime()) ? value : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      };
 
       document.getElementById('playerCreatedByText').textContent = createdBy;
       document.getElementById('playerCreatedAtText').textContent = fmtDate(createdAt);
@@ -535,6 +547,7 @@
     // Initial load
     renderPlayersPage();
   </script>
+  <script src="../js/auth-guard.js"></script>
 </body>
 
 </html>

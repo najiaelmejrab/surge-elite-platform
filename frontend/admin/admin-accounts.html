@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="../css/admin.css">
 </head>
 
-<body>
+<body data-portal-role="admin">
 
   <div class="admin-layout">
     <!-- Sidebar Overlay for Mobile -->
@@ -90,11 +90,23 @@
             </svg>
             Games
           </a>
+          <a href="development.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19h16"></path><path d="M7 16V8"></path><path d="M12 16V5"></path><path d="M17 16v-9"></path></svg>
+            Development
+          </a>
           <a href="admin-accounts.html" class="admin-nav-link active">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
             </svg>
             Accounts
+          </a>
+          <a href="error-logs.html" class="admin-nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 9v4"></path>
+              <path d="M12 17h.01"></path>
+              <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            </svg>
+            Error Logs
           </a>
         </div>
       </nav>
@@ -129,7 +141,7 @@
           </div>
         </div>
         <div class="admin-topbar-right">
-          <a href="../login.html" class="btn btn-outline btn-sm">Log Out</a>
+          <a href="../../backend/public/api/auth.php?action=logout" class="btn btn-outline btn-sm">Log Out</a>
         </div>
       </header>
 
@@ -225,8 +237,9 @@
               <!-- Role Filter -->
               <select id="accountRoleFilter" class="admin-filter-select">
                 <option value="all">All Roles</option>
-                <option value="administrator">Administrator</option>
+                <option value="admin">Administrator</option>
                 <option value="coach">Coach</option>
+                <option value="player">Player</option>
               </select>
               <!-- Status Filter -->
               <select id="accountStatusFilter" class="admin-filter-select">
@@ -246,7 +259,7 @@
                   <th>Role</th>
                   <th>Status</th>
                   <th>Created</th>
-                  <th>Last Login</th>
+                  <th>Last Updated</th>
                   <th style="text-align: center;">Actions</th>
                 </tr>
               </thead>
@@ -275,9 +288,15 @@
       <form id="accountForm">
         <input type="hidden" id="accountIdInput">
 
-        <div class="admin-form-group" style="margin-bottom: 1rem;">
-          <label class="admin-form-label" for="accountNameInput">Full Name *</label>
-          <input type="text" id="accountNameInput" class="admin-form-input" placeholder="e.g. John Doe" required>
+        <div class="admin-form-row cols-2" style="margin-bottom: 1rem;">
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="accountFirstNameInput">First Name *</label>
+            <input type="text" id="accountFirstNameInput" class="admin-form-input" placeholder="e.g. John" required>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="accountLastNameInput">Last Name *</label>
+            <input type="text" id="accountLastNameInput" class="admin-form-input" placeholder="e.g. Doe" required>
+          </div>
         </div>
 
         <div class="admin-form-group" style="margin-bottom: 1rem;">
@@ -290,7 +309,7 @@
           <div class="admin-form-group">
             <label class="admin-form-label" for="accountRoleInput">Role *</label>
             <select id="accountRoleInput" class="admin-form-select">
-              <option value="administrator">Administrator</option>
+              <option value="admin">Administrator</option>
               <option value="coach">Coach</option>
             </select>
           </div>
@@ -342,327 +361,11 @@
 
     function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('open'); }
     function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('open'); }
-    toggle.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
-    overlay.addEventListener('click', closeSidebar);
-
-    /* ── localStorage helpers ────────────────────────────────────────────── */
-    const STORE_KEY = 'surge_admin_accounts_v1';
-
-    function loadAccounts() {
-      try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
-      catch { return {}; }
-    }
-
-    function saveAccounts(accounts) {
-      localStorage.setItem(STORE_KEY, JSON.stringify(accounts));
-    }
-
-    function generateId() {
-      return 'acct_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
-    }
-
-    function getAuditActorName() {
-      const accounts = loadAccounts();
-      const values = Object.values(accounts);
-      if (!values.length) return 'Admin Director';
-      const activeMatch = values.find(account => String(account.status || '').toLowerCase() === 'active');
-      const selected = activeMatch || values[0];
-      return selected && selected.name ? selected.name : 'Admin Director';
-    }
-
-    function applyAccountAudit(account, isCreate = false) {
-      const now = new Date().toISOString();
-      const actorName = getAuditActorName();
-      const next = { ...account };
-
-      if (!next.createdAt && !next.createdDate) {
-        next.createdAt = now;
-        next.createdDate = now;
-        next.createdBy = actorName;
-      } else {
-        next.createdAt = next.createdAt || next.createdDate || now;
-        next.createdDate = next.createdDate || next.createdAt || now;
-        next.createdBy = next.createdBy || actorName;
-      }
-
-      next.updatedAt = now;
-      next.lastModifiedAt = now;
-      next.lastModifiedDate = now;
-      next.lastModifiedBy = actorName;
-      return next;
-    }
-
-    /* ── Seed demo data if empty ─────────────────────────────────────────── */
-    function seedIfEmpty() {
-      const accounts = loadAccounts();
-      if (Object.keys(accounts).length > 0) return;
-      const seed = {
-        acct_seed_001: { id: 'acct_seed_001', name: 'Admin Director', email: 'admin@surgeelite.com', role: 'administrator', status: 'active', createdAt: '2026-01-15T08:00:00Z', createdDate: '2026-01-15T08:00:00Z', createdBy: 'Admin Director', lastModifiedAt: '2026-09-01T07:20:00Z', lastModifiedDate: '2026-09-01T07:20:00Z', lastModifiedBy: 'Admin Director', updatedAt: '2026-09-01T07:20:00Z', lastLogin: '2026-09-01T07:20:00Z' },
-        acct_seed_002: { id: 'acct_seed_002', name: 'Marcus Thompson', email: 'marcus.t@surgeelite.com', role: 'coach', status: 'active', createdAt: '2026-02-20T10:30:00Z', createdDate: '2026-02-20T10:30:00Z', createdBy: 'Admin Director', lastModifiedAt: '2026-08-29T18:15:00Z', lastModifiedDate: '2026-08-29T18:15:00Z', lastModifiedBy: 'Admin Director', updatedAt: '2026-08-29T18:15:00Z', lastLogin: '2026-08-29T18:15:00Z' },
-        acct_seed_003: { id: 'acct_seed_003', name: 'Sarah Chen', email: 'sarah.chen@surgeelite.com', role: 'coach', status: 'pending', createdAt: '2026-08-01T14:00:00Z', createdDate: '2026-08-01T14:00:00Z', createdBy: 'Admin Director', lastModifiedAt: '2026-08-18T09:05:00Z', lastModifiedDate: '2026-08-18T09:05:00Z', lastModifiedBy: 'Admin Director', updatedAt: '2026-08-18T09:05:00Z', lastLogin: '2026-08-18T09:05:00Z' },
-        acct_seed_004: { id: 'acct_seed_004', name: 'James Rivera', email: 'j.rivera@surgeelite.com', role: 'administrator', status: 'inactive', createdAt: '2026-03-10T09:15:00Z', createdDate: '2026-03-10T09:15:00Z', createdBy: 'Admin Director', lastModifiedAt: '2026-07-11T12:40:00Z', lastModifiedDate: '2026-07-11T12:40:00Z', lastModifiedBy: 'Admin Director', updatedAt: '2026-07-11T12:40:00Z', lastLogin: '2026-07-11T12:40:00Z' },
-        acct_seed_005: { id: 'acct_seed_005', name: 'Priya Patel', email: 'priya.p@surgeelite.com', role: 'coach', status: 'active', createdAt: '2026-06-05T11:45:00Z', createdDate: '2026-06-05T11:45:00Z', createdBy: 'Admin Director', lastModifiedAt: '2026-08-30T20:10:00Z', lastModifiedDate: '2026-08-30T20:10:00Z', lastModifiedBy: 'Admin Director', updatedAt: '2026-08-30T20:10:00Z', lastLogin: '2026-08-30T20:10:00Z' }
-      };
-      saveAccounts(seed);
-    }
-
-    /* ── Escape HTML ─────────────────────────────────────────────────────── */
-    function esc(str) {
-      const d = document.createElement('div');
-      d.textContent = str || '';
-      return d.innerHTML;
-    }
-
-    /* ── Format date ─────────────────────────────────────────────────────── */
-    function fmtDate(iso) {
-      if (!iso) return '—';
-      const d = new Date(iso);
-      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-    }
-
-    /* ── Status badge class ──────────────────────────────────────────────── */
-    function statusClass(status) {
-      switch (status) {
-        case 'active': return 'admin-status active';
-        case 'pending': return 'admin-status scheduled';
-        case 'inactive': return 'admin-status ended';
-        default: return 'admin-status';
-      }
-    }
-
-    /* ── Role label ──────────────────────────────────────────────────────── */
-    function roleLabel(role) {
-      return role === 'administrator' ? 'Administrator' : 'Coach';
-    }
-
-    /* ── Render table ────────────────────────────────────────────────────── */
-    function renderTable() {
-      const accounts = loadAccounts();
-      const list = Object.values(accounts);
-      const search = document.getElementById('accountSearchInput').value.toLowerCase().trim();
-      const roleFilter = document.getElementById('accountRoleFilter').value;
-      const statusFilter = document.getElementById('accountStatusFilter').value;
-
-      const filtered = list.filter(a => {
-        if (search && !a.name.toLowerCase().includes(search) && !a.email.toLowerCase().includes(search)) return false;
-        if (roleFilter !== 'all' && a.role !== roleFilter) return false;
-        if (statusFilter !== 'all' && a.status !== statusFilter) return false;
-        return true;
-      });
-
-      // Update KPIs
-      document.getElementById('kpiTotal').textContent = list.length;
-      document.getElementById('kpiActive').textContent = list.filter(a => a.status === 'active').length;
-      document.getElementById('kpiPending').textContent = list.filter(a => a.status === 'pending').length;
-      document.getElementById('kpiInactive').textContent = list.filter(a => a.status === 'inactive').length;
-
-      // Table
-      const tbody = document.getElementById('accountsTableBody');
-      document.getElementById('accountsFooterText').textContent = `Showing ${filtered.length} of ${list.length} entries`;
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2rem; color:var(--text-muted);">No accounts found.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = filtered.map(a => `
-        <tr>
-          <td>
-            <div class="admin-account-cell">
-              <div class="admin-account-meta">
-                <div class="admin-account-name">${esc(a.name)}</div>
-                <div class="admin-account-email">${esc(a.email)}</div>
-              </div>
-            </div>
-          </td>
-          <td>${roleLabel(a.role)}</td>
-          <td><span class="${statusClass(a.status)}">${a.status.charAt(0).toUpperCase() + a.status.slice(1)}</span></td>
-          <td>${fmtDate(a.createdAt)}</td>
-          <td>${fmtDate(a.lastLogin || a.createdAt)}</td>
-          <td style="white-space: nowrap;">
-            <div class="admin-row-actions">
-              <button class="admin-action-btn" onclick="viewAccount('${a.id}')" title="View">👁</button>
-              <button class="admin-action-btn" onclick="editAccount('${a.id}')" title="Edit" aria-label="Edit account">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M12 20h9"></path>
-                  <path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
-                </svg>
-              </button>
-              <button class="admin-action-btn" onclick="toggleStatus('${a.id}')" title="${a.status === 'active' ? 'Deactivate' : 'Activate'}">${a.status === 'active' ? '⏸' : '▶'}</button>
-            </div>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    /* ── Modal helpers ────────────────────────────────────────────────────── */
-    const accountModal = document.getElementById('accountModal');
-    const viewModal = document.getElementById('viewAccountModal');
-
-    function openModal() { accountModal.classList.add('open'); }
-    function closeModal() { accountModal.classList.remove('open'); }
-    function openViewModal() { viewModal.classList.add('open'); }
-    function closeViewModal() { viewModal.classList.remove('open'); }
-
-    // Close buttons
-    document.querySelectorAll('[data-dismiss="modal"]').forEach(btn => btn.addEventListener('click', closeModal));
-    document.querySelectorAll('[data-dismiss="viewModal"]').forEach(btn => btn.addEventListener('click', closeViewModal));
-    accountModal.addEventListener('click', e => { if (e.target === accountModal) closeModal(); });
-    viewModal.addEventListener('click', e => { if (e.target === viewModal) closeViewModal(); });
-
-    /* ── Create Account ──────────────────────────────────────────────────── */
-    document.getElementById('createAccountBtn').addEventListener('click', () => {
-      document.getElementById('accountModalTitle').textContent = 'Create New Account';
-      document.getElementById('accountSaveBtn').textContent = 'Create Account';
-      document.getElementById('accountForm').reset();
-      document.getElementById('accountIdInput').value = '';
-      openModal();
-    });
-
-    /* ── Edit Account ────────────────────────────────────────────────────── */
-    function editAccount(id) {
-      const accounts = loadAccounts();
-      const a = accounts[id];
-      if (!a) return;
-
-      document.getElementById('accountModalTitle').textContent = 'Edit Account';
-      document.getElementById('accountSaveBtn').textContent = 'Save Changes';
-      document.getElementById('accountIdInput').value = a.id;
-      document.getElementById('accountNameInput').value = a.name;
-      document.getElementById('accountEmailInput').value = a.email;
-      document.getElementById('accountRoleInput').value = a.role;
-      document.getElementById('accountStatusInput').value = a.status;
-      openModal();
-    }
-
-    /* ── View Account ────────────────────────────────────────────────────── */
-    function viewAccount(id) {
-      const accounts = loadAccounts();
-      const a = accounts[id];
-      if (!a) return;
-
-      document.getElementById('viewAccountContent').innerHTML = `
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.5rem;">
-          <div>
-            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Full Name</div>
-            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${esc(a.name)}</div>
-          </div>
-          <div>
-            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Email</div>
-            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${esc(a.email)}</div>
-          </div>
-          <div>
-            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Role</div>
-            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${roleLabel(a.role)}</div>
-          </div>
-          <div>
-            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Status</div>
-            <div><span class="${statusClass(a.status)}">${a.status.charAt(0).toUpperCase() + a.status.slice(1)}</span></div>
-          </div>
-          <div>
-            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Created</div>
-            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${fmtDate(a.createdAt || a.createdDate)}</div>
-          </div>
-          <div>
-            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Created By</div>
-            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${esc(a.createdBy || getAuditActorName())}</div>
-          </div>
-          <div>
-            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Last Modified</div>
-            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${fmtDate(a.lastModifiedAt || a.lastModifiedDate || a.updatedAt || a.createdAt)}</div>
-          </div>
-          <div>
-            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Last Modified By</div>
-            <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-main);">${esc(a.lastModifiedBy || a.createdBy || getAuditActorName())}</div>
-          </div>
-          <div style="grid-column: 1 / -1;">
-            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.15rem;">Account ID</div>
-            <div style="font-size: 0.78rem; font-weight: 500; color: var(--text-muted); word-break: break-all;">${esc(a.id)}</div>
-          </div>
-        </div>
-      `;
-      openViewModal();
-    }
-
-    /* ── Toggle Activate/Deactivate ──────────────────────────────────────── */
-    function toggleStatus(id) {
-      const accounts = loadAccounts();
-      const a = accounts[id];
-      if (!a) return;
-      a.status = a.status === 'active' ? 'inactive' : 'active';
-      const now = new Date().toISOString();
-      a.updatedAt = now;
-      a.lastModifiedAt = now;
-      a.lastModifiedDate = now;
-      a.lastModifiedBy = getAuditActorName();
-      a.lastLogin = a.lastLogin || now;
-      accounts[id] = a;
-      saveAccounts(accounts);
-      renderTable();
-      showToast(a.status === 'active' ? `${a.name} activated` : `${a.name} deactivated`);
-    }
-
-    /* ── Save (Create / Update) ──────────────────────────────────────────── */
-    document.getElementById('accountForm').addEventListener('submit', e => {
-      e.preventDefault();
-      const accounts = loadAccounts();
-      const id = document.getElementById('accountIdInput').value;
-      const name = document.getElementById('accountNameInput').value.trim();
-      const email = document.getElementById('accountEmailInput').value.trim();
-      const role = document.getElementById('accountRoleInput').value;
-      const status = document.getElementById('accountStatusInput').value;
-
-      if (!name || !email) return;
-
-      if (id && accounts[id]) {
-        const now = new Date().toISOString();
-        accounts[id].name = name;
-        accounts[id].email = email;
-        accounts[id].role = role;
-        accounts[id].status = status;
-        accounts[id].createdAt = accounts[id].createdAt || accounts[id].createdDate || now;
-        accounts[id].createdDate = accounts[id].createdDate || accounts[id].createdAt || now;
-        accounts[id].createdBy = accounts[id].createdBy || getAuditActorName();
-        accounts[id].lastLogin = accounts[id].lastLogin || accounts[id].createdAt || now;
-        accounts[id].updatedAt = now;
-        accounts[id].lastModifiedAt = now;
-        accounts[id].lastModifiedDate = now;
-        accounts[id].lastModifiedBy = getAuditActorName();
-        saveAccounts(accounts);
-        showToast('Account updated successfully');
-      } else {
-        const newId = generateId();
-        const now = new Date().toISOString();
-        const actor = getAuditActorName();
-        accounts[newId] = { id: newId, name, email, role, status, createdAt: now, createdDate: now, createdBy: actor, lastModifiedAt: now, lastModifiedDate: now, lastModifiedBy: actor, updatedAt: now, lastLogin: now };
-        saveAccounts(accounts);
-        showToast('Account created successfully');
-      }
-
-      closeModal();
-      renderTable();
-    });
-
-    /* ── Toast ────────────────────────────────────────────────────────────── */
-    function showToast(message) {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.style.cssText = 'background: var(--bg-card); border: 1px solid var(--primary); color: var(--text-main); padding: 0.75rem 1.25rem; border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.3); animation: slideIn 0.3s ease;';
-      toast.textContent = message;
-      container.appendChild(toast);
-      setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 2500);
-    }
-
-    /* ── Filter event listeners ───────────────────────────────────────────── */
-    document.getElementById('accountSearchInput').addEventListener('input', renderTable);
-    document.getElementById('accountRoleFilter').addEventListener('change', renderTable);
-    document.getElementById('accountStatusFilter').addEventListener('change', renderTable);
-
-    /* ── Init ─────────────────────────────────────────────────────────────── */
-    seedIfEmpty();
-    renderTable();
+    if (toggle) toggle.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
+    if (overlay) overlay.addEventListener('click', closeSidebar);
   </script>
-
+  <script src="../js/admin-accounts.js"></script>
+  <script src="../js/auth-guard.js"></script>
 </body>
 
 </html>
