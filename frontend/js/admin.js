@@ -746,21 +746,79 @@
   window.getAdminGames = () => adminCache.games;
   window.getAdminGameById = (id) => adminCache.games[id] || null;
   window.saveAdminGame = (gameData) => {
-    const homeTeam = adminCache.teams[gameData.homeTeamId || gameData.home_team_id] || {};
+    // Issue 2 fix: when editing an existing game, always merge the authoritative
+    // backend-sourced cached record first so required FK fields (season_id,
+    // league_id, home_team_id, away_team_id) are never undefined or 0.
+    const existingCached = gameData.id ? (adminCache.games[String(gameData.id)] || {}) : {};
+    const merged = Object.assign({}, existingCached, gameData);
+
+    const homeTeam = adminCache.teams[merged.homeTeamId || merged.home_team_id] || {};
+
+    const seasonId   = parseInt(merged.seasonId   || merged.season_id   || homeTeam.season_id)  || 0;
+    const leagueId   = parseInt(merged.leagueId   || merged.league_id)                          || 0;
+    const homeTeamId = parseInt(merged.homeTeamId || merged.home_team_id)                       || 0;
+    const awayTeamId = parseInt(merged.awayTeamId || merged.away_team_id)                       || 0;
+
+    // Validate required FK fields before sending — show a clear error instead of
+    // silently sending 0 which would cause a MySQL foreign-key violation.
+    if (!seasonId || !leagueId || !homeTeamId || !awayTeamId) {
+      const missing = [
+        !seasonId   && 'season',
+        !leagueId   && 'league',
+        !homeTeamId && 'home team',
+        !awayTeamId && 'away team'
+      ].filter(Boolean).join(', ');
+      if (typeof adminToast === 'function') {
+        adminToast(`Cannot save game: missing required field(s): ${missing}. Please reload the page and try again.`, 'error');
+      } else {
+        alert(`Cannot save game: missing required field(s): ${missing}.`);
+      }
+      return null;
+    }
+
     const payload = {
-      season_id: gameData.seasonId || gameData.season_id || homeTeam.season_id,
-      league_id: gameData.leagueId || gameData.league_id,
-      home_team_id: gameData.homeTeamId || gameData.home_team_id,
-      away_team_id: gameData.awayTeamId || gameData.away_team_id,
-      game_date: gameData.date || gameData.game_date,
-      game_time: gameData.time || gameData.game_time,
-      status: gameData.status === 'in-progress' || gameData.status === 'in_progress' ? 'live' : (gameData.status === 'verified' ? 'completed' : gameData.status),
-      home_score: gameData.homeScore || gameData.home_score || 0,
-      away_score: gameData.awayScore || gameData.away_score || 0,
-      venue_id: gameData.venue_id || null
+      season_id:    seasonId,
+      league_id:    leagueId,
+      home_team_id: homeTeamId,
+      away_team_id: awayTeamId,
+      game_date:    merged.date || merged.game_date,
+      game_time:    merged.time || merged.game_time || null,
+      status:       merged.status === 'in-progress' || merged.status === 'in_progress'
+                      ? 'live'
+                      : (merged.status === 'verified' ? 'completed' : (merged.status || 'scheduled')),
+      home_score:   parseInt(merged.homeScore ?? merged.home_score) || 0,
+      away_score:   parseInt(merged.awayScore ?? merged.away_score) || 0,
+      venue_id:     merged.venue_id || null
     };
-    const saved = request(`${GAME_API}${gameData.id ? `?id=${gameData.id}` : ''}`, gameData.id ? 'PUT' : 'POST', payload);
-    if (saved) { const id = String(saved.id); adminCache.games[id] = { ...gameData, ...saved, id: saved.id, date: saved.game_date, time: saved.game_time, homeTeamId: saved.home_team_id, awayTeamId: saved.away_team_id, leagueId: saved.league_id }; }
+
+    // Issue 1 fix: forward quarter scores and player stats arrays so the backend
+    // GameController::update() can persist them via saveQuarters() and
+    // statModel->saveBatch(). These arrays are built by admin-game-entry.js
+    // using buildQuartersPayload() / buildPlayerStatsPayload().
+    if (Array.isArray(merged.quarters) && merged.quarters.length) {
+      payload.quarters = merged.quarters;
+    }
+    if (Array.isArray(merged.player_stats) && merged.player_stats.length) {
+      payload.player_stats = merged.player_stats;
+    }
+
+    const saved = request(
+      `${GAME_API}${gameData.id ? `?id=${gameData.id}` : ''}`,
+      gameData.id ? 'PUT' : 'POST',
+      payload
+    );
+
+    if (saved) {
+      const id = String(saved.id || gameData.id);
+      adminCache.games[id] = {
+        ...merged, ...saved, id: saved.id || gameData.id,
+        date: saved.game_date || merged.date,
+        time: saved.game_time || merged.time,
+        homeTeamId: saved.home_team_id || homeTeamId,
+        awayTeamId: saved.away_team_id || awayTeamId,
+        leagueId:   saved.league_id   || leagueId
+      };
+    }
     return saved || gameData;
   };
   window.deleteAdminGame = (id) => !!request(`${GAME_API}?id=${id}`, 'DELETE');
